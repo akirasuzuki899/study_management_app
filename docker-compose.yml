@@ -11,18 +11,23 @@ services:
       - log-data:/study_management_app/log
     depends_on:
       - db
-
-  web:    
-    build:      
-      context: containers/nginx
-    container_name: nginx
-    volumes:
-      - public-data:/study_management_app/public
-      - tmp-data:/study_management_app/tmp
-    depends_on:      
-      - app    
     ports:      
-      - 80:80
+      - 3000:3000
+    stdin_open: true
+    tty: true
+
+  # web:    
+  #   build:      
+  #     context: containers/nginx
+  #   container_name: nginx
+  #   volumes:
+  #     - public-data:/study_management_app/public
+  #     - tmp-data:/study_management_app/tmp
+  #   depends_on:      
+  #     - app    
+  #   ports:      
+  #     - 80:80
+    
 
   db:
     image: mysql:8.0.21
