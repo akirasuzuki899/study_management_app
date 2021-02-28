@@ -1,6 +1,6 @@
 class StudyMaterialsController < ApplicationController
   def index
-    @study_materials = current_user.study_materials
+    @study_materials = current_user.study_materials.page(params[:page]).per(2)
   end
 
   def new
