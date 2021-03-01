@@ -2,5 +2,5 @@
   <%= study_material.name %>
   <%= image_tag study_material.picture if study_material.picture.attached? %>
   <%= link_to "delete", study_material, method: :delete, data: {confirm: "You sure?"} %>
-  <%= link_to "edit", edit_study_material_path(study_material) %>
+  <%= link_to "edit", edit_study_material_path(study_material), data: {"turbolinks" => false} %>
 </li>

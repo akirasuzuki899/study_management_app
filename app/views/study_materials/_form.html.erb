@@ -1,6 +1,11 @@
 <%= form_with(model: @study_material, local: true) do |f| %>
 
-  <div id="image-list"></div>
+  <div id="image-list">
+    <% if @study_material.picture.attached? %>
+      <%= image_tag @study_material.picture %>
+    <% end %>
+  </div>
+
   <%= f.label :picture %>
   <%= f.file_field :picture, id: "message_image" %>
 
