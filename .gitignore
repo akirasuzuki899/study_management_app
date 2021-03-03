@@ -72,3 +72,8 @@ yarn-debug.log*
 /public/uploads
 
 .DS_Store
+
+
+
+# seeds.rb 用の画像
+/app/assets/images/*jpg

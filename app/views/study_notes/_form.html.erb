@@ -1,0 +1,17 @@
+<%= form_with(model: @study_note, local: true) do |f| %>
+
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+
+  <%= f.label :name %>
+  <%= f.collection_select :study_material_id, StudyMaterial.all, :id, :name, include_blank: "選択して下さい" %>
+
+  <%= f.label :page_number %>
+  <%= f.number_field :page_number %>
+
+  <%= f.label :content %>
+  <%= f.rich_text_area :content %>
+
+  
+  <%= f.submit "Post" %>
+<% end %>
