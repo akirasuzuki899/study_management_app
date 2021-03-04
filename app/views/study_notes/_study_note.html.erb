@@ -1,5 +1,5 @@
 <li>
-  <%= image_tag study_note.study_material.picture %>
+  <%= image_tag study_note.study_material.picture.variant(resize_to_limit: [100, 100]) if study_note.study_material.picture.attached? %>
   <%= study_note.title %>
   <%= study_note.page_number %>
   <%= link_to "delete", study_note, method: :delete, data: {confirm: "You sure?"} %>
