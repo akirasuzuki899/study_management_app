@@ -1,4 +1,5 @@
 <%= form_with(model: @study_note, local: true) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
 
   <%= f.label :title %>
   <%= f.text_field :title %>

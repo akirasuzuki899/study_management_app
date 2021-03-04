@@ -9,8 +9,11 @@ class StudyNotesController < ApplicationController
 
   def create
     @study_note = current_user.study_notes.build(study_note_params)
-    @study_note.save
-    redirect_to study_notes_path
+    if @study_note.save
+      redirect_to study_notes_path
+    else
+      render 'new'
+    end
   end
 
   def show
@@ -22,8 +25,11 @@ class StudyNotesController < ApplicationController
 
   def update
     @study_note = StudyMaterial.find(params[:id])
-    @study_note.update(study_note_params)
-    redirect_to study_notes_path
+    if @study_note.update(study_note_params)
+      redirect_to study_notes_path
+    else
+      render 'edit'
+    end
   end
 
   def destroy
