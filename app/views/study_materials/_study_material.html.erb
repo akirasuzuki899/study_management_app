@@ -3,4 +3,9 @@
   <%= image_tag study_material.picture.variant(resize_to_limit: [100, 100]) if study_material.picture.attached? %>
   <%= link_to "delete", study_material, method: :delete, data: {confirm: "You sure?"} %>
   <%= link_to "edit", edit_study_material_path(study_material), data: {"turbolinks" => false} %>
+  <% if study_material.is_completed %>
+    <%= button_to "完了済", complete_path, { method: :patch , params: {id: study_material.id, is_completed: 'false' }}%>
+  <% else %>
+    <%= button_to "完了", complete_path, { method: :patch , params: {id: study_material.id, is_completed: 'true' }}%>
+  <% end %>
 </li>

@@ -28,9 +28,15 @@ class StudyMaterialsController < ApplicationController
     redirect_to study_materials_path
   end
 
+  def is_complete
+    @study_material = StudyMaterial.find(params[:id])
+    # debugger
+    @study_material.update(is_completed: study_material_params[:is_completed])
+    redirect_to study_materials_path
+  end
 
   private
     def study_material_params
-      params.require(:study_material).permit(:name, :picture)
+      params.permit(:name, :picture, :is_completed)
     end
 end

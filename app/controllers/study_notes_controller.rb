@@ -38,6 +38,7 @@ class StudyNotesController < ApplicationController
   end
 
 
+
   private
     def study_note_params
       params.require(:study_note).permit(:page_number, :content, :study_material_id, :title)

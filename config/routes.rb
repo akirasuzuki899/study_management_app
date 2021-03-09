@@ -10,5 +10,6 @@ Rails.application.routes.draw do
   resources :study_materials
   devise_for :users
   root 'static_pages#home'
+  patch '/study_material', to: 'study_materials#is_complete', as: 'complete'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

@@ -5,7 +5,6 @@ class StudyMaterial < ApplicationRecord
   validates :user_id, presence: true
   validates :name, presence: true
   validates :picture,
-    presence: true, blob: { content_type: :image, size_range: 1..5.megabytes }
-
+    blob: { content_type: :image, size_range: 1..5.megabytes }
 
 end
