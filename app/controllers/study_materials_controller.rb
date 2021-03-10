@@ -30,7 +30,6 @@ class StudyMaterialsController < ApplicationController
 
   def is_complete
     @study_material = StudyMaterial.find(params[:id])
-    # debugger
     @study_material.update(is_completed: study_material_params[:is_completed])
     redirect_to study_materials_path
   end
