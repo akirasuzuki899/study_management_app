@@ -1,6 +1,6 @@
 class StudyMaterialsController < ApplicationController
   def index
-    @study_materials = current_user.study_materials.page(params[:page]).per(2)
+    @study_materials = current_user.study_materials.page(params[:page]).per(5)
   end
 
   def new
@@ -30,12 +30,16 @@ class StudyMaterialsController < ApplicationController
 
   def is_complete
     @study_material = StudyMaterial.find(params[:id])
-    @study_material.update(is_completed: study_material_params[:is_completed])
+    @study_material.update(complete_params)
     redirect_to study_materials_path
   end
 
   private
     def study_material_params
-      params.permit(:name, :picture, :is_completed)
+      params.require(:study_material).permit(:name, :picture)
+    end
+
+    def complete_params
+      params.permit(:is_completed)
     end
 end
