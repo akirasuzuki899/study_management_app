@@ -28,6 +28,12 @@ RSpec.describe StudyMaterial, type: :model do
     context "無効な投稿" do
       # 画像のサイズとフォーマットのテストが未実装
       
+      it "ユーザーが存在しない場合は登録できない" do
+        @study_material.user_id = ""
+        @study_material.valid?
+        expect(@study_material.errors[:user_id]).to  include("can't be blank")
+      end
+      
       it "name が空であれば登録できない" do
         @study_material.name = ""
         @study_material.valid?
@@ -40,11 +46,6 @@ RSpec.describe StudyMaterial, type: :model do
         expect(@study_material.errors[:name]).to  include("is too long (maximum is 50 characters)")
       end
 
-      it "ユーザーが存在しない場合は登録できない" do
-        @study_material.user_id = ""
-        @study_material.valid?
-        expect(@study_material.errors[:user_id]).to  include("can't be blank")
-      end
 
     end
     
