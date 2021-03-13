@@ -1,4 +1,7 @@
 class StudyMaterialsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :correct_user, only: [:edit, :update, :destroy, :is_complete]
+
   def index
     @study_materials = current_user.study_materials.page(params[:page]).per(5)
   end
@@ -9,27 +12,29 @@ class StudyMaterialsController < ApplicationController
 
   def create
     @study_material = current_user.study_materials.build(study_material_params)
-    @study_material.save
-    redirect_to study_materials_path
+    if @study_material.save
+      redirect_to study_materials_path
+    else
+      render 'new'
+    end
   end
 
-  def edit
-    @study_material = StudyMaterial.find(params[:id])
-  end
+  def edit; end
 
   def update
-    @study_material = StudyMaterial.find(params[:id])
-    @study_material.update(study_material_params)
-    redirect_to study_materials_path
+    if @study_material.update(study_material_params)
+      redirect_to study_materials_path
+    else
+      render 'edit'
+    end
   end
 
   def destroy
-    StudyMaterial.find(params[:id]).destroy
+    @study_material.destroy
     redirect_to study_materials_path
   end
 
   def is_complete
-    @study_material = StudyMaterial.find(params[:id])
     @study_material.update(complete_params)
     redirect_to study_materials_path
   end
@@ -41,5 +46,10 @@ class StudyMaterialsController < ApplicationController
 
     def complete_params
       params.permit(:is_completed)
+    end
+
+    def correct_user
+      @study_material = current_user.study_materials.find_by(id: params[:id])
+      redirect_to root_url if @study_material.nil?
     end
 end
