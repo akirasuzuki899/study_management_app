@@ -40,16 +40,17 @@ class StudyMaterialsController < ApplicationController
   end
 
   private
-    def study_material_params
-      params.require(:study_material).permit(:name, :picture)
-    end
 
-    def complete_params
-      params.permit(:is_completed)
-    end
+  def study_material_params
+    params.require(:study_material).permit(:name, :picture)
+  end
 
-    def correct_user
-      @study_material = current_user.study_materials.find_by(id: params[:id])
-      redirect_to root_url if @study_material.nil?
-    end
+  def complete_params
+    params.permit(:is_completed)
+  end
+
+  def correct_user
+    @study_material = current_user.study_materials.find_by(id: params[:id])
+    redirect_to root_url if @study_material.nil?
+  end
 end

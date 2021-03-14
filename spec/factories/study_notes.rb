@@ -3,7 +3,7 @@ FactoryBot.define do
     user { :user }
     study_material { :study_material }
     page_number { 1 }
-    title { "title" }
-    content { "content has ritch text" }
+    title { 'title' }
+    content { 'content has ritch text' }
   end
 end

@@ -11,10 +11,16 @@ services:
       - log-data:/study_management_app/log
     depends_on:
       - db
+      - chrome
     ports:      
       - 3000:3000
+      - 4000:4000
     stdin_open: true
     tty: true
+
+  chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: chrome
 
   # web:    
   #   build:      

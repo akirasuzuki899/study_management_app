@@ -5,7 +5,7 @@ class StudyNotesController < ApplicationController
   def index
     @study_notes = current_user.study_notes.page(params[:page]).per(5)
   end
-  
+
   def new
     @study_note = StudyNote.new
   end
@@ -19,8 +19,7 @@ class StudyNotesController < ApplicationController
     end
   end
 
-  def show
-  end
+  def show; end
 
   def edit; end
 
@@ -38,12 +37,13 @@ class StudyNotesController < ApplicationController
   end
 
   private
-    def study_note_params
-      params.require(:study_note).permit(:page_number, :content, :study_material_id, :title)
-    end
 
-    def correct_user
-      @study_note = current_user.study_notes.find_by(id: params[:id])
-      redirect_to root_url if @study_note.nil?
-    end
+  def study_note_params
+    params.require(:study_note).permit(:page_number, :content, :study_material_id, :title)
+  end
+
+  def correct_user
+    @study_note = current_user.study_notes.find_by(id: params[:id])
+    redirect_to root_url if @study_note.nil?
+  end
 end

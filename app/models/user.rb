@@ -6,5 +6,4 @@ class User < ApplicationRecord
   has_many :study_materials, dependent: :destroy
   has_many :study_notes, dependent: :destroy
   validates :name, presence: true
-  
 end
