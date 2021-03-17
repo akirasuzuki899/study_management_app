@@ -5,7 +5,7 @@
   <%= f.text_field :title %>
 
   <%= f.label :name %>
-  <%= f.collection_select :study_material_id, StudyMaterial.all, :id, :name, include_blank: "選択して下さい" %>
+  <%= f.collection_select :study_material_id, current_user.study_materials.all, :id, :name, include_blank: "選択して下さい" %>
 
   <%= f.label :page_number %>
   <%= f.number_field :page_number %>

@@ -38,7 +38,7 @@ RSpec.describe 'StudyMaterials', js: true, type: :system do
     end
   end
 
-  describe '新規作成機能', open_on_error: true do
+  describe '新規作成機能' do
     let(:login_user) { user_a }
     before do
       visit new_study_material_path
