@@ -77,8 +77,8 @@ RSpec.describe 'StudyMaterials', js: true, type: :system do
     end
   end
 
-  describe "教材の進捗管理機能" do
-    context "ユーザーAがログインしているとき" do
+  describe '教材の進捗管理機能' do
+    context 'ユーザーAがログインしているとき' do
       let(:login_user) { user_a }
       it 'ユーザーAが作成した教材の進捗を管理できる' do
         visit study_materials_path

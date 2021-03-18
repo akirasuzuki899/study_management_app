@@ -5,12 +5,14 @@ RSpec.describe 'StudyNotes', js: true, type: :system do
 
   let(:user_a) { FactoryBot.create(:user, name: 'ユーザーA', email: 'a@test.com') }
   let(:user_b) { FactoryBot.create(:user, name: 'ユーザーB', email: 'b@test.com') }
-  let(:study_material_a) { FactoryBot.create(
-    :study_material,
-    name: '最初の教材',
-    user: user_a,
-    picture: fixture_file_upload('app/assets/images/toeic1.jpg')
-  ) }
+  let(:study_material_a) do
+    FactoryBot.create(
+      :study_material,
+      name: '最初の教材',
+      user: user_a,
+      picture: fixture_file_upload('app/assets/images/toeic1.jpg')
+    )
+  end
 
   before do
     FactoryBot.create(
@@ -26,7 +28,7 @@ RSpec.describe 'StudyNotes', js: true, type: :system do
     fill_in 'user_password',	with: login_user.password
     click_button 'Log in'
   end
-  
+
   describe '一覧表示機能' do
     context 'ユーザーAがログインしているとき' do
       let(:login_user) { user_a }
@@ -51,9 +53,9 @@ RSpec.describe 'StudyNotes', js: true, type: :system do
     before do
       visit new_study_note_path
       fill_in 'Title', with: study_note_title
-      select study_note_name, from: "study_note[study_material_id]"
+      select study_note_name, from: 'study_note[study_material_id]'
       fill_in 'Page number', with: 1
-      fill_in_rich_text_area "study_note_content", with: study_note_content
+      fill_in_rich_text_area 'study_note_content', with: study_note_content
       click_button 'Post'
     end
 
@@ -76,20 +78,20 @@ RSpec.describe 'StudyNotes', js: true, type: :system do
       end
     end
 
-    context "新規作成画面で無効なデータを送信したとき" do
+    context '新規作成画面で無効なデータを送信したとき' do
       let(:study_note_title) { '' }
       let(:study_note_name) { '最初の教材' }
       let(:study_note_content) { 'rich text' }
-      it "title が空でエラーとなる" do
+      it 'title が空でエラーとなる' do
         expect(page).to have_content "can't be blank"
       end
     end
-    
-    context "新規作成画面で無効なデータを送信したとき" do
+
+    context '新規作成画面で無効なデータを送信したとき' do
       let(:study_note_title) { 'user_aが所有する新規教材メモ' }
       let(:study_note_name) { '最初の教材' }
       let(:study_note_content) { '' }
-      it "content が空でエラーとなる" do
+      it 'content が空でエラーとなる' do
         expect(page).to have_content "can't be blank"
       end
     end
@@ -107,7 +109,7 @@ RSpec.describe 'StudyNotes', js: true, type: :system do
       end
     end
 
-    context "ユーザーAが教材Aを削除したとき" do
+    context 'ユーザーAが教材Aを削除したとき' do
       let(:login_user) { user_a }
       it '教材Aに紐づく教材メモが削除される' do
         expect do

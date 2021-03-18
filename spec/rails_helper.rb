@@ -47,8 +47,7 @@ Capybara.register_driver :remote_chrome do |app|
 end
 
 RSpec.configure do |config|
-
-  #ActionTextをテストする
+  # ActionTextをテストする
   config.include ActionTextHelper, type: :system
 
   config.before(:each, type: :system) do
@@ -60,7 +59,6 @@ RSpec.configure do |config|
     Capybara.server_host = IPSocket.getaddress(Socket.gethostname)
     Capybara.server_port = 4000
     Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
-    # Capybara.app_host = "localhost:3000"
   end
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
