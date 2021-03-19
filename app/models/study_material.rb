@@ -1,4 +1,5 @@
 class StudyMaterial < ApplicationRecord
+  attr_accessor :material_url
   belongs_to :user
   has_many :study_notes, dependent: :destroy
   has_one_attached :picture

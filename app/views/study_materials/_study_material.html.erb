@@ -4,8 +4,8 @@
   <%= link_to "delete", study_material, method: :delete, data: {confirm: "You sure?"} %>
   <%= link_to "edit", edit_study_material_path(study_material), data: {"turbolinks" => false} %>
   <% if study_material.is_completed %>
-    <%= button_to "完了済", complete_path, { method: :patch , params: {id: study_material.id, is_completed: 'false' }}%>
+    <%= button_to "完了済", is_complete_study_material_path(study_material), { method: :patch , params: {is_completed: 'false' }}%>
   <% else %>
-    <%= button_to "完了", complete_path, { method: :patch , params: {id: study_material.id, is_completed: 'true' }}%>
+    <%= button_to "完了", is_complete_study_material_path(study_material), { method: :patch , params: {is_completed: 'true' }}%>
   <% end %>
 </li>

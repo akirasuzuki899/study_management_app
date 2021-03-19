@@ -1,0 +1,10 @@
+<%= form_with(url: search_study_materials_path, method: :get, local: true) do |f| %>
+  <%= f.text_field :keyword %>
+  <%= f.submit '本の題名を検索' %>
+<% end %>
+<% if @study_materials %>
+  <% @study_materials.each do |study_material| %>
+    <p><%= study_material.name %></p>
+    <%= image_tag study_material.material_url %>
+  <% end %>
+<% end %>
