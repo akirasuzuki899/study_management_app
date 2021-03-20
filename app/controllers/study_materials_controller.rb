@@ -4,7 +4,6 @@ class StudyMaterialsController < ApplicationController
 
   def index
     @study_materials = current_user.study_materials.page(params[:page]).per(5)
-    # debugger
   end
 
   def new
@@ -13,6 +12,7 @@ class StudyMaterialsController < ApplicationController
 
   def create
     @study_material = current_user.study_materials.build(study_material_params)
+    @study_material.attach_url_image(study_material_params[:image_url], study_material_params[:name])
     if @study_material.save
       redirect_to study_materials_path
     else
@@ -41,20 +41,20 @@ class StudyMaterialsController < ApplicationController
       results = RakutenWebService::Books::Book.search(title: params[:keyword])
       results.each do |result|
         study_material = StudyMaterial.new(read(result))
-        @study_materials << study_material
+        @study_materials << study_material if new_material?(study_material)
       end
     end
   end
 
   def is_complete
     @study_material.update(complete_params)
-    redirect_to search_study_materials_path
+    redirect_to study_materials_path
   end
 
   private
 
     def study_material_params
-      params.require(:study_material).permit(:name, :picture)
+      params.require(:study_material).permit(:name, :picture, :image_url)
     end
 
     def complete_params
@@ -69,16 +69,18 @@ class StudyMaterialsController < ApplicationController
 
     def read(result)
       title = result['title']
-      # url = result['itemUrl']
-      # isbn = result['isbn']
       image_url = result['mediumImageUrl']
       {
         name: title,
-        # url: url,
-        # isbn: isbn,
-        material_url: image_url,
+        image_url: image_url,
       }
-      # debugger
-
     end
-end
+
+    def new_material?(new_material)
+      study_materials = current_user.study_materials.select(:name)
+      for study_material in study_materials do
+        return false if study_material[:name] == new_material[:name]
+      end
+      return true
+    end
+  end
