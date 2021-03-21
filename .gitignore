@@ -76,4 +76,4 @@ yarn-debug.log*
 
 
 # seeds.rb 用の画像
-/app/assets/images/*jpg
+# /app/assets/images/*jpg
