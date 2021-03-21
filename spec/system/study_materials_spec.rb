@@ -11,7 +11,7 @@ RSpec.describe 'StudyMaterials', js: true, type: :system do
       :study_material,
       name: '最初の教材',
       user: user_a,
-      picture: fixture_file_upload('app/assets/images/toeic1.jpg')
+      image: fixture_file_upload('app/assets/images/toeic1.jpg')
     )
     visit '/users/sign_in'
     fill_in 'user_email',	with: login_user.email
@@ -43,7 +43,7 @@ RSpec.describe 'StudyMaterials', js: true, type: :system do
     before do
       visit new_study_material_path
       fill_in 'Name', with: study_material_name
-      attach_file('study_material_picture', "#{Rails.root}/app/assets/images/toeic2.jpg")
+      attach_file('study_material_image', "#{Rails.root}/app/assets/images/toeic2.jpg")
       click_button 'Post'
     end
 

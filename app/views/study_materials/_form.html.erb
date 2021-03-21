@@ -2,13 +2,13 @@
 <%= render 'shared/error_messages', object: f.object %>
 
   <div id="image-list">
-    <% if @study_material.picture.attached? %>
-      <%= image_tag @study_material.picture %>
+    <% if @study_material.image.attached? %>
+      <%= image_tag @study_material.image %>
     <% end %>
   </div>
 
-  <%= f.label :picture %>
-  <%= f.file_field :picture %>
+  <%= f.label :image %>
+  <%= f.file_field :image %>
 
   <%= f.label :name %>
   <%= f.text_field :name %>

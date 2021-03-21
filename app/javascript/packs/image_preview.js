@@ -2,7 +2,7 @@ if (document.URL.match(/study_materials\/new/) || document.URL.match(/study_mate
   document.addEventListener('DOMContentLoaded', function(){
     const ImageList = document.getElementById('image-list');
     console.log('DOMContentLoaded が動いた');
-    document.getElementById('study_material_picture').addEventListener('change', function(e){
+    document.getElementById('study_material_image').addEventListener('change', function(e){
       console.log('change が動いた')
       // 画像が表示されている場合のみ、すでに存在している画像を削除する
       const imageContent = document.querySelector('img');

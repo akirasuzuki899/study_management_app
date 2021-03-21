@@ -21,7 +21,7 @@ users.each do |user|
       name: "公式TOEIC Listning & Reading 問題集 #{n + 1}",
       is_completed: false
     )
-    study_material.picture.attach(io: File.open(Rails.root.join("./app/assets/images/toeic#{n + 1}.jpg")), filename: "toeic#{n + 1}.jpg")
+    study_material.image.attach(io: File.open(Rails.root.join("./app/assets/images/toeic#{n + 1}.jpg")), filename: "toeic#{n + 1}.jpg")
   end
 
   # 教材のメモを追加

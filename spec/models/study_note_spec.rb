@@ -5,7 +5,7 @@ RSpec.describe StudyNote, type: :model do
   before do
     @user = FactoryBot.create(:user)
     @study_material = FactoryBot.create(:study_material, user_id: @user.id)
-    @study_material.picture = fixture_file_upload('app/assets/images/toeic1.jpg')
+    @study_material.image = fixture_file_upload('app/assets/images/toeic1.jpg')
     @study_note = FactoryBot.build(:study_note, user_id: @user.id, study_material_id: @study_material.id)
   end
 

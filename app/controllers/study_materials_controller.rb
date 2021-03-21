@@ -12,7 +12,7 @@ class StudyMaterialsController < ApplicationController
 
   def create
     @study_material = current_user.study_materials.build(study_material_params)
-    @study_material.attach_url_image(study_material_params[:image_url], study_material_params[:name])
+    @study_material.attach_url_image(study_material_params[:image_url], study_material_params[:name]) if !!study_material_params[:image_url]
     if @study_material.save
       redirect_to study_materials_path
     else
@@ -53,34 +53,33 @@ class StudyMaterialsController < ApplicationController
 
   private
 
-    def study_material_params
-      params.require(:study_material).permit(:name, :picture, :image_url)
-    end
-
-    def complete_params
-      params.permit(:is_completed)
-    end
-
-    def correct_user
-      @study_material = current_user.study_materials.find_by(id: params[:id])
-      redirect_to root_url if @study_material.nil?
-    end
-    
-
-    def read(result)
-      title = result['title']
-      image_url = result['mediumImageUrl']
-      {
-        name: title,
-        image_url: image_url,
-      }
-    end
-
-    def new_material?(new_material)
-      study_materials = current_user.study_materials.select(:name)
-      for study_material in study_materials do
-        return false if study_material[:name] == new_material[:name]
-      end
-      return true
-    end
+  def study_material_params
+    params.require(:study_material).permit(:name, :image, :image_url)
   end
+
+  def complete_params
+    params.permit(:is_completed)
+  end
+
+  def correct_user
+    @study_material = current_user.study_materials.find_by(id: params[:id])
+    redirect_to root_url if @study_material.nil?
+  end
+
+  def read(result)
+    title = result['title']
+    image_url = result['mediumImageUrl']
+    {
+      name: title,
+      image_url: image_url
+    }
+  end
+
+  def new_material?(new_material)
+    study_materials = current_user.study_materials.select(:name)
+    study_materials.each do |study_material|
+      return false if study_material[:name] == new_material[:name]
+    end
+    true
+  end
+end

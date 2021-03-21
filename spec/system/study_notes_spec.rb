@@ -10,7 +10,7 @@ RSpec.describe 'StudyNotes', js: true, type: :system do
       :study_material,
       name: '最初の教材',
       user: user_a,
-      picture: fixture_file_upload('app/assets/images/toeic1.jpg')
+      image: fixture_file_upload('app/assets/images/toeic1.jpg')
     )
   end
 

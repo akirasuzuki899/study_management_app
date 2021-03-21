@@ -6,12 +6,12 @@ RSpec.describe StudyMaterial, type: :model do
   before do
     @user = FactoryBot.create(:user)
     @study_material = FactoryBot.build(:study_material, user_id: @user.id)
-    @study_material.picture = fixture_file_upload('app/assets/images/toeic1.jpg')
+    @study_material.image = fixture_file_upload('app/assets/images/toeic1.jpg')
   end
 
   describe '登録' do
     context '有効な投稿' do
-      it '有効な user_id,name,picture であれば登録できる' do
+      it '有効な user_id,name,image であれば登録できる' do
         expect(@study_material).to be_valid
       end
 
