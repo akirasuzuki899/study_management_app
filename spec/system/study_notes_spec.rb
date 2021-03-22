@@ -8,7 +8,7 @@ RSpec.describe 'StudyNotes', js: true, type: :system do
   let(:study_material_a) do
     FactoryBot.create(
       :study_material,
-      name: '最初の教材',
+      title: '最初の教材',
       user: user_a,
       image: fixture_file_upload('app/assets/images/toeic1.jpg')
     )

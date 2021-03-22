@@ -12,7 +12,7 @@ class StudyMaterialsController < ApplicationController
 
   def create
     @study_material = current_user.study_materials.build(study_material_params)
-    @study_material.attach_url_image(study_material_params[:image_url], study_material_params[:name]) if !!study_material_params[:image_url]
+    @study_material.attach_image_url(study_material_params[:image_url], study_material_params[:title]) if study_material_params[:image_url].present?
     if @study_material.save
       redirect_to study_materials_path
     else
@@ -47,39 +47,35 @@ class StudyMaterialsController < ApplicationController
   end
 
   def is_complete
-    @study_material.update(complete_params)
+    @study_material.update(study_material_params)
     redirect_to study_materials_path
   end
 
   private
 
-  def study_material_params
-    params.require(:study_material).permit(:name, :image, :image_url)
-  end
-
-  def complete_params
-    params.permit(:is_completed)
-  end
-
-  def correct_user
-    @study_material = current_user.study_materials.find_by(id: params[:id])
-    redirect_to root_url if @study_material.nil?
-  end
-
-  def read(result)
-    title = result['title']
-    image_url = result['mediumImageUrl']
-    {
-      name: title,
-      image_url: image_url
-    }
-  end
-
-  def new_material?(new_material)
-    study_materials = current_user.study_materials.select(:name)
-    study_materials.each do |study_material|
-      return false if study_material[:name] == new_material[:name]
+    def study_material_params
+      params.require(:study_material).permit(:title, :image, :image_url, :is_completed)
     end
-    true
-  end
+
+    def correct_user
+      @study_material = current_user.study_materials.find(params[:id])
+      redirect_to root_url if @study_material.nil?
+    end
+
+    def read(result)
+      title = result['title']
+      image_url = result['mediumImageUrl']
+      {
+        title: title,
+        image_url: image_url,
+      }
+    end
+
+    def new_material?(new_material)
+      study_materials = current_user.study_materials.select(:title)
+      study_materials.each do |study_material|
+        return false if study_material[:title] == new_material[:title]
+      end
+      true
+    end
 end

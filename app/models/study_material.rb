@@ -6,11 +6,11 @@ class StudyMaterial < ApplicationRecord
   has_many :study_notes, dependent: :destroy
   has_one_attached :image
   validates :user_id, presence: true
-  validates :name, presence: true, length: { maximum: 50 }
+  validates :title, presence: true, length: { maximum: 50 }
   validates :image,
             blob: { content_type: :image, size_range: 1..5.megabytes }
 
-  def attach_url_image(url, title)
+  def attach_image_url(url, title)
     image = open(url)
     self.image.attach(io: image, filename: "#{title}.jpg")
   end

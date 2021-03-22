@@ -9,7 +9,7 @@ RSpec.describe 'StudyMaterials', js: true, type: :system do
   before do
     FactoryBot.create(
       :study_material,
-      name: '最初の教材',
+      title: '最初の教材',
       user: user_a,
       image: fixture_file_upload('app/assets/images/toeic1.jpg')
     )
@@ -42,13 +42,13 @@ RSpec.describe 'StudyMaterials', js: true, type: :system do
     let(:login_user) { user_a }
     before do
       visit new_study_material_path
-      fill_in 'Name', with: study_material_name
+      fill_in 'Title', with: study_material_title
       attach_file('study_material_image', "#{Rails.root}/app/assets/images/toeic2.jpg")
       click_button 'Post'
     end
 
     context '新規作成画面で有効なデータを送信したとき' do
-      let(:study_material_name) { 'user_aが所有する新規教材' }
+      let(:study_material_title) { 'user_aが所有する新規教材' }
       it '正常に登録される' do
         visit study_materials_path
         expect(page).to have_content 'user_aが所有する新規教材'
@@ -57,8 +57,8 @@ RSpec.describe 'StudyMaterials', js: true, type: :system do
     end
 
     context '新規作成画面で無効なデータを送信したとき' do
-      let(:study_material_name) { '' }
-      it 'name が空でエラーとなる' do
+      let(:study_material_title) { '' }
+      it 'title が空でエラーとなる' do
         expect(page).to have_content "can't be blank"
       end
     end

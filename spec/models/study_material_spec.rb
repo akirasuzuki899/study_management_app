@@ -11,12 +11,12 @@ RSpec.describe StudyMaterial, type: :model do
 
   describe '登録' do
     context '有効な投稿' do
-      it '有効な user_id,name,image であれば登録できる' do
+      it '有効な user_id,title,image であれば登録できる' do
         expect(@study_material).to be_valid
       end
 
-      it 'name が50文字以下であれば登録できる' do
-        @study_material.name = 'a' * 50
+      it 'title が50文字以下であれば登録できる' do
+        @study_material.title = 'a' * 50
         expect(@study_material).to be_valid
       end
     end
@@ -30,16 +30,16 @@ RSpec.describe StudyMaterial, type: :model do
         expect(@study_material.errors[:user_id]).to include("can't be blank")
       end
 
-      it 'name が空であれば登録できない' do
-        @study_material.name = ''
+      it 'title が空であれば登録できない' do
+        @study_material.title = ''
         @study_material.valid?
-        expect(@study_material.errors[:name]).to include("can't be blank")
+        expect(@study_material.errors[:title]).to include("can't be blank")
       end
 
-      it 'name が51文字以上であれば登録できない' do
-        @study_material.name = 'a' * 51
+      it 'title が51文字以上であれば登録できない' do
+        @study_material.title = 'a' * 51
         @study_material.valid?
-        expect(@study_material.errors[:name]).to include('is too long (maximum is 50 characters)')
+        expect(@study_material.errors[:title]).to include('is too long (maximum is 50 characters)')
       end
     end
   end
