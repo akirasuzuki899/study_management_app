@@ -18,6 +18,17 @@ services:
     stdin_open: true
     tty: true
 
+  front:
+    build: ./front
+    container_name: vue
+    command: npm run serve
+    volumes:
+      - ./front:/study_management_app_front
+    ports:
+      - '8080:8080'
+    stdin_open: true
+    tty: true
+
   chrome:
     # image: selenium/standalone-chrome:latest
     image: selenium/standalone-chrome-debug:latest
