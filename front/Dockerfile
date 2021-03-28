@@ -7,6 +7,4 @@ WORKDIR /study_management_app_front
 COPY package.json /study_management_app_front/package.json
 COPY package-lock.json /study_management_app_front/package-lock.json
 RUN npm install
-COPY . ./study_management_app
-
-EXPOSE 8080
+COPY . ./study_management_app_front
