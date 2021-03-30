@@ -1,20 +1,20 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/>
-     -->
-    <Login></Login>
+    <nav>
+      <router-link to="/" class="link">Home</router-link>
+      <router-link to="register" class="link">Register</router-link>
+      <router-link to="login" class="link">Login</router-link>
+      <router-link to="studymaterials" class="link">StudyMaterials</router-link>
+    </nav>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Login from './components/Login.vue'
-
 export default {
   name: 'App',
   components: {
-    // HelloWorld
-    Login
+
   }
 }
 </script>
@@ -28,4 +28,8 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+.link {
+  margin-right: 10px;
+}
 </style>
+
