@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import Home from './views/Home.vue'
 import Register from './views/Register.vue'
 import Login from './views/Login.vue'
-// import store from './store'
+import store from './store'
 
 import StudyMaterials from './views/StudyMaterials.vue'
 
@@ -14,11 +14,46 @@ export default new Router({
     {
       path: '/', 
       component: Home,
-      // beforeEnter(to, from, next){
-      //   if (store.getters.)
-      // }
+      beforeEnter(to, from, next){
+        if (store.getters.authTokens['access-token']) {
+          next();
+        } else {
+          next('/login');
+        }
+      }
     },
-    {path: '/login', component: Login},
-    {path: '/register', component: Register},
-    {path: '/studymaterials', component: StudyMaterials}]
+    {
+      path: '/login', 
+      component: Login,
+      beforeEnter(to, from, next){
+        if (store.getters.authTokens['access-token']) {
+          next('/');
+        } else {
+          next();
+        }
+      }
+    },
+    {
+      path: '/register', 
+      component: Register,
+      beforeEnter(to, from, next){
+        if (store.getters.authTokens['access-token']) {
+          next('/');
+        } else {
+          next();
+        }
+      }
+    },
+    {
+      path: '/studymaterials', 
+      component: StudyMaterials,
+      beforeEnter(to, from, next){
+        if (store.getters.authTokens['access-token']) {
+          next();
+        } else {
+          next('/login');
+        }
+      }
+    }
+  ]
 });

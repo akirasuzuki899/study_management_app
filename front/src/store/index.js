@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from "axios";
+import router from '../router'
 
 Vue.use(Vuex);
 
@@ -26,10 +27,7 @@ export default new Vuex.Store({
         "expiry": authTokens['expiry'],
         "token-type": authTokens['token-type'],
       };
-    }, 
-    signOut(state) {
-      state.authTokens = null;
-    },
+    }
   },
   actions: {
     autoLogin({ commit }) {
@@ -40,6 +38,7 @@ export default new Vuex.Store({
         "expiry": localStorage.getItem('expiry'),
         "token-type": localStorage.getItem('token-type'),
       };
+      if (!authTokens) return;
       commit('updateAuthTokens', authTokens);
     },
     login({ commit }, authData) {
@@ -59,10 +58,29 @@ export default new Vuex.Store({
           localStorage.setItem( "expiry", response.headers['expiry']);
           localStorage.setItem( "token-type", response.headers['token-type']);
           console.log(response);
+          router.push('/');
         })
         .catch(error => {
           console.log(error);
         });
+    },
+    logout({ commit }) {
+      commit(
+        'updateAuthTokens', 
+        {
+          'access-token': null,
+          "client": null,
+          "uid": null,
+          "expiry": null,
+          "token-type": null,
+        }
+      );
+      localStorage.removeItem("access-token");
+      localStorage.removeItem("client");
+      localStorage.removeItem("uid");
+      localStorage.removeItem("expiry");
+      localStorage.removeItem("token-type");
+      router.replace('/login');
     },
     register({ commit }, authData) {
       axios
@@ -77,6 +95,7 @@ export default new Vuex.Store({
         .then(response => {
           commit('updateAuthTokens', response.headers);
           console.log(response);
+          router.push('/');
         })
         .catch(error => {
           console.log(error);

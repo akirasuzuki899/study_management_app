@@ -1,10 +1,16 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/" class="link">Home</router-link>
-      <router-link to="register" class="link">Register</router-link>
-      <router-link to="login" class="link">Login</router-link>
-      <router-link to="studymaterials" class="link">StudyMaterials</router-link>
+      <template v-if="isAuthenticated">
+        <router-link to="/" class="header-item">Home</router-link>
+        <router-link to="studymaterials" class="header-item">StudyMaterials</router-link>
+        <span class="header-item" @click="logout">logout</span>
+        
+      </template>
+      <template v-if="!isAuthenticated">
+        <router-link to="login" class="header-item">Login</router-link>
+        <router-link to="register" class="header-item">Register</router-link>
+      </template>
     </nav>
     <router-view></router-view>
   </div>
@@ -13,8 +19,15 @@
 <script>
 export default {
   name: 'App',
-  components: {
-
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters.authTokens['access-token'] !== null;
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout');
+    }
   }
 }
 </script>
@@ -28,8 +41,9 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-.link {
+.header-item {
   margin-right: 10px;
+  cursor: pointer;
 }
 </style>
 
