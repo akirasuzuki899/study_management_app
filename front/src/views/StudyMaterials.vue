@@ -18,14 +18,14 @@ export default {
     }
   },
   computed: {
-    headers() {
-      return this.$store.getters.headers;
+    authTokens() {
+      return this.$store.getters.authTokens;
     }
   },
   created() {
     axios
       .get('/api/v1/study_materials', {
-        headers: this.headers
+        headers: this.authTokens
       })
       .then(response => {
         this.studymaterials = response.data.data;
