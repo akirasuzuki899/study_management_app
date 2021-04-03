@@ -3,12 +3,15 @@
     <h3>StudyMaterials</h3>
     <div v-for="studymaterial in studymaterials" :key="studymaterial.id">
       <div>タイトル：{{studymaterial.title}}</div>
+      <img :src="studymaterial.image_url" />
     </div>
+    <VueTrix v-model="editorContent" placeholder="Enter content" localStorage/>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import VueTrix from "vue-trix";
 export default {
   data() {
     return {
@@ -16,6 +19,9 @@ export default {
       keyword: '',
       studymaterials: [],
     }
+  },
+  components: {
+    VueTrix
   },
   computed: {
     authTokens() {

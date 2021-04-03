@@ -3,6 +3,7 @@ import App from './App.vue'
 import axios from "axios";
 import store from "./store";
 import router from "./router"
+import "vue-trix";
 
 Vue.config.productionTip = false
 

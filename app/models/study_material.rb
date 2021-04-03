@@ -1,4 +1,5 @@
 class StudyMaterial < ApplicationRecord
+  include Rails.application.routes.url_helpers
   require 'open-uri'
   attr_accessor :image_url
 
@@ -13,5 +14,10 @@ class StudyMaterial < ApplicationRecord
   def attach_image_url(url, title)
     image = open(url)
     self.image.attach(io: image, filename: "#{title}.jpg")
+  end
+
+  def image_url
+    # 紐づいている画像のURLを取得する
+    image.attached? ? url_for(image) : nil
   end
 end
