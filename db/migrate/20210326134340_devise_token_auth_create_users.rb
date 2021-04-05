@@ -1,5 +1,5 @@
 class DeviseTokenAuthCreateUsers < ActiveRecord::Migration[6.1]
-    # create migration by running a command like this (where `User` is your USER_CLASS table):
+  # create migration by running a command like this (where `User` is your USER_CLASS table):
   # `rails g migration AddTokensToUsers provider:string uid:string tokens:text`
 
   def up

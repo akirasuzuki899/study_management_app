@@ -6,6 +6,7 @@ import Login from './views/Login.vue'
 import store from './store'
 
 import StudyMaterials from './views/StudyMaterials.vue'
+import StudyNotes from './views/StudyNotes.vue'
 
 Vue.use(Router);
 
@@ -47,6 +48,17 @@ export default new Router({
     {
       path: '/studymaterials', 
       component: StudyMaterials,
+      beforeEnter(to, from, next){
+        if (store.getters.authTokens['access-token']) {
+          next();
+        } else {
+          next('/login');
+        }
+      }
+    },
+    {
+      path: '/studynotes', 
+      component: StudyNotes,
       beforeEnter(to, from, next){
         if (store.getters.authTokens['access-token']) {
           next();

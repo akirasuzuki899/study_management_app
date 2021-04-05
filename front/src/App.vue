@@ -4,6 +4,7 @@
       <template v-if="isAuthenticated">
         <router-link to="/" class="header-item">Home</router-link>
         <router-link to="studymaterials" class="header-item">StudyMaterials</router-link>
+        <router-link to="studynotes" class="header-item">StudyNotes</router-link>
         <span class="header-item" @click="logout">logout</span>
         
       </template>
@@ -17,6 +18,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: 'App',
   computed: {
@@ -27,6 +29,20 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('logout');
+      axios
+      .delete('/api/v1/auth/sign_out',
+      {
+        // "uid": this.$store.state["uid"],
+        // "access-token": this.$store.state["access-token"],
+        // "client": this.$store.state["client"],
+        headers: this.authTokens
+      })
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      })
     }
   }
 }
