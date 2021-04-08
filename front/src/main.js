@@ -4,6 +4,7 @@ import axios from "axios";
 import store from "./store";
 import router from "./router"
 import "vue-trix";
+import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false
 
@@ -31,6 +32,7 @@ axios.interceptors.response.eject(interceptorsResponse);
 store.dispatch('autoLogin');
 new Vue({
   store,
-  router, 
-  render: h => h(App),
+  router,
+  vuetify,
+  render: h => h(App)
 }).$mount('#app')

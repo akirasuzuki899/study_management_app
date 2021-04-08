@@ -28,21 +28,24 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch('logout');
       axios
-      .delete('/api/v1/auth/sign_out',
-      {
-        // "uid": this.$store.state["uid"],
-        // "access-token": this.$store.state["access-token"],
-        // "client": this.$store.state["client"],
-        headers: this.authTokens
-      })
+      .delete(
+        '/api/v1/auth/sign_out',
+        {
+          headers:{
+            "uid": this.$store.getters.authTokens["uid"],
+            "access-token": this.$store.getters.authTokens["access-token"],
+            "client": this.$store.getters.authTokens["client"],
+          }
+        }
+      )
       .then(response => {
         console.log(response);
       })
       .catch(error => {
         console.log(error);
-      })
+      });
+      this.$store.dispatch('logout');
     }
   }
 }

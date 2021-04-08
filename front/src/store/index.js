@@ -38,7 +38,7 @@ export default new Vuex.Store({
         "expiry": localStorage.getItem('expiry'),
         "token-type": localStorage.getItem('token-type'),
       };
-      if (!authTokens) return;
+      // if (!authTokens) return;
       commit('updateAuthTokens', authTokens);
     },
     login({ commit }, authData) {

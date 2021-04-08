@@ -1,7 +1,7 @@
 module Api
   module V1
     class StudyMaterialsController < ApplicationController
-      before_action :authenticate_user!
+      before_action :authenticate_api_v1_user!
       before_action :correct_user, only: [:edit, :update, :destroy, :is_complete]
 
       def index
