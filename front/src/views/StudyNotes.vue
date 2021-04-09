@@ -40,6 +40,8 @@
 import axios from "axios";
 import VueTrix from "vue-trix";
 import { DirectUpload } from "@rails/activestorage";
+const Host = 'http://localhost:3000/';
+
 export default {
   data() {
     return {
@@ -73,16 +75,8 @@ export default {
             // @param object data from remote server response data after upload.
             let attributes = {
               sgid: blob.attachable_sgid,
-              ref: "figureElement"
+              url: Host + "rails/active_storage/blobs/" + blob.signed_id + "/" + blob.filename,
             };
-            console.log("アタッチメント")
-            // console.log(event.attachment);
-            // const attachment = <action-text-attachment sgid="this.sgid"></action-text-attachment>
-            // element.editor.setSelectedRange([0, 0]);
-            // element.editor.insertHTML("<action-text-attachment></action-text-attachment>");
-            // console.log(document.getElementsByTagName('figure'));
-            // console.log(document.getElementsByTagName('figure').innerHTML = "<action-text-attachment></action-text-attachment>");
-            // document.getElementsByTagName('title').innerHTML = "<action-text-attachment>ssssss</action-text-attachment>";
             event.attachment.setAttributes(attributes);
           }
         });
