@@ -3,7 +3,7 @@
     <h3>StudyMaterials</h3>
     <div v-for="studymaterial in studymaterials" :key="studymaterial.id">
       <div>タイトル：{{studymaterial.title}}</div>
-      <img :src="studymaterial.image_url" />
+      <img :src="studymaterial.image_url"  width="200"/>
     </div>
   </div>
 </template>

@@ -5,8 +5,8 @@ module Api
       before_action :correct_user, only: [:edit, :update, :destroy, :is_complete]
 
       def index
-        @study_materials = current_user.study_materials.page(params[:page]).per(5)
-        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_materials, methods: [:image_url] }
+        @study_materials = current_user.study_materials.page(params[:page]).per(10)
+        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_materials }, methods: [:image_url]
       end
 
       def new

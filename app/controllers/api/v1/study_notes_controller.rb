@@ -5,11 +5,16 @@ module Api
       before_action :correct_user, only: [:edit, :update, :destroy]
 
       def index
-        # @study_notes = current_user.study_notes.page(params[:page]).per(5)
-        @study_notes = StudyNote.find(31)
-        @study_materials = current_user.study_materials.select(:id, :title)
-        @image = @study_notes.content
-        render json: { status: 'SUCCESS', message: 'Loaded posts', data: {study_notes: @study_notes, study_materials: @study_materials, image: @image}, methods: [:image_url] }
+        @study_notes = StudyNote.includes(:study_material).where(user_id: current_user.id).page(params[:page]).per(10)
+        render json: { status: 'SUCCESS', 
+                       message: 'Loaded posts', 
+                       data: {
+                         study_notes: @study_notes.as_json(
+                           include: [:study_material], 
+                           methods: [:study_material_image_url]
+                         )
+                       } 
+                      }
       end
 
       def new
@@ -20,7 +25,7 @@ module Api
         @study_note = StudyNote.new
         @study_note = current_user.study_notes.build(study_note_params)
         if @study_note.save
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_note, methods: [:image_url] }
+          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_note }, methods: [:image_url]
         else
           render json: { status: 'ERROR', message: 'Loaded posts', data: @study_note.errors }
         end
