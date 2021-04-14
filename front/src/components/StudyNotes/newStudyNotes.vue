@@ -47,7 +47,7 @@ export default {
       studymaterials: [],
     }
   },
-  components: {
+  Components: {
     VueTrix
   },
   methods: {
@@ -94,6 +94,21 @@ export default {
           console.log(error);
         });
     }
+  },
+  computed: {
+    authTokens() {
+      return this.$store.getters.authTokens;
+    }
+  },
+  created() {
+    axios
+      .get('/api/v1/study_materials', {
+        headers: this.authTokens
+      })
+      .then(response => {
+        console.log(response);
+        this.studymaterials = response.data.data;
+      });
   },
 }
 </script>>

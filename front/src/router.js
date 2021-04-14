@@ -1,12 +1,16 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue'
-import Register from './views/Register.vue'
-import Login from './views/Login.vue'
-import store from './store'
+import store from './store';
 
-import StudyMaterials from './views/StudyMaterials.vue'
-import StudyNotes from './views/StudyNotes.vue'
+import Home from './views/Home.vue';
+import Register from './views/Register.vue';
+import Login from './views/Login.vue';
+import StudyMaterials from './views/StudyMaterials.vue';
+import StudyNotes from './views/StudyNotes.vue';
+
+import NewStudyNotes from './components/StudyNotes/NewStudyNotes.vue';
+import IndexStudyNotes from './components/StudyNotes/IndexStudyNotes.vue';
+import ShowStudyNote from './components/StudyNotes/ShowStudyNote.vue';
 
 Vue.use(Router);
 
@@ -65,7 +69,12 @@ export default new Router({
         } else {
           next('/login');
         }
-      }
+      },
+      children: [
+        { path: "new", component: NewStudyNotes },
+        { path: "index", component: IndexStudyNotes },
+        { path: ":id", component: ShowStudyNote, props: true},
+      ]
     }
   ]
 });

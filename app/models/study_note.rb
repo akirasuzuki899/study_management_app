@@ -12,4 +12,8 @@ class StudyNote < ApplicationRecord
   def study_material_image_url
     study_material.image.attached? ? url_for(study_material.image) : nil
   end
+
+  def get_content
+    content.to_s
+  end
 end

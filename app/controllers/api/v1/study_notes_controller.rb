@@ -1,6 +1,7 @@
 module Api
   module V1
     class StudyNotesController < ApplicationController
+      before_action { ActionText::Content.renderer = ApplicationController.renderer.new(request.env) }
       before_action :authenticate_user!
       before_action :correct_user, only: [:edit, :update, :destroy]
 
@@ -25,13 +26,20 @@ module Api
         @study_note = StudyNote.new
         @study_note = current_user.study_notes.build(study_note_params)
         if @study_note.save
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_note }, methods: [:image_url]
+          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_note }
         else
           render json: { status: 'ERROR', message: 'Loaded posts', data: @study_note.errors }
         end
       end
 
-      def show; end
+      def show
+        @study_note = StudyNote.find(params[:id])
+        if @study_note.present?
+          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_note }, methods: [:get_content, :study_material_image_url]
+        else
+          render json: { status: 'ERROR', message: 'Loaded posts', data: @study_note.errors }
+        end
+      end
 
       def edit; end
 
