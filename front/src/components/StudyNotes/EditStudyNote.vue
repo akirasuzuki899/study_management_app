@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <h1>フォーム</h1>
-    <form @submit.prevent="createNotes">
+    <form @submit.prevent="updateNote">
       <div>
         <label id="title">タイトル</label>
         <input v-model="title" type="text">
@@ -36,6 +36,7 @@ import { DirectUpload } from "@rails/activestorage";
 const Host = 'http://localhost:3000/';
 
 export default {
+  props: ["id"],
   data() {
     return {
       title: '',
@@ -73,10 +74,10 @@ export default {
           }
         });
     },
-    createNotes() {
+    updateNote() {
       axios
-        .post(
-          '/api/v1/study_notes', 
+        .patch(
+          '/api/v1/study_notes/' + this.id, 
           {
             title: this.title,
             page_number: this.page_number,
@@ -102,6 +103,17 @@ export default {
   },
   created() {
     axios
+      .get('/api/v1/study_notes/' + this.id, {
+        headers: this.authTokens
+      })
+      .then(response => {
+        this.title = response.data.data.title;
+        this.page_number = response.data.data.page_number;
+        this.study_material_id = response.data.data.study_material_id;
+        this.content = response.data.data.get_trix_content;
+        console.log(response);
+      });
+    axios
       .get('/api/v1/study_materials', {
         headers: this.authTokens
       })
@@ -111,4 +123,4 @@ export default {
       });
   },
 }
-</script>>
+</script>

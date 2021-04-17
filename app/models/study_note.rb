@@ -14,6 +14,10 @@ class StudyNote < ApplicationRecord
   end
 
   def get_content
-    content.to_s
+    content.body.to_s
+  end
+
+  def get_trix_content
+    content.body.to_trix_html
   end
 end

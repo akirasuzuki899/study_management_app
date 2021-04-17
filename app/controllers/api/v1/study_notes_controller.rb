@@ -1,9 +1,8 @@
 module Api
   module V1
     class StudyNotesController < ApplicationController
-      before_action { ActionText::Content.renderer = ApplicationController.renderer.new(request.env) }
       before_action :authenticate_user!
-      before_action :correct_user, only: [:edit, :update, :destroy]
+      before_action :correct_user, only: [:update, :destroy]
 
       def index
         @study_notes = StudyNote.includes(:study_material).where(user_id: current_user.id).page(params[:page]).per(10)
@@ -15,11 +14,7 @@ module Api
                            methods: [:study_material_image_url]
                          )
                        } 
-                      }
-      end
-
-      def new
-        @study_note = StudyNote.new
+                     }
       end
       
       def create
@@ -35,19 +30,17 @@ module Api
       def show
         @study_note = StudyNote.find(params[:id])
         if @study_note.present?
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_note }, methods: [:get_content, :study_material_image_url]
+          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_note }, methods: [:get_content, :get_trix_content, :study_material_image_url]
         else
           render json: { status: 'ERROR', message: 'Loaded posts', data: @study_note.errors }
         end
       end
 
-      def edit; end
-
       def update
         if @study_note.update(study_note_params)
-          redirect_to study_notes_path
+          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_note }
         else
-          render 'edit'
+          render json: { status: 'ERROR', message: 'Loaded posts', data: @study_note.errors }
         end
       end
 
@@ -59,7 +52,7 @@ module Api
       private
 
       def study_note_params
-        params.require(:study_note).permit(:page_number, :content, :study_material_id, :title).merge(content: params[:content])
+        params.require(:study_note).permit(:page_number, :study_material_id, :title).merge(content: params[:content])
       end
 
       def correct_user

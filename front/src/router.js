@@ -11,6 +11,7 @@ import StudyNotes from './views/StudyNotes.vue';
 import NewStudyNotes from './components/StudyNotes/NewStudyNotes.vue';
 import IndexStudyNotes from './components/StudyNotes/IndexStudyNotes.vue';
 import ShowStudyNote from './components/StudyNotes/ShowStudyNote.vue';
+import EditStudyNote from './components/StudyNotes/EditStudyNote.vue';
 
 Vue.use(Router);
 
@@ -74,6 +75,7 @@ export default new Router({
         { path: "new", component: NewStudyNotes },
         { path: "index", component: IndexStudyNotes },
         { path: ":id", component: ShowStudyNote, props: true},
+        { path: ":id/edit", component: EditStudyNote, props: true},
       ]
     }
   ]
