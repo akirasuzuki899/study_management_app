@@ -53,26 +53,26 @@ export default {
   },
   methods: {
     handleAttachmentChanges(event) {
-        // 1. get file object
+      if (event.attachment.file ===  undefined) return;
+
+      // 1. get file object
       let file = event.attachment.file;
   
       // 2. upload file to remote server with FormData
-        const upload = new DirectUpload(file, "http://localhost:3000/rails/active_storage/direct_uploads");
-        console.log(upload);
-        upload.create((error, blob) => {
-          if(error){
-            console.log(error);
-          } else {
-            console.log(blob);
-            // 3. if upload success, set back the attachment's URL attribute
-            // @param object data from remote server response data after upload.
-            let attributes = {
-              sgid: blob.attachable_sgid,
-              url: Host + "rails/active_storage/blobs/" + blob.signed_id + "/" + blob.filename,
-            };
-            event.attachment.setAttributes(attributes);
-          }
-        });
+      const upload = new DirectUpload(file, "http://localhost:3000/rails/active_storage/direct_uploads");
+      upload.create((error, blob) => {
+        if(error){
+          console.log(error);
+        } else {
+          // 3. if upload success, set back the attachment's URL attribute
+          // @param object data from remote server response data after upload.
+          let attributes = {
+            sgid: blob.attachable_sgid,
+            url: Host + "rails/active_storage/blobs/" + blob.signed_id + "/" + blob.filename,
+          };
+          event.attachment.setAttributes(attributes);
+        }
+      });
     },
     updateNote() {
       axios
@@ -111,14 +111,12 @@ export default {
         this.page_number = response.data.data.page_number;
         this.study_material_id = response.data.data.study_material_id;
         this.content = response.data.data.get_trix_content;
-        console.log(response);
       });
     axios
       .get('/api/v1/study_materials', {
         headers: this.authTokens
       })
       .then(response => {
-        console.log(response);
         this.studymaterials = response.data.data;
       });
   },
