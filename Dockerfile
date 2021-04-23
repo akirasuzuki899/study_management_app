@@ -1,7 +1,8 @@
 FROM ruby:2.7.2
 RUN apt-get update -qq && \
     apt-get install -y nodejs \
-                       npm && \
+                       npm \
+                       cron && \
     npm install -g yarn
 
 WORKDIR /study_management_app
@@ -9,6 +10,7 @@ WORKDIR /study_management_app
 COPY Gemfile /study_management_app/Gemfile
 COPY Gemfile.lock /study_management_app/Gemfile.lock
 RUN bundle install
+RUN service cron start
 COPY . /study_management_app
 RUN mkdir -p /study_management_app/tmp/sockets
 

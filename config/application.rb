@@ -35,5 +35,12 @@ module StudyManagementApp
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+
+    # バッチ処理で使用するスクリプトの場所
+    config.autoload_paths += %W(#{config.root}/lib)
+    
+    # バッチ処理で使用するスクリプトをproductionでも呼び出せるように設定
+    config.enable_dependency_loading = true 
   end
 end
