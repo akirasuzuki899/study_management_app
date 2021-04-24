@@ -52,14 +52,17 @@ module Api
       end
 
       def is_complete
-        @study_material.update(study_material_params)
-        redirect_to study_materials_path
+        if @study_material.update(study_material_params)
+          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_material }
+        else
+          render json: { status: 'ERROR', message: 'Loaded posts', data: @study_material.errors }
+        end
       end
 
       private
 
       def study_material_params
-        params.require(:study_material).permit(:title, :image, :image_url, :is_completed)
+        params.permit(:title, :image, :image_url, :is_completed)
       end
 
       def correct_user

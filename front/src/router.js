@@ -13,6 +13,9 @@ import IndexStudyNotes from './components/StudyNotes/IndexStudyNotes.vue';
 import ShowStudyNote from './components/StudyNotes/ShowStudyNote.vue';
 import EditStudyNote from './components/StudyNotes/EditStudyNote.vue';
 
+import IndexStudyMaterials from './components/StudyMaterials/IndexStudyMaterials.vue';
+
+
 Vue.use(Router);
 
 export default new Router({
@@ -59,7 +62,13 @@ export default new Router({
         } else {
           next('/login');
         }
-      }
+      },
+      children: [
+        // { path: "new", component: NewStudyNotes },
+        { path: "index", component: IndexStudyMaterials },
+        // { path: ":id", component: ShowStudyNote, props: true},
+        // { path: ":id/edit", component: EditStudyNote, props: true},
+      ]
     },
     {
       path: '/studynotes', 

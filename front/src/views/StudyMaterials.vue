@@ -1,37 +1,21 @@
 <template>
-  <div>
-    <h3>StudyMaterials</h3>
-    <div v-for="studymaterial in studymaterials" :key="studymaterial.id">
-      <div>タイトル：{{studymaterial.title}}</div>
-      <img :src="studymaterial.image_url"  width="200"/>
-    </div>
-  </div>
+  <v-app>
+    <router-view></router-view>
+  </v-app>
 </template>
 
 <script>
-import axios from "axios";
-export default {
-  data() {
-    return {
-      title: '',
-      keyword: '',
-      studymaterials: [],
+  // import NewStudyMaterials from "../components/StudyMaterials/NewStudyMaterials";
+  import IndexStudyMaterials from "../components/StudyMaterials/IndexStudyMaterials";
+  // import ShowStudyMaterials from "../components/StudyMaterials/ShowStudyMaterials";
+  // import EditStudyMaterials from "../components/StudyMaterials/EditStudyMaterials";
+
+  export default {
+    Components: {
+      // NewStudyMaterials,
+      IndexStudyMaterials,
+      // ShowStudyMaterials,
+      // EditStudyMaterials,
     }
-  },
-  computed: {
-    authTokens() {
-      return this.$store.getters.authTokens;
-    }
-  },
-  created() {
-    axios
-      .get('/api/v1/study_materials', {
-        headers: this.authTokens
-      })
-      .then(response => {
-        this.studymaterials = response.data.data;
-        console.log(response.data.data);
-      });
   }
-}
 </script>

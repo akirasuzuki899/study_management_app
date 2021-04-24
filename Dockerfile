@@ -10,8 +10,8 @@ WORKDIR /study_management_app
 COPY Gemfile /study_management_app/Gemfile
 COPY Gemfile.lock /study_management_app/Gemfile.lock
 RUN bundle install
-RUN service cron start
 COPY . /study_management_app
+RUN bundle exec whenever --update-crontab 
 RUN mkdir -p /study_management_app/tmp/sockets
 
 COPY entrypoint.sh /usr/bin/
