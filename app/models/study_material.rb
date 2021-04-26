@@ -1,17 +1,17 @@
 class StudyMaterial < ApplicationRecord
   include Rails.application.routes.url_helpers
   require 'open-uri'
-  attr_accessor :image_url
+  attr_accessor :rakuten_image_url
 
   belongs_to :user
   has_many :study_notes, dependent: :destroy
   has_one_attached :image
   validates :user_id, presence: true
-  validates :title, presence: true, length: { maximum: 50 }
+  validates :title, presence: true, length: { maximum: 50 }, uniqueness: { case_sensitive: false }
   validates :image,
             blob: { content_type: :image, size_range: 1..5.megabytes }
 
-  def attach_image_url(url, title)
+  def attach_rakuten_image(url, title)
     image = open(url)
     self.image.attach(io: image, filename: "#{title}.jpg")
   end

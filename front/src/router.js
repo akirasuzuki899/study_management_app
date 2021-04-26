@@ -14,6 +14,7 @@ import ShowStudyNote from './components/StudyNotes/ShowStudyNote.vue';
 import EditStudyNote from './components/StudyNotes/EditStudyNote.vue';
 
 import IndexStudyMaterials from './components/StudyMaterials/IndexStudyMaterials.vue';
+import SearchStudyMaterials from './components/StudyMaterials/SearchStudyMaterials.vue';
 
 
 Vue.use(Router);
@@ -66,6 +67,7 @@ export default new Router({
       children: [
         // { path: "new", component: NewStudyNotes },
         { path: "index", component: IndexStudyMaterials },
+        { path: "search", component: SearchStudyMaterials },
         // { path: ":id", component: ShowStudyNote, props: true},
         // { path: ":id/edit", component: EditStudyNote, props: true},
       ]
