@@ -1,30 +1,23 @@
 module Api
   module V1
     class StudyMaterialsController < ApplicationController
-      before_action :authenticate_api_v1_user!
-      before_action :correct_user, only: [:edit, :update, :destroy, :is_complete]
+      before_action :authenticate_user!
+      before_action :correct_user, only: [:update, :destroy, :is_complete]
 
       def index
-        @study_materials = current_user.study_materials.page(params[:page]).per(10)
+        @study_materials = current_user.study_materials.page(params[:page]).per(30)
         render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_materials }, methods: [:image_url]
-      end
-
-      def new
-        @study_material = StudyMaterial.new
-        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_materials }
       end
 
       def create
         @study_material = current_user.study_materials.build(study_material_params)
-        @study_material.attach_image_url(study_material_params[:image_url], study_material_params[:title]) if study_material_params[:image_url].present?
+        @study_material.attach_rakuten_image(study_material_params[:rakuten_image_url], study_material_params[:title]) if study_material_params[:rakuten_image_url].present?
         if @study_material.save
-          redirect_to study_materials_path
+          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_material }
         else
-          render 'new'
+          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_material.errors }
         end
       end
-
-      def edit; end
 
       def update
         if @study_material.update(study_material_params)
@@ -48,7 +41,7 @@ module Api
             @study_materials << study_material if new_material?(study_material)
           end
         end
-        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_materials }
+        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_materials }, methods: [:rakuten_image_url]
       end
 
       def is_complete
@@ -62,7 +55,7 @@ module Api
       private
 
       def study_material_params
-        params.permit(:title, :image, :image_url, :is_completed)
+        params.permit(:title, :image, :rakuten_image_url, :is_completed)
       end
 
       def correct_user
@@ -72,10 +65,10 @@ module Api
 
       def read(result)
         title = result['title']
-        image_url = result['mediumImageUrl']
+        rakuten_image_url = result['mediumImageUrl']
         {
           title: title,
-          image_url: image_url
+          rakuten_image_url: rakuten_image_url
         }
       end
 
