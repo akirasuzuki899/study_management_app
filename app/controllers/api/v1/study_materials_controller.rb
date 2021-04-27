@@ -35,13 +35,13 @@ module Api
       def search
         @study_materials = []
         if params[:keyword].present?
-          results = RakutenWebService::Books::Book.search(title: params[:keyword])
+          results = RakutenWebService::Books::Book.search(title: params[:keyword], page: params[:page])
           results.each do |result|
             study_material = StudyMaterial.new(read(result))
             @study_materials << study_material if new_material?(study_material)
           end
         end
-        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_materials }, methods: [:rakuten_image_url]
+        render json: @study_materials, status: :ok, methods: [:rakuten_image_url]
       end
 
       def is_complete

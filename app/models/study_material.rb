@@ -7,7 +7,7 @@ class StudyMaterial < ApplicationRecord
   has_many :study_notes, dependent: :destroy
   has_one_attached :image
   validates :user_id, presence: true
-  validates :title, presence: true, length: { maximum: 50 }, uniqueness: { case_sensitive: false }
+  validates :title, presence: true, length: { maximum: 50 }, uniqueness: { case_sensitive: false , scope: :user}
   validates :image,
             blob: { content_type: :image, size_range: 1..5.megabytes }
 
