@@ -16,6 +16,8 @@ import EditStudyNote from './components/StudyNotes/EditStudyNote.vue';
 import IndexStudyMaterials from './components/StudyMaterials/IndexStudyMaterials.vue';
 import SearchStudyMaterials from './components/StudyMaterials/SearchStudyMaterials.vue';
 
+import Calendar from './components/Calendar/Calendar.vue';
+
 
 Vue.use(Router);
 
@@ -88,6 +90,10 @@ export default new Router({
         { path: ":id", component: ShowStudyNote, props: true},
         { path: ":id/edit", component: EditStudyNote, props: true},
       ]
+    },
+    {
+      path: '/calendar', 
+      component: Calendar,
     }
   ]
 });
