@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_26_134340) do
+ActiveRecord::Schema.define(version: 2021_05_01_145209) do
 
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -48,6 +48,19 @@ ActiveRecord::Schema.define(version: 2021_03_26_134340) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "schedule_templates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "study_material_id", null: false
+    t.string "title"
+    t.time "start_time"
+    t.time "end_time"
+    t.string "day_of_week"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["study_material_id"], name: "index_schedule_templates_on_study_material_id"
+    t.index ["user_id"], name: "index_schedule_templates_on_user_id"
   end
 
   create_table "study_materials", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -90,6 +103,8 @@ ActiveRecord::Schema.define(version: 2021_03_26_134340) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "schedule_templates", "study_materials"
+  add_foreign_key "schedule_templates", "users"
   add_foreign_key "study_materials", "users"
   add_foreign_key "study_notes", "study_materials"
   add_foreign_key "study_notes", "users"
