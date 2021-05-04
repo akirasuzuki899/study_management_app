@@ -6,7 +6,9 @@ module Api
 
       def index
         @schedule_templates = current_user.schedule_templates
-        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @schedule_templates }
+        # @schedule_templates[0].start_time.strftime('%H:%M')
+        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @schedule_templates }, methods: [:start, :end]
+        # debugger
       end
 
       def create
@@ -34,7 +36,7 @@ module Api
       private
 
       def schedule_template_params
-        params.permit(:study_material_id, :title, :start_time, :end_time, :day_of_week)
+        params.permit(:study_material_id, :name, :start_time, :end_time, :day_of_week)
       end
 
       def correct_user

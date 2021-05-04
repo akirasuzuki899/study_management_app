@@ -17,6 +17,7 @@ import IndexStudyMaterials from './components/StudyMaterials/IndexStudyMaterials
 import SearchStudyMaterials from './components/StudyMaterials/SearchStudyMaterials.vue';
 
 import Calendar from './components/Calendar/Calendar.vue';
+import ScheduleTemplate from './components/Calendar/ScheduleTemplate.vue';
 
 
 Vue.use(Router);
@@ -94,6 +95,10 @@ export default new Router({
     {
       path: '/calendar', 
       component: Calendar,
+    },
+    {
+      path: '/schedule/template', 
+      component: ScheduleTemplate,
     }
   ]
 });
