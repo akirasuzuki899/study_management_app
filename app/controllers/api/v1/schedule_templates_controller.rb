@@ -5,10 +5,20 @@ module Api
       before_action :correct_user, only: [:update, :destroy]
 
       def index
-        @schedule_templates = current_user.schedule_templates
-        # @schedule_templates[0].start_time.strftime('%H:%M')
-        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @schedule_templates }, methods: [:start, :end]
-        # debugger
+        @schedule_templates = current_user.schedule_templates.includes(:study_material)
+        @study_materials = current_user.study_materials
+        render json: { status: 'SUCCESS', 
+                       message: 'Loaded posts', 
+                       data: {
+                           schedule_templates: @schedule_templates.as_json(
+                            include: [:study_material],
+                            methods: [:start, :end]
+                           ),
+                           study_materials: @study_materials.as_json(
+                            methods: [:image_url]
+                           )
+                        }
+                      }
       end
 
       def create

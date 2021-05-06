@@ -1,4 +1,5 @@
 class ScheduleTemplate < ApplicationRecord
+  include Rails.application.routes.url_helpers
   belongs_to :user
   belongs_to :study_material
   
@@ -20,5 +21,9 @@ class ScheduleTemplate < ApplicationRecord
   def end
     end_time = self.end_time.strftime('%H:%M:%S')
     return "#{BASEWEEK[:月]} #{end_time}"
+  end
+
+  def study_material_image_url
+    study_material.image.attached? ? url_for(study_material.image) : nil
   end
 end

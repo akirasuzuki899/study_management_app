@@ -32,15 +32,13 @@
               >
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn icon>
+                <v-btn icon @click.stop="dialog = true">
                   <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
                 </v-btn>
               </v-toolbar>
               <v-card-text>
-                <span v-html="selectedEvent.details"></span>
+                <p v-html="selectedEvent.start"></p>
+                <p v-html="selectedEvent.end"></p>
               </v-card-text>
               <v-card-actions>
                 <v-btn
@@ -54,6 +52,81 @@
             </v-card>
           </v-menu>
 
+          <!-- ダイアログ -->
+          <div class="text-center">
+            <v-dialog
+              v-model="dialog"
+              width="500"
+            >
+              <v-card>
+                <v-card-title>
+                  <span class="headline">{{this.selectedEvent.name}}</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <!-- <form @submit.prevent="createSchedule"> -->
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="4"
+                      >
+                        <v-text-field
+                          label="タイトル"
+                          :value="this.selectedEvent.name"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="4"
+                      >
+                        <v-select 
+                          label="教材"
+                          :items="studyMaterials"
+                          item-text="title"
+                          item-value="id"
+                          :value="this.selectedEvent.study_material_id"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="4"
+                      >
+                        <v-text-field
+                          label="予定"
+
+                          required
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                  <small>*indicates required field</small>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click.stop="dialog = false"
+                  >
+                    取消
+                  </v-btn>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click.stop="dialog = false"
+                  >
+                    保存
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
+          <!-- ダイアログ -->
+
         </v-sheet>
       </v-col>
     </v-row>
@@ -66,16 +139,13 @@ import axios from "axios";
   export default {
     data: () => ({
       baseDate: '2000-01-03',
+      dialog: false,
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
-      schedules: [
-        {name: "test",
-        start: '2000-01-04 10:00:00',
-        end: '2000-01-04 12:00:00',
-        test: 'test'
-        }
-      ],
+      schedules: [],
+      studyMaterials: [],
+      study_material_id: ''
     }),
     methods: {
       showEvent ({ nativeEvent, event }) {
@@ -83,9 +153,8 @@ import axios from "axios";
           this.selectedEvent = event
           this.selectedElement = nativeEvent.target
           requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
-        }
           console.log(this.selectedEvent);
-
+        }
 
         if (this.selectedOpen) {
           this.selectedOpen = false
@@ -111,7 +180,10 @@ import axios from "axios";
           headers: this.authTokens
         })
         .then(({data}) => {
-          this.schedules.push(...data.data)
+          this.schedules.push(...data.data.schedule_templates)
+          this.studyMaterials.push(...data.data.study_materials)
+          console.log(this.schedules);
+          console.log(this.studyMaterials)
         });
     }
   }
