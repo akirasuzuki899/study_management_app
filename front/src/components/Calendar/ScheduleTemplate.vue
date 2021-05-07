@@ -32,13 +32,13 @@
               >
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn icon @click.stop="dialog = true">
+                <v-btn icon @click.stop="setDefaultFormValue(); dialog = true">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </v-toolbar>
               <v-card-text>
-                <p v-html="selectedEvent.start"></p>
-                <p v-html="selectedEvent.end"></p>
+                <p v-html="selectedEvent.start_time_hm"></p>
+                <p v-html="selectedEvent.end_time_hm"></p>
               </v-card-text>
               <v-card-actions>
                 <v-btn
@@ -53,14 +53,14 @@
           </v-menu>
 
           <!-- ダイアログ -->
-          <div class="text-center">
+          <div class="text-center" :key="selectedEvent.id">
             <v-dialog
               v-model="dialog"
               width="500"
             >
               <v-card>
                 <v-card-title>
-                  <span class="headline">{{this.selectedEvent.name}}</span>
+                  <span class="headline">{{selectedEvent.name}}</span>
                 </v-card-title>
                 <v-card-text>
                   <v-container>
@@ -73,7 +73,7 @@
                       >
                         <v-text-field
                           label="タイトル"
-                          :value="this.selectedEvent.name"
+                          :value="selectedEvent.name"
                           required
                         ></v-text-field>
                       </v-col>
@@ -87,7 +87,7 @@
                           :items="studyMaterials"
                           item-text="title"
                           item-value="id"
-                          :value="this.selectedEvent.study_material_id"
+                          :value="selectedEvent.study_material_id"
                         />
                       </v-col>
                       <v-col
@@ -95,12 +95,88 @@
                         sm="12"
                         md="4"
                       >
-                        <v-text-field
-                          label="予定"
-
+                        <v-select
+                          label="曜日"
+                          :items="dayOfWeek" 
+                          :value="selectedEvent.day_of_week"
                           required
-                        ></v-text-field>
+                        ></v-select>
                       </v-col>
+
+                      <!-- タイムピッカー -->
+                      <!-- 開始時間 -->
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-menu
+                          ref="menu"
+                          v-model="timePickerStart"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          :return-value.sync="formData.start_time"
+                          transition="scale-transition"
+                          offset-y
+                          max-width="290px"
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="formData.start_time"
+                              label="開始時刻"
+                              prepend-icon="mdi-clock-time-four-outline"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-time-picker
+                            v-if="timePickerStart"
+                            v-model="formData.start_time"
+                            full-width
+                            @click:minute="$refs.menu.save(formData.start_time)"
+                          ></v-time-picker>
+                        </v-menu>
+                      </v-col>
+
+                      <!-- 終了時間 -->
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="6"
+                      >
+                        <v-menu
+                          ref="menu"
+                          v-model="timePickerEnd"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          :return-value.sync="formData.end_time"
+                          transition="scale-transition"
+                          offset-y
+                          max-width="290px"
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="formData.end_time"
+                              label="終了時刻"
+                              prepend-icon="mdi-clock-time-four-outline"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-time-picker
+                            v-if="timePickerEnd"
+                            v-model="formData.end_time"
+                            full-width
+                            @click:minute="$refs.menu.save(formData.end_time)"
+                          ></v-time-picker>
+                        </v-menu>
+                      </v-col>
+                      <!-- タイムピッカー -->
+
                     </v-row>
                   </v-container>
                   <small>*indicates required field</small>
@@ -139,13 +215,23 @@ import axios from "axios";
   export default {
     data: () => ({
       baseDate: '2000-01-03',
+      dayOfWeek: ['月', '火', '水', '木', '金', '土', '日'],
+      timePickerStart: false,
+      timePickerEnd: false,
       dialog: false,
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
       schedules: [],
       studyMaterials: [],
-      study_material_id: ''
+      study_material_id: '',
+      formData: {
+        name: '',
+        study_material_id: '',
+        day_of_week: '',
+        start_time: '',
+        end_time: ''
+      }
     }),
     methods: {
       showEvent ({ nativeEvent, event }) {
@@ -153,7 +239,6 @@ import axios from "axios";
           this.selectedEvent = event
           this.selectedElement = nativeEvent.target
           requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
-          console.log(this.selectedEvent);
         }
 
         if (this.selectedOpen) {
@@ -164,6 +249,16 @@ import axios from "axios";
         }
 
         nativeEvent.stopPropagation()
+      },
+      setDefaultFormValue () {
+        this.formData.name = this.selectedEvent.name
+        this.formData.study_material_id = this.selectedEvent.study_material_id
+        this.formData.day_of_week = this.selectedEvent.day_of_week
+        this.formData.start_time = this.selectedEvent.start_time_hm
+        this.formData.end_time = this.selectedEvent.end_time_hm
+
+        console.log("setDefaultFormValue")
+        console.log(this.formData.start_time)
       },
     },
     mounted () {
@@ -182,8 +277,7 @@ import axios from "axios";
         .then(({data}) => {
           this.schedules.push(...data.data.schedule_templates)
           this.studyMaterials.push(...data.data.study_materials)
-          console.log(this.schedules);
-          console.log(this.studyMaterials)
+          console.log(data)
         });
     }
   }

@@ -12,7 +12,8 @@ module Api
                        data: {
                            schedule_templates: @schedule_templates.as_json(
                             include: [:study_material],
-                            methods: [:start, :end]
+                            methods: [:start, :end, :start_time_hm, :end_time_hm],
+                            except: [:created_at, :updated_at, :start_time, :end_time]
                            ),
                            study_materials: @study_materials.as_json(
                             methods: [:image_url]
