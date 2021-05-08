@@ -11,6 +11,7 @@
             type="week"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             @click:event="showEvent"
+            @click:time="dialog = true"
           >
             <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
           </v-calendar>
@@ -35,6 +36,9 @@
                 <v-btn icon @click.stop="setDefaultFormValue(); dialog = true">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
+                <v-btn icon @click.stop="deleteSchedule(); selectedOpen = false">
+                  <v-icon>mdi-delete-outline</v-icon>
+                </v-btn>
               </v-toolbar>
               <v-card-text>
                 <p v-html="selectedEvent.start_time_hm"></p>
@@ -46,7 +50,7 @@
                   color="secondary"
                   @click="selectedOpen = false"
                 >
-                  Cancel
+                  閉じる
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -73,7 +77,7 @@
                       >
                         <v-text-field
                           label="タイトル"
-                          :value="selectedEvent.name"
+                          v-model="formData.name"
                           required
                         ></v-text-field>
                       </v-col>
@@ -87,18 +91,18 @@
                           :items="studyMaterials"
                           item-text="title"
                           item-value="id"
-                          :value="selectedEvent.study_material_id"
+                          v-model="formData.study_material_id"
                         />
                       </v-col>
                       <v-col
                         cols="12"
-                        sm="12"
-                        md="4"
+                        sm="4"
+                        md="6"
                       >
                         <v-select
                           label="曜日"
                           :items="dayOfWeek" 
-                          :value="selectedEvent.day_of_week"
+                          v-model="formData.day_of_week"
                           required
                         ></v-select>
                       </v-col>
@@ -107,11 +111,11 @@
                       <!-- 開始時間 -->
                       <v-col
                         cols="12"
-                        sm="6"
+                        sm="4"
                         md="6"
                       >
                         <v-menu
-                          ref="menu"
+                          ref="startMenu"
                           v-model="timePickerStart"
                           :close-on-content-click="false"
                           :nudge-right="40"
@@ -134,8 +138,10 @@
                           <v-time-picker
                             v-if="timePickerStart"
                             v-model="formData.start_time"
+                            format="24hr"
+                            :allowed-minutes="allowedMinutes"
                             full-width
-                            @click:minute="$refs.menu.save(formData.start_time)"
+                            @click:minute="$refs.startMenu.save(formData.start_time)"
                           ></v-time-picker>
                         </v-menu>
                       </v-col>
@@ -143,11 +149,11 @@
                       <!-- 終了時間 -->
                       <v-col
                         cols="12"
-                        sm="6"
+                        sm="4"
                         md="6"
                       >
                         <v-menu
-                          ref="menu"
+                          ref="endMenu"
                           v-model="timePickerEnd"
                           :close-on-content-click="false"
                           :nudge-right="40"
@@ -170,8 +176,10 @@
                           <v-time-picker
                             v-if="timePickerEnd"
                             v-model="formData.end_time"
+                            format="24hr"
+                            :allowed-minutes="allowedMinutes"
                             full-width
-                            @click:minute="$refs.menu.save(formData.end_time)"
+                            @click:minute="$refs.endMenu.save(formData.end_time)"
                           ></v-time-picker>
                         </v-menu>
                       </v-col>
@@ -193,7 +201,7 @@
                   <v-btn
                     color="blue darken-1"
                     text
-                    @click.stop="dialog = false"
+                    @click.stop="createSchedule(); dialog = false"
                   >
                     保存
                   </v-btn>
@@ -256,10 +264,68 @@ import axios from "axios";
         this.formData.day_of_week = this.selectedEvent.day_of_week
         this.formData.start_time = this.selectedEvent.start_time_hm
         this.formData.end_time = this.selectedEvent.end_time_hm
-
-        console.log("setDefaultFormValue")
-        console.log(this.formData.start_time)
       },
+      createSchedule() {
+        axios
+          .post(
+            '/api/v1/schedule_templates',
+            {
+              name: this.formData.name,
+              study_material_id: this.formData.study_material_id,
+              day_of_week: this.formData.day_of_week,
+              start_time: this.formData.start_time,
+              end_time: this.formData.end_time
+            },
+            {
+              headers: this.authTokens
+            }
+          )
+          .then(response => {
+            console.log(response);
+          })
+          .catch(error => {
+            console.log(error);
+          })
+      },
+      updateSchedule() {
+        axios
+          .post(
+            '/api/v1/schedule_templates/' + this.selectedEvent.id,
+            {
+              name: this.formData.name,
+              study_material_id: this.formData.study_material_id,
+              day_of_week: this.formData.day_of_week,
+              start_time: this.formData.start_time,
+              end_time: this.formData.end_time
+            },
+            {
+              headers: this.authTokens
+            }
+          )
+          .then(response => {
+            console.log(response);
+          })
+          .catch(error => {
+            console.log(error);
+          })
+      },
+      deleteSchedule() {
+        axios
+          .delete(
+            '/api/v1/schedule_templates/' + this.selectedEvent.id,
+            {
+              headers: this.authTokens
+            }
+          )
+          .then(response => {
+            console.log(response);
+
+          })
+          .chach(error => {
+            console.log(error);
+          })
+      },
+      allowedMinutes: v => v % 5 === 0 || v === 0
     },
     mounted () {
       this.$refs.calendar.scrollToTime('08:00')
