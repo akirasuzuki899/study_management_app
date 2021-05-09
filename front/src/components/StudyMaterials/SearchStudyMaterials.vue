@@ -5,16 +5,17 @@
     <input type="text" v-model="keyword" @focus="initSearchStatus">
     <button @click="changeSearchStatus">検索</button>
 
-    <div v-for="(studyMaterial, index) in studyMaterials" :key="studyMaterial.id" :id="index">
-      <img :src="studyMaterial.rakuten_image_url"  width="100"/>
-      <div>タイトル：{{studyMaterial.title}}</div>
-      <button @click="registerStudyMaterial(studyMaterial, index)">登録</button>
+    <div v-for="(serchResult, index) in serchResults" :key="serchResult.id" :id="index">
+      <img :src="serchResult.rakuten_image_url"  width="100"/>
+      <div>タイトル：{{serchResult.title}}</div>
+      <button @click="registerStudyMaterial(serchResult, index)">登録</button>
     </div>
     <infinite-loading @infinite="infiniteHandler" v-if="SearchStatus"></infinite-loading>
   </v-app>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import axios from 'axios';
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -28,13 +29,11 @@ export default {
       message: '',
       page: 1,
       keyword: '',
-      studyMaterials: []
+      serchResults: []
     }
   },
   computed: {
-    authTokens() {
-      return this.$store.getters.authTokens;
-    }
+    ...mapGetters(["authTokens"])
   },
   methods: {
     changeSearchStatus() {
@@ -57,7 +56,7 @@ export default {
           console.log(data);
           if(data.length){
             this.page += 1;
-            this.studyMaterials.push(...data)
+            this.serchResults.push(...data)
             $state.loaded();
           } else {
             $state.complete();
@@ -71,22 +70,22 @@ export default {
       this.keyword = '';
       this.SearchStatus = false,
       this.page = 1;
-      this.studyMaterials = [];
+      this.serchResults = [];
       this.message = '';
     },
-    registerStudyMaterial(studyMaterial, index){
+    registerStudyMaterial(serchResult, index){
       axios
        .post('/api/v1/study_materials',
        {
-         title: studyMaterial.title,
-         rakuten_image_url: studyMaterial.rakuten_image_url
+         title: serchResult.title,
+         rakuten_image_url: serchResult.rakuten_image_url
        },
        {
          headers: this.authTokens
        })
        .then( response => {
          console.log(response);
-         this.studyMaterials.splice(index, 1);
+         this.serchResults.splice(index, 1);
        })
        .catch( error => {
          console.log(error);

@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from "axios";
-import router from '../router'
+import router from '../router';
+
+import studyMaterial from "./modules/studyMaterial";
 
 Vue.use(Vuex);
 
@@ -13,7 +15,8 @@ export default new Vuex.Store({
       "uid": null,
       "expiry": null,
       "token-type": null,
-    }
+    },
+    studyMaterials: {},
   },
   getters: {
     authTokens: state => state.authTokens
@@ -101,5 +104,8 @@ export default new Vuex.Store({
           console.log(error);
         });
     }
+  },
+  modules: {
+    studyMaterial,
   }
 });
