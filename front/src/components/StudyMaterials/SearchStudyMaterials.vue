@@ -84,8 +84,8 @@ export default {
          headers: this.authTokens
        })
        .then( response => {
-         console.log(response);
          this.serchResults.splice(index, 1);
+         this.$store.commit('addStudyMaterials', response)
        })
        .catch( error => {
          console.log(error);

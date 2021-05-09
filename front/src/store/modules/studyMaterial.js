@@ -23,6 +23,9 @@ const state = {
    setCompleteStatus(state, {studyMaterial, index}) {
     state.studyMaterials[index].is_completed = !studyMaterial.is_completed
    },
+   addStudyMaterials(state, response) {
+     state.studyMaterials.push(response.data.data)
+   }
 };
 
 const actions = {
