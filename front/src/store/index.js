@@ -4,6 +4,7 @@ import axios from "axios";
 import router from '../router';
 
 import studyMaterial from "./modules/studyMaterial";
+import scheduleTemplate from "./modules/scheduleTemplate";
 
 Vue.use(Vuex);
 
@@ -107,5 +108,6 @@ export default new Vuex.Store({
   },
   modules: {
     studyMaterial,
+    scheduleTemplate,
   }
 });

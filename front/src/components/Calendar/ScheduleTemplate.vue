@@ -6,7 +6,7 @@
           <v-calendar
             ref="calendar"
             :value="baseDate"
-            :events="schedules"
+            :events="scheduleTemplates"
             color="primary"
             type="week"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
@@ -20,13 +20,12 @@
             ref="showEvent"
             :selectedEvent="selectedEvent" 
             :selectedElement="selectedElement" 
-            :studyMaterials="studyMaterials"
+            @initSelectedStatus="initSelectedStatus"
           ></ShowEvent>
 
           <Form
             ref="form"
             :selectedEvent="selectedEvent"
-            :studyMaterials="studyMaterials"
           ></Form>
 
         </v-sheet>
@@ -36,7 +35,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapGetters } from "vuex";
 import ShowEvent from "./ShowEvent";
 import Form from "./Form";
 
@@ -52,13 +51,10 @@ import Form from "./Form";
       selectedEvent: {},
       selectedElement: null,
 
-      // すべてのイベント
-      schedules: [],
-
-      // すべての教材
-      studyMaterials: [],
-      study_material_id: '',
     }),
+    computed: {
+      ...mapGetters(["authTokens", "scheduleTemplates"])
+    },
     methods: {
       showEvent ({ nativeEvent, event }) {
         const open = () => {
@@ -76,26 +72,17 @@ import Form from "./Form";
 
         nativeEvent.stopPropagation()
       },
+      initSelectedStatus() {
+        this.selectedEvent = {},
+        this.selectedElement = null
+      },
     },
     mounted () {
       this.$refs.calendar.scrollToTime('08:00')
     },
-    computed: {
-      authTokens() {
-        return this.$store.getters.authTokens;
-      }
-    },
     created() {
-      axios
-        .get('/api/v1/schedule_templates', {
-          headers: this.authTokens
-        })
-        .then(({data}) => {
-          this.schedules.push(...data.data.schedule_templates)
-          this.studyMaterials.push(...data.data.study_materials)
-          console.log(data)
-        });
-    }
+      this.$store.dispatch('getScheduleTemplates', this.authTokens)
+    },
   }
 </script>
 

@@ -30,7 +30,4 @@ class ScheduleTemplate < ApplicationRecord
     end_time = self.end_time.strftime('%H:%M')
   end
 
-  def study_material_image_url
-    study_material.image.attached? ? url_for(study_material.image) : nil
-  end
 end

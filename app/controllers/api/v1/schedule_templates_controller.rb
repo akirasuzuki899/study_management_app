@@ -5,21 +5,21 @@ module Api
       before_action :correct_user, only: [:update, :destroy]
 
       def index
-        @schedule_templates = current_user.schedule_templates.includes(:study_material)
-        @study_materials = current_user.study_materials
+        @schedule_templates = current_user.schedule_templates
         render json: { status: 'SUCCESS', 
                        message: 'Loaded posts', 
-                       data: {
-                           schedule_templates: @schedule_templates.as_json(
-                            include: [:study_material],
-                            methods: [:start, :end, :start_time_hm, :end_time_hm],
-                            except: [:created_at, :updated_at, :start_time, :end_time]
-                           ),
-                           study_materials: @study_materials.as_json(
-                            methods: [:image_url]
-                           )
-                        }
+                       schedule_templates: @schedule_templates.as_json(
+                         methods: [:start, :end, :start_time_hm, :end_time_hm],
+                         except: [:created_at, :updated_at, :start_time, :end_time],
+                       )
                       }
+                      #  data: {
+                      #      schedule_templates: @schedule_templates.as_json(
+                      #       methods: [:start, :end, :start_time_hm, :end_time_hm],
+                      #       except: [:created_at, :updated_at, :start_time, :end_time],
+                      #      )
+                      #   }
+                      # }
       end
 
       def create
@@ -41,7 +41,7 @@ module Api
 
       def destroy
         @schedule_template.destroy
-        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @schedule_template }
+        render json: { status: 'SUCCESS', message: 'Loaded posts', schedule_template: @schedule_template }
       end
 
       private

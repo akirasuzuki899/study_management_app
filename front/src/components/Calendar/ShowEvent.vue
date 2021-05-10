@@ -20,7 +20,16 @@
           <v-btn icon @click.stop="editSchedule(); $refs.form.setDefaultFormValue()">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn icon @click.stop="deleteSchedule(); closeShowEvent()">
+          <v-btn 
+            icon 
+            @click.stop="
+              closeShowEvent(); 
+              deleteScheduleTemplate(
+                {
+                  authTokens: authTokens, 
+                  selectedEvent: selectedEvent
+                })
+              ">
             <v-icon>mdi-delete-outline</v-icon>
           </v-btn>
         </v-toolbar>
@@ -43,47 +52,37 @@
     <Form
       ref="form"
       :selectedEvent="selectedEvent"
-      :studyMaterials="studyMaterials"
     ></Form>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
 import Form from "./Form";
 export default {
   components: {
       Form,
     },
-  props: ["selectedEvent", "selectedElement", "studyMaterials"],
+  props: ["selectedEvent", "selectedElement"],
   data: () => ({
     selectedOpen: false,
   }),
+  computed: {
+    ...mapGetters(["authTokens"])
+  },
   methods: {
+    ...mapActions(["deleteScheduleTemplate"]),
+
     openShowEvent(){
       this.selectedOpen = true
     },
     closeShowEvent(){
       this.selectedOpen = false
+      this.$emit('initSelectedStatus');
     },
     editSchedule() {
       this.$refs.form.openForm()
     },
-    deleteSchedule() {
-        axios
-          .delete(
-            '/api/v1/schedule_templates/' + this.selectedEvent.id,
-            {
-              headers: this.authTokens
-            }
-          )
-          .then(response => {
-            console.log(response);
-          })
-          .chach(error => {
-            console.log(error);
-          })
-      },
   }
 }
 </script>

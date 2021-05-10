@@ -156,9 +156,10 @@
 
 <script>
 import axios from "axios";
+import { mapGetters } from "vuex";
 
 export default {
-  props: ["selectedEvent", "studyMaterials"],
+  props: ["selectedEvent"],
   data: () => ({
     timePickerStart: false,
     timePickerEnd: false,
@@ -173,6 +174,9 @@ export default {
         end_time: ''
       }
   }),
+  computed: {
+    ...mapGetters(["authTokens", "studyMaterials"])
+  },
   methods: {
     setDefaultFormValue () {
         this.formData.name = this.selectedEvent.name
@@ -230,15 +234,10 @@ export default {
     allowedMinutes: v => v % 5 === 0 || v === 0,
 
     openForm () {
-        this.formDialog = true
-      },
+      this.formDialog = true
+    },
     closeForm () {
       this.formDialog = false
-    }
-  },
-  computed: {
-    authTokens() {
-      return this.$store.getters.authTokens;
     }
   },
 }
