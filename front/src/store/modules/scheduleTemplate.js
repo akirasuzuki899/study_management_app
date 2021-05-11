@@ -26,7 +26,9 @@ const mutations = {
     state.scheduleTemplates.push(data.schedule_template)
   },
   updateScheduleTemplate(state, data) {
-    state.scheduleTemplates.push(data.schedule_template)
+    const index = state.scheduleTemplates.findIndex((v) => v.id === data.schedule_template.id);
+    console.log(data)
+    state.scheduleTemplates.splice(index, 1, data.schedule_template)
   },
   destroyScheduleTemplate(state, data) {
     console.log("ScheduleTemplates")
