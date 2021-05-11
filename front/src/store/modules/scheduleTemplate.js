@@ -22,6 +22,12 @@ const mutations = {
   setScheduleTemplates(state, data) {
     state.scheduleTemplates = data.schedule_templates;
   },
+  addScheduleTemplate(state, data) {
+    state.scheduleTemplates.push(data.schedule_template)
+  },
+  updateScheduleTemplate(state, data) {
+    state.scheduleTemplates.push(data.schedule_template)
+  },
   destroyScheduleTemplate(state, data) {
     console.log("ScheduleTemplates")
     console.log(state.scheduleTemplates)
@@ -45,6 +51,50 @@ const actions = {
       .then(({ data }) => {
         commit("setScheduleTemplates", data)
       });
+  },
+  createScheduleTemplate( { commit } , { authTokens, formData} ) {
+    axios
+      .post(
+        '/api/v1/schedule_templates',
+        {
+          name: formData.name,
+          study_material_id: formData.study_material_id,
+          day_of_week: formData.day_of_week,
+          start_time: formData.start_time,
+          end_time: formData.end_time
+        },
+        {
+          headers: authTokens
+        }
+      )
+      .then(( { data } ) => {
+        commit("addScheduleTemplate", data)
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  },
+  updateScheduleTemplate( { commit }, { authTokens, selectedEvent, formData } )  {
+    axios
+      .put(
+        '/api/v1/schedule_templates/' + selectedEvent.id,
+        {
+          name: formData.name,
+          study_material_id: formData.study_material_id,
+          day_of_week: formData.day_of_week,
+          start_time: formData.start_time,
+          end_time: formData.end_time
+        },
+        {
+          headers: authTokens
+        }
+      )
+      .then(( { data } ) => {
+        commit("updateScheduleTemplate", data)
+      })
+      .catch(error => {
+        console.log(error);
+      })
   },
   deleteScheduleTemplate( { commit }, { authTokens, selectedEvent } ) {
     axios

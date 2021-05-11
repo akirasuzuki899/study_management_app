@@ -142,11 +142,33 @@
             取消
           </v-btn>
           <v-btn
+            v-if="method === 'createScheduleTemplate'"
             color="blue darken-1"
             text
-            @click.stop="createSchedule(); closeForm()"
+            @click.stop="
+              createScheduleTemplate(
+                {
+                  authTokens: authTokens,
+                  formData: formData
+                }); 
+              closeForm()"
           >
             保存
+          </v-btn>
+          <v-btn
+            v-if="method === 'updateScheduleTemplate'"
+            color="blue darken-1"
+            text
+            @click.stop="
+              updateScheduleTemplate(
+                {
+                  authTokens: authTokens,
+                  selectedEvent: selectedEvent,
+                  formData: formData,
+                }); 
+              closeForm()"
+          >
+            更新
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -155,86 +177,42 @@
 </template>
 
 <script>
-import axios from "axios";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
-  props: ["selectedEvent"],
+  props: ["selectedEvent", "method"],
   data: () => ({
     timePickerStart: false,
     timePickerEnd: false,
-    // フォーム
     formDialog: false,
     dayOfWeek: ['月', '火', '水', '木', '金', '土', '日'],
     formData: {
-        name: '',
-        study_material_id: '',
-        day_of_week: '',
-        start_time: '',
-        end_time: ''
-      }
+      name: '',
+      study_material_id: '',
+      day_of_week: '',
+      start_time: '',
+      end_time: ''
+    }
   }),
   computed: {
     ...mapGetters(["authTokens", "studyMaterials"])
   },
   methods: {
-    setDefaultFormValue () {
-        this.formData.name = this.selectedEvent.name
-        this.formData.study_material_id = this.selectedEvent.study_material_id
-        this.formData.day_of_week = this.selectedEvent.day_of_week
-        this.formData.start_time = this.selectedEvent.start_time_hm
-        this.formData.end_time = this.selectedEvent.end_time_hm
-      },
-    createSchedule() {
-        axios
-          .post(
-            '/api/v1/schedule_templates',
-            {
-              name: this.formData.name,
-              study_material_id: this.formData.study_material_id,
-              day_of_week: this.formData.day_of_week,
-              start_time: this.formData.start_time,
-              end_time: this.formData.end_time
-            },
-            {
-              headers: this.authTokens
-            }
-          )
-          .then(response => {
-            console.log(response);
+    ...mapActions(["createScheduleTemplate", "updateScheduleTemplate"]),
 
-          })
-          .catch(error => {
-            console.log(error);
-          })
-    },
-    updateSchedule() {
-      axios
-        .post(
-          '/api/v1/schedule_templates/' + this.selectedEvent.id,
-          {
-            name: this.formData.name,
-            study_material_id: this.formData.study_material_id,
-            day_of_week: this.formData.day_of_week,
-            start_time: this.formData.start_time,
-            end_time: this.formData.end_time
-          },
-          {
-            headers: this.authTokens
-          }
-        )
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        })
+    setDefaultFormValue () {
+      this.formData.name = this.selectedEvent.name
+      this.formData.study_material_id = this.selectedEvent.study_material_id
+      this.formData.day_of_week = this.selectedEvent.day_of_week
+      this.formData.start_time = this.selectedEvent.start_time_hm
+      this.formData.end_time = this.selectedEvent.end_time_hm
     },
     
     allowedMinutes: v => v % 5 === 0 || v === 0,
 
     openForm () {
       this.formDialog = true
+      if (this.method==="createScheduleTemplate") this.$emit('initSelectedStatus');
     },
     closeForm () {
       this.formDialog = false

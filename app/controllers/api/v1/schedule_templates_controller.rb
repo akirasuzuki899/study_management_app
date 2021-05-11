@@ -13,29 +13,34 @@ module Api
                          except: [:created_at, :updated_at, :start_time, :end_time],
                        )
                       }
-                      #  data: {
-                      #      schedule_templates: @schedule_templates.as_json(
-                      #       methods: [:start, :end, :start_time_hm, :end_time_hm],
-                      #       except: [:created_at, :updated_at, :start_time, :end_time],
-                      #      )
-                      #   }
-                      # }
       end
 
       def create
         @schedule_template = current_user.schedule_templates.build(schedule_template_params)
         if @schedule_template.save
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @schedule_template }
+          render json: { status: 'SUCCESS', 
+                         message: 'Loaded posts', 
+                         schedule_template: @schedule_template.as_json(
+                          methods: [:start, :end, :start_time_hm, :end_time_hm],
+                          except: [:created_at, :updated_at, :start_time, :end_time],
+                         )
+                        }
         else
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @schedule_template.errors }
+          render json: { status: 'SUCCESS', message: 'Loaded posts', schedule_template: @schedule_template.errors }
         end
       end
 
       def update
         if @schedule_template.update(schedule_template_params)
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @schedule_template }
+          render json: { status: 'SUCCESS', 
+                          message: 'Loaded posts', 
+                          schedule_template: @schedule_template.as_json(
+                            methods: [:start, :end, :start_time_hm, :end_time_hm],
+                            except: [:created_at, :updated_at, :start_time, :end_time],
+                           ) 
+                        }
         else
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @schedule_template.error }
+          render json: { status: 'SUCCESS', message: 'Loaded posts', schedule_template: @schedule_template.error }
         end
       end
 

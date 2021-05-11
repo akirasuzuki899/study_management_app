@@ -51,6 +51,7 @@
 
     <Form
       ref="form"
+      method="updateScheduleTemplate"
       :selectedEvent="selectedEvent"
     ></Form>
   </div>
@@ -78,12 +79,12 @@ export default {
     },
     closeShowEvent(){
       this.selectedOpen = false
-      this.$emit('initSelectedStatus');
+      this.$emit('initSelectedStatus')
     },
     editSchedule() {
       this.$refs.form.openForm()
     },
-  }
+  },
 }
 </script>
 

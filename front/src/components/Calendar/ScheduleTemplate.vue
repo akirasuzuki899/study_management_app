@@ -11,7 +11,7 @@
             type="week"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             @click:event="showEvent"
-            @click:time="$refs.form.openForm();"
+            @click:time="$refs.showEvent.selectedOpen===false&&$refs.form.openForm();"
           >
             <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
           </v-calendar>
@@ -25,7 +25,9 @@
 
           <Form
             ref="form"
+            method="createScheduleTemplate"
             :selectedEvent="selectedEvent"
+            @initSelectedStatus="initSelectedStatus"
           ></Form>
 
         </v-sheet>
