@@ -17,12 +17,12 @@
         >
           <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn icon @click.stop="editSchedule(); $refs.form.setDefaultFormValue()">
+          <v-btn icon @click="editSchedule()">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-btn 
             icon 
-            @click.stop="
+            @click="
               closeShowEvent(); 
               deleteScheduleTemplate(
                 {
@@ -47,13 +47,14 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-menu>
 
-    <Form
-      ref="form"
-      method="updateScheduleTemplate"
-      :selectedEvent="selectedEvent"
-    ></Form>
+      <Form
+        ref="form"
+        method="updateScheduleTemplate"
+        :selectedEvent="selectedEvent"
+      ></Form>
+      
+    </v-menu>
   </div>
 </template>
 
@@ -79,7 +80,6 @@ export default {
     },
     closeShowEvent(){
       this.selectedOpen = false
-      this.$emit('initSelectedStatus')
     },
     editSchedule() {
       this.$refs.form.openForm()

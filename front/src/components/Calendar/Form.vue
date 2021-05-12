@@ -137,7 +137,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click.stop="closeForm()"
+            @click="closeForm()"
           >
             取消
           </v-btn>
@@ -145,7 +145,7 @@
             v-if="method === 'createScheduleTemplate'"
             color="blue darken-1"
             text
-            @click.stop="
+            @click="
               createScheduleTemplate(
                 {
                   authTokens: authTokens,
@@ -159,7 +159,7 @@
             v-if="method === 'updateScheduleTemplate'"
             color="blue darken-1"
             text
-            @click.stop="
+            @click="
               updateScheduleTemplate(
                 {
                   authTokens: authTokens,
@@ -211,8 +211,8 @@ export default {
     allowedMinutes: v => v % 5 === 0 || v === 0,
 
     openForm () {
+      this.method === "createScheduleTemplate" ? this.$emit('initSelectedStatus') : this.setDefaultFormValue();
       this.formDialog = true
-      if (this.method==="createScheduleTemplate") this.$emit('initSelectedStatus');
     },
     closeForm () {
       this.formDialog = false

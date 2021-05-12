@@ -20,7 +20,6 @@
             ref="showEvent"
             :selectedEvent="selectedEvent" 
             :selectedElement="selectedElement" 
-            @initSelectedStatus="initSelectedStatus"
           ></ShowEvent>
 
           <Form
