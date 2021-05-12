@@ -10,7 +10,7 @@ class User < ApplicationRecord
   #          :recoverable, :rememberable, :validatable
   has_many :study_materials, dependent: :destroy
   has_many :study_notes, dependent: :destroy
-  has_many :schedule_templates, dependent: :destroy
+  has_many :task_templates, dependent: :destroy
   
   validates :name, presence: true
 end

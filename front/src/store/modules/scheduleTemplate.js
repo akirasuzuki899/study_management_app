@@ -47,7 +47,7 @@ const mutations = {
 const actions = {
   getScheduleTemplates( { commit }, authTokens ) {
     axios
-      .get('/api/v1/schedule_templates', {
+      .get('/api/v1/task_templates', {
         headers: authTokens
       })
       .then(({ data }) => {
@@ -57,7 +57,7 @@ const actions = {
   createScheduleTemplate( { commit } , { authTokens, formData} ) {
     axios
       .post(
-        '/api/v1/schedule_templates',
+        '/api/v1/task_templates',
         {
           name: formData.name,
           study_material_id: formData.study_material_id,
@@ -79,7 +79,7 @@ const actions = {
   updateScheduleTemplate( { commit }, { authTokens, selectedEvent, formData } )  {
     axios
       .put(
-        '/api/v1/schedule_templates/' + selectedEvent.id,
+        '/api/v1/task_templates/' + selectedEvent.id,
         {
           name: formData.name,
           study_material_id: formData.study_material_id,
@@ -101,7 +101,7 @@ const actions = {
   deleteScheduleTemplate( { commit }, { authTokens, selectedEvent } ) {
     axios
       .delete(
-        '/api/v1/schedule_templates/' + selectedEvent.id,
+        '/api/v1/task_templates/' + selectedEvent.id,
         {
           headers: authTokens
         }
