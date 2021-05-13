@@ -6,12 +6,12 @@
           <v-calendar
             ref="calendar"
             :value="baseDate"
-            :events="scheduleTemplates"
+            :events="taskTemplates"
             color="primary"
             type="week"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             @click:event="showEvent"
-            @click:time="$refs.showEvent.selectedOpen===false&&$refs.form.openForm();"
+            @click:time="createEvent"
           >
             <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
           </v-calendar>
@@ -19,14 +19,12 @@
           <ShowEvent 
             ref="showEvent"
             :selectedEvent="selectedEvent" 
-            :selectedElement="selectedElement" 
+            :selectedElement="selectedElement"
           ></ShowEvent>
 
           <Form
             ref="form"
-            method="createScheduleTemplate"
-            :selectedEvent="selectedEvent"
-            @initSelectedStatus="initSelectedStatus"
+            method="createTaskTemplate"
           ></Form>
 
         </v-sheet>
@@ -45,18 +43,21 @@ import Form from "./Form";
       ShowEvent,
       Form,
     },
-    data: () => ({
-      baseDate: '2000-01-03',
-
-      // イベントの詳細画面
-      selectedEvent: {},
-      selectedElement: null,
-
-    }),
+    data() {
+      return {
+        baseDate: '2000-01-03',
+        selectedEvent: {},
+        selectedElement: null,
+      }
+    },
     computed: {
-      ...mapGetters(["authTokens", "scheduleTemplates"])
+      ...mapGetters(["authTokens", "taskTemplates"])
     },
     methods: {
+      createEvent() {
+        console.log("createEvent")
+        if(this.$refs.showEvent.selectedOpen===false) this.$refs.form.openForm();
+      },
       showEvent ({ nativeEvent, event }) {
         const open = () => {
           this.selectedEvent = event
@@ -64,8 +65,8 @@ import Form from "./Form";
           requestAnimationFrame(() => requestAnimationFrame(() => this.$refs.showEvent.openShowEvent()))
         }
 
-        if (this.selectedOpen) {
-          this.selectedOpen = false
+        if (this.$refs.showEvent.selectedOpen) {
+          this.$refs.showEvent.selectedOpen = false
           requestAnimationFrame(() => requestAnimationFrame(() => open()))
         } else {
           open()
@@ -73,16 +74,12 @@ import Form from "./Form";
 
         nativeEvent.stopPropagation()
       },
-      initSelectedStatus() {
-        this.selectedEvent = {},
-        this.selectedElement = null
-      },
     },
     mounted () {
       this.$refs.calendar.scrollToTime('08:00')
     },
     created() {
-      this.$store.dispatch('getScheduleTemplates', this.authTokens)
+      this.$store.dispatch('getTaskTemplates', this.authTokens)
     },
   }
 </script>

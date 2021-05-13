@@ -17,14 +17,14 @@
         >
           <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn icon @click="editSchedule()">
+          <v-btn icon @click="editTask()">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-btn 
             icon 
             @click="
               closeShowEvent(); 
-              deleteScheduleTemplate(
+              deleteTaskTemplate(
                 {
                   authTokens: authTokens, 
                   selectedEvent: selectedEvent
@@ -50,7 +50,7 @@
 
       <Form
         ref="form"
-        method="updateScheduleTemplate"
+        method="updateTaskTemplate"
         :selectedEvent="selectedEvent"
       ></Form>
       
@@ -66,14 +66,16 @@ export default {
       Form,
     },
   props: ["selectedEvent", "selectedElement"],
-  data: () => ({
-    selectedOpen: false,
-  }),
+  data() {
+    return {
+      selectedOpen: false,
+    }
+  } ,
   computed: {
     ...mapGetters(["authTokens"])
   },
   methods: {
-    ...mapActions(["deleteScheduleTemplate"]),
+    ...mapActions(["deleteTaskTemplate"]),
 
     openShowEvent(){
       this.selectedOpen = true
@@ -81,7 +83,7 @@ export default {
     closeShowEvent(){
       this.selectedOpen = false
     },
-    editSchedule() {
+    editTask() {
       this.$refs.form.openForm()
     },
   },

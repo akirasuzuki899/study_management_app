@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center" :key="selectedEvent.id">
+  <div class="text-center" :key="selectedEvent.id || null">
     <v-dialog
       v-model="formDialog"
       width="500"
@@ -7,7 +7,7 @@
     >
       <v-card>
         <v-card-title>
-          <span class="headline">{{selectedEvent.name}}</span>
+          <span class="headline">{{selectedEvent.name || "新規作成"}}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -137,16 +137,16 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="closeForm()"
+            @click.stop="closeForm()"
           >
             取消
           </v-btn>
           <v-btn
-            v-if="method === 'createScheduleTemplate'"
+            v-if="method === 'createTaskTemplate'"
             color="blue darken-1"
             text
             @click="
-              createScheduleTemplate(
+              createTaskTemplate(
                 {
                   authTokens: authTokens,
                   formData: formData
@@ -156,11 +156,11 @@
             保存
           </v-btn>
           <v-btn
-            v-if="method === 'updateScheduleTemplate'"
+            v-if="method === 'updateTaskTemplate'"
             color="blue darken-1"
             text
             @click="
-              updateScheduleTemplate(
+              updateTaskTemplate(
                 {
                   authTokens: authTokens,
                   selectedEvent: selectedEvent,
@@ -180,40 +180,54 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  props: ["selectedEvent", "method"],
-  data: () => ({
-    timePickerStart: false,
-    timePickerEnd: false,
-    formDialog: false,
-    dayOfWeek: ['月', '火', '水', '木', '金', '土', '日'],
-    formData: {
-      name: '',
-      study_material_id: '',
-      day_of_week: '',
-      start_time: '',
-      end_time: ''
+  props: {
+    selectedEvent: {
+      default:() => ({
+        name: '',
+        study_material_id: '',
+        day_of_week: '',
+        start_time_hm: '',
+        end_time_hm: ''
+      })
+    },
+    method: {}, 
+  },
+  data () {
+    return {
+      timePickerStart: false,
+      timePickerEnd: false,
+      formDialog: false,
+      dayOfWeek: ['月', '火', '水', '木', '金', '土', '日'],
+      formData: {
+        name: '',
+        study_material_id: '',
+        day_of_week: '',
+        start_time: '',
+        end_time: ''
+      }
     }
-  }),
+  },
   computed: {
-    ...mapGetters(["authTokens", "studyMaterials"])
+    ...mapGetters(["authTokens", "studyMaterials"]),
   },
   methods: {
-    ...mapActions(["createScheduleTemplate", "updateScheduleTemplate"]),
+    ...mapActions(["createTaskTemplate", "updateTaskTemplate"]),
 
-    setDefaultFormValue () {
+    setDefaultFormData () {
       this.formData.name = this.selectedEvent.name
       this.formData.study_material_id = this.selectedEvent.study_material_id
       this.formData.day_of_week = this.selectedEvent.day_of_week
       this.formData.start_time = this.selectedEvent.start_time_hm
       this.formData.end_time = this.selectedEvent.end_time_hm
     },
-    
+
     allowedMinutes: v => v % 5 === 0 || v === 0,
 
     openForm () {
-      this.method === "createScheduleTemplate" ? this.$emit('initSelectedStatus') : this.setDefaultFormValue();
+      this.setDefaultFormData()
       this.formDialog = true
     },
+    
     closeForm () {
       this.formDialog = false
     }

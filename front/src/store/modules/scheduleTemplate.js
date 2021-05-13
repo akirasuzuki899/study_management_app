@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const state = {
-  scheduleTemplates: [],
-  scheduleTemplate: {
+  taskTemplates: [],
+  taskTemplate: {
     id: '',
     user_id: '',
     name: '',
@@ -15,46 +15,46 @@ const state = {
 };
 
 const getters = {
-  scheduleTemplates: state => state.scheduleTemplates
+  taskTemplates: state => state.taskTemplates
 };
 
 const mutations = {
-  setScheduleTemplates(state, data) {
-    state.scheduleTemplates = data.schedule_templates;
+  setTaskTemplates(state, data) {
+    state.taskTemplates = data.task_templates;
   },
-  addScheduleTemplate(state, data) {
-    state.scheduleTemplates.push(data.schedule_template)
+  addTaskTemplate(state, data) {
+    state.taskTemplates.push(data.task_template)
   },
-  updateScheduleTemplate(state, data) {
-    const index = state.scheduleTemplates.findIndex((v) => v.id === data.schedule_template.id);
+  updateTaskTemplate(state, data) {
+    const index = state.taskTemplates.findIndex((v) => v.id === data.task_template.id);
     console.log(data)
-    state.scheduleTemplates.splice(index, 1, data.schedule_template)
+    state.taskTemplates.splice(index, 1, data.task_template)
   },
-  destroyScheduleTemplate(state, data) {
-    console.log("ScheduleTemplates")
-    console.log(state.scheduleTemplates)
+  destroyTaskTemplate(state, data) {
+    console.log("taskTemplates")
+    console.log(state.taskTemplates)
     
     console.log("data")
     console.log(data)
 
-    const index = state.scheduleTemplates.findIndex((v) => v.id === data.schedule_template.id);
+    const index = state.taskTemplates.findIndex((v) => v.id === data.task_template.id);
     console.log("index")
     console.log(index)
-    state.scheduleTemplates.splice(index, 1)
+    state.taskTemplates.splice(index, 1)
   }
 };
 
 const actions = {
-  getScheduleTemplates( { commit }, authTokens ) {
+  getTaskTemplates( { commit }, authTokens ) {
     axios
       .get('/api/v1/task_templates', {
         headers: authTokens
       })
       .then(({ data }) => {
-        commit("setScheduleTemplates", data)
+        commit("setTaskTemplates", data)
       });
   },
-  createScheduleTemplate( { commit } , { authTokens, formData} ) {
+  createTaskTemplate( { commit } , { authTokens, formData} ) {
     axios
       .post(
         '/api/v1/task_templates',
@@ -70,13 +70,13 @@ const actions = {
         }
       )
       .then(( { data } ) => {
-        commit("addScheduleTemplate", data)
+        commit("addTaskTemplate", data)
       })
       .catch(error => {
         console.log(error);
       })
   },
-  updateScheduleTemplate( { commit }, { authTokens, selectedEvent, formData } )  {
+  updateTaskTemplate( { commit }, { authTokens, selectedEvent, formData } )  {
     axios
       .put(
         '/api/v1/task_templates/' + selectedEvent.id,
@@ -92,13 +92,13 @@ const actions = {
         }
       )
       .then(( { data } ) => {
-        commit("updateScheduleTemplate", data)
+        commit("updateTaskTemplate", data)
       })
       .catch(error => {
         console.log(error);
       })
   },
-  deleteScheduleTemplate( { commit }, { authTokens, selectedEvent } ) {
+  deleteTaskTemplate( { commit }, { authTokens, selectedEvent } ) {
     axios
       .delete(
         '/api/v1/task_templates/' + selectedEvent.id,
@@ -107,7 +107,7 @@ const actions = {
         }
       )
       .then(({ data }) => {
-        commit("destroyScheduleTemplate", data)
+        commit("destroyTaskTemplate", data)
       })
       .catch( error => {
         console.log(error);
