@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-menu
-      v-model="selectedOpen"
+      v-model="isOpen"
       :close-on-content-click="false"
       :activator="selectedElement"
       offset-x
@@ -12,47 +12,48 @@
         flat
       >
         <v-toolbar
-          :color="selectedEvent.color"
+          :color="selectedTask.color"
           dark
         >
-          <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+          <v-toolbar-title v-html="selectedTask.name"></v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn icon @click="editTask()">
+          <v-btn icon @click="edit()">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-btn 
             icon 
             @click="
-              closeShowEvent(); 
+              close(); 
               deleteTaskTemplate(
                 {
                   authTokens: authTokens, 
-                  selectedEvent: selectedEvent
+                  selectedTask: selectedTask
                 })
               ">
             <v-icon>mdi-delete-outline</v-icon>
           </v-btn>
         </v-toolbar>
         <v-card-text>
-          <p v-html="selectedEvent.start_time_hm"></p>
-          <p v-html="selectedEvent.end_time_hm"></p>
+          <p v-html="selectedTask.start_time_hm"></p>
+          <p v-html="selectedTask.end_time_hm"></p>
         </v-card-text>
         <v-card-actions>
           <v-btn
             text
             color="secondary"
-            @click="closeShowEvent"
+            @click="close()"
           >
             閉じる
           </v-btn>
         </v-card-actions>
       </v-card>
 
-      <Form
+      <TaskForm
         ref="form"
-        method="updateTaskTemplate"
-        :selectedEvent="selectedEvent"
-      ></Form>
+        method="update"
+        :target="target"
+        :selectedTask="selectedTask"
+      ></TaskForm>
       
     </v-menu>
   </div>
@@ -60,15 +61,15 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import Form from "./Form";
+import TaskForm from "./Form";
 export default {
   components: {
-      Form,
+      TaskForm,
     },
-  props: ["selectedEvent", "selectedElement"],
+  props: ["selectedTask", "selectedElement", "target"],
   data() {
     return {
-      selectedOpen: false,
+      isOpen: false,
     }
   } ,
   computed: {
@@ -77,14 +78,14 @@ export default {
   methods: {
     ...mapActions(["deleteTaskTemplate"]),
 
-    openShowEvent(){
-      this.selectedOpen = true
+    open(){
+      this.isOpen = true
     },
-    closeShowEvent(){
-      this.selectedOpen = false
+    close(){
+      this.isOpen = false
     },
-    editTask() {
-      this.$refs.form.openForm()
+    edit() {
+      this.$refs.form.open()
     },
   },
 }

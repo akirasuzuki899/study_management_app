@@ -1,13 +1,13 @@
 <template>
-  <div class="text-center" :key="selectedEvent.id || null">
+  <div class="text-center" :key="selectedTask.id || null">
     <v-dialog
-      v-model="formDialog"
+      v-model="Dialog"
       width="500"
-      @click:outside="closeForm()"
+      @click:outside="close()"
     >
       <v-card>
         <v-card-title>
-          <span class="headline">{{selectedEvent.name || "新規作成"}}</span>
+          <span class="headline">{{selectedTask.name || "新規作成"}}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -137,36 +137,36 @@
           <v-btn
             color="blue darken-1"
             text
-            @click.stop="closeForm()"
+            @click.stop="close()"
           >
             取消
           </v-btn>
           <v-btn
-            v-if="method === 'createTaskTemplate'"
+            v-if="method === 'create'"
             color="blue darken-1"
             text
             @click="
-              createTaskTemplate(
+              create(
                 {
                   authTokens: authTokens,
                   formData: formData
                 }); 
-              closeForm()"
+              close()"
           >
             保存
           </v-btn>
           <v-btn
-            v-if="method === 'updateTaskTemplate'"
+            v-if="method === 'update'"
             color="blue darken-1"
             text
             @click="
-              updateTaskTemplate(
+              update(
                 {
                   authTokens: authTokens,
-                  selectedEvent: selectedEvent,
+                  selectedTask: selectedTask,
                   formData: formData,
                 }); 
-              closeForm()"
+              close()"
           >
             更新
           </v-btn>
@@ -181,7 +181,7 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   props: {
-    selectedEvent: {
+    selectedTask: {
       default:() => ({
         name: '',
         study_material_id: '',
@@ -191,12 +191,13 @@ export default {
       })
     },
     method: {}, 
+    target: {},
   },
   data () {
     return {
       timePickerStart: false,
       timePickerEnd: false,
-      formDialog: false,
+      Dialog: false,
       dayOfWeek: ['月', '火', '水', '木', '金', '土', '日'],
       formData: {
         name: '',
@@ -211,25 +212,28 @@ export default {
     ...mapGetters(["authTokens", "studyMaterials"]),
   },
   methods: {
-    ...mapActions(["createTaskTemplate", "updateTaskTemplate"]),
+    ...mapActions({
+      create: "createTaskTemplate",
+      update:  "updateTaskTemplate"
+    }),
 
     setDefaultFormData () {
-      this.formData.name = this.selectedEvent.name
-      this.formData.study_material_id = this.selectedEvent.study_material_id
-      this.formData.day_of_week = this.selectedEvent.day_of_week
-      this.formData.start_time = this.selectedEvent.start_time_hm
-      this.formData.end_time = this.selectedEvent.end_time_hm
+      this.formData.name = this.selectedTask.name
+      this.formData.study_material_id = this.selectedTask.study_material_id
+      this.formData.day_of_week = this.selectedTask.day_of_week
+      this.formData.start_time = this.selectedTask.start_time_hm
+      this.formData.end_time = this.selectedTask.end_time_hm
     },
 
     allowedMinutes: v => v % 5 === 0 || v === 0,
 
-    openForm () {
+    open () {
       this.setDefaultFormData()
-      this.formDialog = true
+      this.Dialog = true
     },
     
-    closeForm () {
-      this.formDialog = false
+    close () {
+      this.Dialog = false
     }
   },
 }

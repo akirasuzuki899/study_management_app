@@ -10,22 +10,24 @@
             color="primary"
             type="week"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-            @click:event="showEvent"
-            @click:time="createEvent"
+            @click:event="showTaskTemplate"
+            @click:time="createTaskTemplate"
           >
             <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
           </v-calendar>
 
-          <ShowEvent 
-            ref="showEvent"
-            :selectedEvent="selectedEvent" 
+          <TaskShow 
+            ref="taskTemplateShow"
+            :selectedTask="selectedTask" 
             :selectedElement="selectedElement"
-          ></ShowEvent>
+            :target="target"
+          ></TaskShow>
 
-          <Form
+          <TaskForm
             ref="form"
-            method="createTaskTemplate"
-          ></Form>
+            method="create"
+            :target="target"
+          ></TaskForm>
 
         </v-sheet>
       </v-col>
@@ -35,18 +37,19 @@
 
 <script>
 import { mapGetters } from "vuex";
-import ShowEvent from "./ShowEvent";
-import Form from "./Form";
+import TaskShow from "./ShowEvent";
+import TaskForm from "./Form";
 
   export default {
     components: {
-      ShowEvent,
-      Form,
+      TaskShow,
+      TaskForm,
     },
     data() {
       return {
+        target: "taskTemplate",
         baseDate: '2000-01-03',
-        selectedEvent: {},
+        selectedTask: {},
         selectedElement: null,
       }
     },
@@ -54,19 +57,18 @@ import Form from "./Form";
       ...mapGetters(["authTokens", "taskTemplates"])
     },
     methods: {
-      createEvent() {
-        console.log("createEvent")
-        if(this.$refs.showEvent.selectedOpen===false) this.$refs.form.openForm();
+      createTaskTemplate() {
+        if(this.$refs.taskTemplateShow.isOpen === false) this.$refs.form.open();
       },
-      showEvent ({ nativeEvent, event }) {
+      showTaskTemplate ({ nativeEvent, event }) {
         const open = () => {
-          this.selectedEvent = event
+          this.selectedTask = event
           this.selectedElement = nativeEvent.target
-          requestAnimationFrame(() => requestAnimationFrame(() => this.$refs.showEvent.openShowEvent()))
+          requestAnimationFrame(() => requestAnimationFrame(() => this.$refs.taskTemplateShow.open()))
         }
 
-        if (this.$refs.showEvent.selectedOpen) {
-          this.$refs.showEvent.selectedOpen = false
+        if (this.$refs.taskTemplateShow.isOpen) {
+          this.$refs.taskTemplateShow.isOpen = false
           requestAnimationFrame(() => requestAnimationFrame(() => open()))
         } else {
           open()

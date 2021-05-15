@@ -76,10 +76,10 @@ const actions = {
         console.log(error);
       })
   },
-  updateTaskTemplate( { commit }, { authTokens, selectedEvent, formData } )  {
+  updateTaskTemplate( { commit }, { authTokens, selectedTask, formData } )  {
     axios
       .put(
-        '/api/v1/task_templates/' + selectedEvent.id,
+        '/api/v1/task_templates/' + selectedTask.id,
         {
           name: formData.name,
           study_material_id: formData.study_material_id,
@@ -98,10 +98,10 @@ const actions = {
         console.log(error);
       })
   },
-  deleteTaskTemplate( { commit }, { authTokens, selectedEvent } ) {
+  deleteTaskTemplate( { commit }, { authTokens, selectedTask } ) {
     axios
       .delete(
-        '/api/v1/task_templates/' + selectedEvent.id,
+        '/api/v1/task_templates/' + selectedTask.id,
         {
           headers: authTokens
         }
