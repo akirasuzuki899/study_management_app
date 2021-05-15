@@ -16,8 +16,8 @@ import EditStudyNote from './components/StudyNotes/EditStudyNote.vue';
 import IndexStudyMaterials from './components/StudyMaterials/IndexStudyMaterials.vue';
 import SearchStudyMaterials from './components/StudyMaterials/SearchStudyMaterials.vue';
 
-import Calendar from './components/Calendar/Calendar.vue';
-import ScheduleTemplate from './components/Calendar/ScheduleTemplate.vue';
+import Calendar from './components/Schedule/Schedule.vue';
+import ScheduleTemplate from './components/Schedule/ScheduleTemplate.vue';
 
 
 Vue.use(Router);

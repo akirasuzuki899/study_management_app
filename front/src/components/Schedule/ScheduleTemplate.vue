@@ -38,7 +38,7 @@
 <script>
 import { mapGetters } from "vuex";
 import TaskShow from "./ShowEvent";
-import TaskForm from "./Form";
+import TaskForm from "./TaskForm";
 
   export default {
     components: {

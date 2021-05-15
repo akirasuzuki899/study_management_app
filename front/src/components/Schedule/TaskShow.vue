@@ -61,7 +61,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import TaskForm from "./Form";
+import TaskForm from "./TaskForm";
 export default {
   components: {
       TaskForm,
