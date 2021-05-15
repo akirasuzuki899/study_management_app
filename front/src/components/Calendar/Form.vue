@@ -141,35 +141,21 @@
           >
             取消
           </v-btn>
-          <v-btn
-            v-if="method === 'create'"
-            color="blue darken-1"
-            text
-            @click="
-              create(
-                {
-                  authTokens: authTokens,
-                  formData: formData
-                }); 
-              close()"
-          >
-            保存
-          </v-btn>
-          <v-btn
-            v-if="method === 'update'"
-            color="blue darken-1"
-            text
-            @click="
-              update(
-                {
-                  authTokens: authTokens,
-                  selectedTask: selectedTask,
-                  formData: formData,
-                }); 
-              close()"
-          >
-            更新
-          </v-btn>
+          <ButtonCreate
+            v-if="method=='create'"
+            :authTokens="authTokens"
+            :formData="formData"
+            :target="target"
+            @task-template="createTaskTemplate($event); close()"
+          ></ButtonCreate>
+          <ButtonUpdate
+            v-if="method=='update'"
+            :authTokens="authTokens"
+            :formData="formData"
+            :target="target"
+            :selectedTask="selectedTask"
+            @task-template="updateTaskTemplate($event); close()"
+          ></ButtonUpdate>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -178,8 +164,14 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import ButtonCreate from "./TaskButtonCreate";
+import ButtonUpdate from "./TaskButtonUpdate";
 
 export default {
+  components: {
+    ButtonCreate,
+    ButtonUpdate,
+  },
   props: {
     selectedTask: {
       default:() => ({
@@ -212,10 +204,7 @@ export default {
     ...mapGetters(["authTokens", "studyMaterials"]),
   },
   methods: {
-    ...mapActions({
-      create: "createTaskTemplate",
-      update:  "updateTaskTemplate"
-    }),
+    ...mapActions(["createTaskTemplate","updateTaskTemplate"]),
 
     setDefaultFormData () {
       this.formData.name = this.selectedTask.name
