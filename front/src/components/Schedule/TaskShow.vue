@@ -20,18 +20,12 @@
           <v-btn icon @click="edit()">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn 
-            icon 
-            @click="
-              close(); 
-              deleteTaskTemplate(
-                {
-                  authTokens: authTokens, 
-                  selectedTask: selectedTask
-                })
-              ">
-            <v-icon>mdi-delete-outline</v-icon>
-          </v-btn>
+          <ButonnDelete
+            :authTokens="authTokens"
+            :selectedTask="selectedTask"
+            :target="target"
+            @task-template="deleteTaskTemplate($event); close()"
+          ></ButonnDelete>
         </v-toolbar>
         <v-card-text>
           <p v-html="selectedTask.start_time_hm"></p>
@@ -62,9 +56,11 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import TaskForm from "./TaskForm";
+import ButonnDelete from "./TaskButtonDelete";
 export default {
   components: {
       TaskForm,
+      ButonnDelete,
     },
   props: ["selectedTask", "selectedElement", "target"],
   data() {

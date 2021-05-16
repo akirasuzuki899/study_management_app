@@ -1,21 +1,20 @@
 <template>
-  <v-btn
-    color="blue darken-1"
-    text
-    @click="updateTarget"
+  <v-btn 
+    icon 
+    @click="deleteTarget"
   >
-    更新
+    <v-icon>mdi-delete-outline</v-icon>
   </v-btn>
 </template>
 
 <script>
 export default {
-  props: ["target", "authTokens", "formData", "selectedTask"],
+  props: ["target", "authTokens", "selectedTask"],
   methods: {
-    updateTarget(){
-      if (this.target === "taskTemplate"){
+    deleteTarget(){
+      if(this.target === "taskTemplate"){
         this.taskTemplate()
-      } else if (this.target === "task") {
+      } else if (this.target === "task"){
         this.task()
       } else {
         console.log("値が不正")
@@ -26,7 +25,6 @@ export default {
       console.log(this.target)
       this.$emit('task-template', {
         authTokens: this.authTokens,
-        formData: this.formData,
         selectedTask: this.selectedTask
       })
     },
@@ -34,10 +32,9 @@ export default {
       console.log("task")
       this.$emit("task", {
         authTokens: this.authTokens,
-        formData: this.formData,
         selectedTask: this.selectedTask
       })
     },
-  },
+  }
 }
 </script>

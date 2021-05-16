@@ -37,7 +37,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import TaskShow from "./ShowEvent";
+import TaskShow from "./TaskShow";
 import TaskForm from "./TaskForm";
 
   export default {

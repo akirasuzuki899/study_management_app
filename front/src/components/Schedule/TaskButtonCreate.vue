@@ -2,7 +2,7 @@
   <v-btn
     color="blue darken-1"
     text
-    @click="create"
+    @click="createTarget"
   >
     保存
   </v-btn>
@@ -12,7 +12,7 @@
 export default {
   props: ["target", "authTokens", "formData"],
   methods: {
-    create(){
+    createTarget(){
       if (this.target === "taskTemplate"){
         this.taskTemplate()
       } else if (this.target === "task") {
