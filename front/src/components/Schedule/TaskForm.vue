@@ -147,6 +147,7 @@
             :formData="formData"
             :target="target"
             @task-template="createTaskTemplate($event); close()"
+            @task="createTask($event); close()"
           ></ButtonCreate>
           <ButtonUpdate
             v-if="method=='update'"
@@ -155,6 +156,7 @@
             :target="target"
             :selectedTask="selectedTask"
             @task-template="updateTaskTemplate($event); close()"
+            @task="updateTask($event); close()"
           ></ButtonUpdate>
         </v-card-actions>
       </v-card>
@@ -204,7 +206,7 @@ export default {
     ...mapGetters(["authTokens", "studyMaterials"]),
   },
   methods: {
-    ...mapActions(["createTaskTemplate","updateTaskTemplate"]),
+    ...mapActions(["createTaskTemplate","updateTaskTemplate", "createTask", "updateTask"]),
 
     setDefaultFormData () {
       this.formData.name = this.selectedTask.name

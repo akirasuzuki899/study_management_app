@@ -5,6 +5,7 @@ import router from '../router';
 
 import studyMaterial from "./modules/studyMaterial";
 import scheduleTemplate from "./modules/scheduleTemplate";
+import task from "./modules/task";
 
 Vue.use(Vuex);
 
@@ -108,6 +109,7 @@ export default new Vuex.Store({
   },
   modules: {
     studyMaterial,
+    task,
     scheduleTemplate,
   }
 });

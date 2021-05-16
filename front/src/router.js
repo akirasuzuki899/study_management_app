@@ -16,7 +16,7 @@ import EditStudyNote from './components/StudyNotes/EditStudyNote.vue';
 import IndexStudyMaterials from './components/StudyMaterials/IndexStudyMaterials.vue';
 import SearchStudyMaterials from './components/StudyMaterials/SearchStudyMaterials.vue';
 
-import Calendar from './components/Schedule/Schedule.vue';
+import Schedule from './components/Schedule/Schedule.vue';
 import ScheduleTemplate from './components/Schedule/ScheduleTemplate.vue';
 
 
@@ -93,8 +93,8 @@ export default new Router({
       ]
     },
     {
-      path: '/calendar', 
-      component: Calendar,
+      path: '/schedule', 
+      component: Schedule,
     },
     {
       path: '/schedule/template', 

@@ -2,21 +2,38 @@
   <v-app>
     <v-row>
       <v-col>
-        <v-sheet height="400">
+        <v-sheet height="900">
           <v-calendar
             ref="calendar"
-            :events="events"
+            :events="tasks"
             color="primary"
             type="week"
+            :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+            @click:event="showTask"
+            @click:time="createTask"
           >
-            <template v-slot:day-body="{ date, week }">
+            <!-- <template v-slot:day-body="{ date, week }">
               <div
                 class="v-current-time"
                 :class="{ first: date === week[0].date }"
                 :style="{ top: nowY }"
               ></div>
-            </template>
+            </template> -->
           </v-calendar>
+
+          <TaskShow 
+            ref="taskShow"
+            :selectedTask="selectedTask" 
+            :selectedElement="selectedElement"
+            :target="target"
+          ></TaskShow>
+
+          <TaskForm
+            ref="form"
+            method="create"
+            :target="target"
+          ></TaskForm>
+
         </v-sheet>
       </v-col>
     </v-row>
@@ -24,57 +41,73 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import TaskShow from "./TaskShow";
+import TaskForm from "./TaskForm";
+
   export default {
-    data: () => ({
-      ready: false,
-      events: [
-        {
-          name: 'Weekly Meeting',
-          start: '2021-04-30 09:00',
-          end: '2021-04-30 10:00',
-        },
-        {
-          name: `Thomas' Birthday`,
-          start: '2021-04-28',
-        },
-        {
-          name: 'Mash Potatoes',
-          start: '2021-04-29 12:30',
-          end: '2021-04-29 15:30',
-        },
-        {
-          name: 'TEST',
-          start: '2021-04-29 22:30',
-          end: '2021-04-30 1:30',
-        }
-      ],
-    }),
-    computed: {
-      cal () {
-        return this.ready ? this.$refs.calendar : null
-      },
-      nowY () {
-        return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
-      },
+    components: {
+      TaskShow,
+      TaskForm,
     },
-    mounted () {
-      this.ready = true
-      this.scrollToTime()
-      this.updateTime()
+    data() {
+      return {
+        // ready: false,
+        target: "task",
+        selectedTask: {},
+        selectedElement: null,
+      }
+    },
+    computed: {
+      ...mapGetters(["authTokens", "tasks"]),
+      // cal () {
+      //   return this.ready ? this.$refs.calendar : null
+      // },
+      // nowY () {
+      //   return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
+      // },
     },
     methods: {
-      getCurrentTime () {
-        return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
+      createTask() {
+        if(this.$refs.taskShow.isOpen === false) this.$refs.form.open();
       },
-      scrollToTime () {
-        const time = this.getCurrentTime()
-        const first = Math.max(0, time - (time % 30) - 30)
+      showTask ({ nativeEvent, event }) {
+        const open = () => {
+          this.selectedTask = event
+          this.selectedElement = nativeEvent.target
+          requestAnimationFrame(() => requestAnimationFrame(() => this.$refs.taskShow.open()))
+        }
 
-        this.cal.scrollToTime(first)
+        if (this.$refs.taskShow.isOpen) {
+          this.$refs.taskShow.isOpen = false
+          requestAnimationFrame(() => requestAnimationFrame(() => open()))
+        } else {
+          open()
+        }
+
+        nativeEvent.stopPropagation()
       },
-      updateTime () {
-        setInterval(() => this.cal.updateTimes(), 60 * 1000)
-      },
+      // getCurrentTime () {
+      //   return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
+      // },
+      // scrollToTime () {
+      //   const time = this.getCurrentTime()
+      //   const first = Math.max(0, time - (time % 30) - 30)
+
+      //   this.cal.scrollToTime(first)
+      // },
+      // updateTime () {
+      //   setInterval(() => this.cal.updateTimes(), 60 * 1000)
+      // },
+    },
+    mounted () {
+      this.$refs.calendar.scrollToTime('08:00')
+      // this.ready = true
+      // this.scrollToTime()
+      // this.updateTime()
+    },
+    created() {
+      this.$store.dispatch('getTasks', this.authTokens)
     },
   }
 </script>

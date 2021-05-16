@@ -20,12 +20,13 @@
           <v-btn icon @click="edit()">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <ButonnDelete
+          <ButtonDelete
             :authTokens="authTokens"
             :selectedTask="selectedTask"
             :target="target"
             @task-template="deleteTaskTemplate($event); close()"
-          ></ButonnDelete>
+            @task="deleteTask($event); close()"
+          ></ButtonDelete>
         </v-toolbar>
         <v-card-text>
           <p v-html="selectedTask.start_time_hm"></p>
@@ -56,11 +57,11 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import TaskForm from "./TaskForm";
-import ButonnDelete from "./TaskButtonDelete";
+import ButtonDelete from "./TaskButtonDelete";
 export default {
   components: {
       TaskForm,
-      ButonnDelete,
+      ButtonDelete,
     },
   props: ["selectedTask", "selectedElement", "target"],
   data() {
@@ -72,7 +73,7 @@ export default {
     ...mapGetters(["authTokens"])
   },
   methods: {
-    ...mapActions(["deleteTaskTemplate"]),
+    ...mapActions(["deleteTaskTemplate", "deleteTask"]),
 
     open(){
       this.isOpen = true
