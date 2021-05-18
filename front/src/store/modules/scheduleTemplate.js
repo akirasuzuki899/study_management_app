@@ -51,6 +51,7 @@ const actions = {
         headers: authTokens
       })
       .then(({ data }) => {
+        console.log(data)
         commit("setTaskTemplates", data)
       });
   },

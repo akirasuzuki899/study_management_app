@@ -6,25 +6,13 @@ module Api
 
       def index
         @task_templates = current_user.task_templates
-        render json: { status: 'SUCCESS', 
-                       message: 'Loaded posts', 
-                       task_templates: @task_templates.as_json(
-                         methods: [:start, :end, :start_time_hm, :end_time_hm],
-                         except: [:created_at, :updated_at, :start_time, :end_time],
-                       )
-                      }
+        render json: @task_templates, adapter: :json, each_serializer: TaskTemplateSerializer
       end
 
       def create
         @task_template = current_user.task_templates.build(task_template_params)
         if @task_template.save
-          render json: { status: 'SUCCESS', 
-                         message: 'Loaded posts', 
-                         task_template: @task_template.as_json(
-                          methods: [:start, :end, :start_time_hm, :end_time_hm],
-                          except: [:created_at, :updated_at, :start_time, :end_time],
-                         )
-                        }
+          render json: @task_template, adapter: :json, serializer: TaskTemplateSerializer
         else
           render json: { status: 'SUCCESS', message: 'Loaded posts', task_template: @task_template.errors }
         end
@@ -32,13 +20,7 @@ module Api
 
       def update
         if @task_template.update(task_template_params)
-          render json: { status: 'SUCCESS', 
-                          message: 'Loaded posts', 
-                          task_template: @task_template.as_json(
-                            methods: [:start, :end, :start_time_hm, :end_time_hm],
-                            except: [:created_at, :updated_at, :start_time, :end_time],
-                           ) 
-                        }
+          render json: @task_template, adapter: :json, serializer: TaskTemplateSerializer
         else
           render json: { status: 'SUCCESS', message: 'Loaded posts', task_template: @task_template.error }
         end
@@ -46,7 +28,7 @@ module Api
 
       def destroy
         @task_template.destroy
-        render json: { status: 'SUCCESS', message: 'Loaded posts', task_template: @task_template }
+        render json: @task_template, adapter: :json, serializer: TaskTemplateSerializer
       end
 
       private
