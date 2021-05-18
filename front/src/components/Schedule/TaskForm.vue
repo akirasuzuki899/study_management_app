@@ -180,8 +180,8 @@ export default {
         name: '',
         study_material_id: '',
         day_of_week: '',
-        start_time_hm: '',
-        end_time_hm: ''
+        start_time: '',
+        end_time: ''
       })
     },
     method: {}, 
@@ -212,8 +212,8 @@ export default {
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
       this.formData.day_of_week = this.selectedTask.day_of_week
-      this.formData.start_time = this.selectedTask.start_time_hm
-      this.formData.end_time = this.selectedTask.end_time_hm
+      this.formData.start_time = this.selectedTask.start_time
+      this.formData.end_time = this.selectedTask.end_time
     },
 
     allowedMinutes: v => v % 5 === 0 || v === 0,

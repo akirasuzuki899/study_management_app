@@ -29,8 +29,8 @@
           ></ButtonDelete>
         </v-toolbar>
         <v-card-text>
-          <p v-html="selectedTask.start_time_hm"></p>
-          <p v-html="selectedTask.end_time_hm"></p>
+          <p v-html="selectedTask.start_time"></p>
+          <p v-html="selectedTask.end_time"></p>
         </v-card-text>
         <v-card-actions>
           <v-btn
