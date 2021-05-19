@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1, format: 'json' do
       mount_devise_token_auth_for 'User', at: 'auth'
+      resources :tasks
       resources :task_templates
       resources :study_notes
       resources :study_materials do
