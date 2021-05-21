@@ -5,12 +5,10 @@ const state = {
   task: {
     id: '',
     user_id: '',
+    study_material_id: '',
     name: '',
-    start_time: '',
-    end_time: '',
-    day_of_week: '',
-    created_at: '',
-    updated_at: '',
+    start: '',
+    end: '',
   }
 };
 
@@ -21,6 +19,7 @@ const getters = {
 const mutations = {
   setTasks(state, data) {
     state.tasks = data.tasks;
+    console.log(state.tasks)
   },
   addTask(state, data) {
     state.tasks.push(data.task)
@@ -51,6 +50,7 @@ const actions = {
         headers: authTokens
       })
       .then(({ data }) => {
+        console.log(data)
         commit("setTasks", data)
       });
   },
@@ -61,9 +61,8 @@ const actions = {
         {
           name: formData.name,
           study_material_id: formData.study_material_id,
-          day_of_week: formData.day_of_week,
-          start_time: formData.start_time,
-          end_time: formData.end_time
+          start_at: formData.start_time,
+          end_at: formData.end_time
         },
         {
           headers: authTokens

@@ -5,15 +5,15 @@ module Api
       before_action :correct_user, only: [:update, :destroy]
 
       def index
-        @tasks = current_user.tasks
+        today = Time.now
+        @tasks = current_user.tasks.where(start_at: today.beginning_of_week...today.end_of_week)
         render json: @tasks, adapter: :json, each_serializer: TaskSerializer
       end
 
       def create
         @task = current_user.tasks.build(task_params)
         if @task.save
-          # render json: @task, adapter: :json, serializer: TaskSerializer
-          render json: { status: 'SUCCESS', message: 'Loaded posts', task: @task }
+          render json: @task, adapter: :json, serializer: TaskSerializer
         else
           render json: { status: 'SUCCESS', message: 'Loaded posts', task: @task.errors }
         end

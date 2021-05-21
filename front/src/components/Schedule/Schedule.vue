@@ -52,7 +52,7 @@ import TaskForm from "./TaskForm";
     },
     data() {
       return {
-        // ready: false,
+        ready: false,
         target: "task",
         selectedTask: {},
         selectedElement: null,
@@ -60,12 +60,12 @@ import TaskForm from "./TaskForm";
     },
     computed: {
       ...mapGetters(["authTokens", "tasks"]),
-      // cal () {
-      //   return this.ready ? this.$refs.calendar : null
-      // },
-      // nowY () {
-      //   return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
-      // },
+      cal () {
+        return this.ready ? this.$refs.calendar : null
+      },
+      nowY () {
+        return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
+      },
     },
     methods: {
       createTask() {
@@ -87,24 +87,23 @@ import TaskForm from "./TaskForm";
 
         nativeEvent.stopPropagation()
       },
-      // getCurrentTime () {
-      //   return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
-      // },
-      // scrollToTime () {
-      //   const time = this.getCurrentTime()
-      //   const first = Math.max(0, time - (time % 30) - 30)
+      getCurrentTime () {
+        return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
+      },
+      scrollToTime () {
+        const time = this.getCurrentTime()
+        const first = Math.max(0, time - (time % 30) - 30)
 
-      //   this.cal.scrollToTime(first)
-      // },
-      // updateTime () {
-      //   setInterval(() => this.cal.updateTimes(), 60 * 1000)
-      // },
+        this.cal.scrollToTime(first)
+      },
+      updateTime () {
+        setInterval(() => this.cal.updateTimes(), 60 * 1000)
+      },
     },
     mounted () {
-      this.$refs.calendar.scrollToTime('08:00')
-      // this.ready = true
-      // this.scrollToTime()
-      // this.updateTime()
+      this.ready = true
+      this.scrollToTime()
+      this.updateTime()
     },
     created() {
       this.$store.dispatch('getTasks', this.authTokens)

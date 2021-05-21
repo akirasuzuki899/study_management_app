@@ -12,16 +12,22 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-col cols="12" sm="12" md="12">
+              <v-col
+                cols="12"
+                sm="12"
+                md="12"
+              >
                 <v-text-field
                   label="タイトル"
                   v-model="formData.name"
                   required
                 ></v-text-field>
               </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="12" md="12">
+              <v-col
+                cols="12"
+                sm="12"
+                md="12"
+              >
                 <v-select 
                   label="教材"
                   :items="studyMaterials"
@@ -31,43 +37,20 @@
                   required
                 />
               </v-col>
-            </v-row>
-
-          <!-- 開始日時 -->
-            <!-- 日付 -->
-            <v-row>
-              <v-col cols="12" sm="4" md="4">
-                <v-subheader>開始</v-subheader>
-              </v-col>
-              <v-col cols="12" sm="4" md="4" >
-                <v-menu
-                  v-model="datePickerStart"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="formData.start_date"
-                      label="日付"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="formData.start_date"
-                    locale="ja-jp"
-                    @input="datePickerStart = false"
-                  ></v-date-picker>
-                </v-menu>
+              <v-col
+                cols="12"
+                sm="4"
+                md="4"
+              >
               </v-col>
 
-              <!-- 時間 -->
-              <v-col cols="12" sm="4" md="4">
+              <!-- タイムピッカー -->
+              <!-- 開始時間 -->
+              <v-col
+                cols="12"
+                sm="4"
+                md="4"
+              >
                 <v-menu
                   ref="startMenu"
                   v-model="timePickerStart"
@@ -82,7 +65,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="formData.start_time"
-                      label="時刻"
+                      label="開始時刻"
                       prepend-icon="mdi-clock-time-four-outline"
                       readonly
                       v-bind="attrs"
@@ -99,44 +82,13 @@
                   ></v-time-picker>
                 </v-menu>
               </v-col>
-            </v-row>
-            <!-- 開始日時 -->
 
-            <!-- 終了日時 -->
-              <!-- 日付 -->
-            <v-row>
-              <v-col cols="12" sm="4" md="4">
-                <v-subheader>終了</v-subheader>
-              </v-col>
-              <v-col cols="12" sm="4" md="4">
-                <v-menu
-                  v-model="datePickerEnd"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="formData.end_date"
-                      label="日付"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="formData.end_date"
-                    locale="ja-jp"
-                    @input="datePickerEnd = false"
-                  ></v-date-picker>
-                </v-menu>
-              </v-col>
-
-              <!-- 時間 -->
-              <v-col cols="12" sm="4" md="4">
+              <!-- 終了時間 -->
+              <v-col
+                cols="12"
+                sm="4"
+                md="4"
+              >
                 <v-menu
                   ref="endMenu"
                   v-model="timePickerEnd"
@@ -151,7 +103,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="formData.end_time"
-                      label="時刻"
+                      label="終了時刻"
                       prepend-icon="mdi-clock-time-four-outline"
                       readonly
                       v-bind="attrs"
@@ -168,9 +120,9 @@
                   ></v-time-picker>
                 </v-menu>
               </v-col>
-            </v-row>
-            <!-- 終了日時 -->
+              <!-- タイムピッカー -->
 
+            </v-row>
           </v-container>
           <small>*indicates required field</small>
         </v-card-text>
@@ -230,8 +182,6 @@ export default {
   },
   data () {
     return {
-      datePickerStart: false,
-      datePickerEnd: false,
       timePickerStart: false,
       timePickerEnd: false,
       Dialog: false,
@@ -240,9 +190,7 @@ export default {
         name: '',
         study_material_id: '',
         day_of_week: '',
-        start_date: '',
         start_time: '',
-        end_date: '',
         end_time: ''
       }
     }
@@ -256,8 +204,7 @@ export default {
     setDefaultFormData () {
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
-      this.formData.start_date = this.selectedTask.start_date
-      this.formData.start_date = this.selectedTask.start_date
+      this.formData.day_of_week = this.selectedTask.day_of_week
       this.formData.start_time = this.selectedTask.start_time
       this.formData.end_time = this.selectedTask.end_time
     },

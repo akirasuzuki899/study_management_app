@@ -23,11 +23,11 @@
             :target="target"
           ></TaskShow>
 
-          <TaskForm
+          <TaskTemplateForm
             ref="form"
             method="create"
             :target="target"
-          ></TaskForm>
+          ></TaskTemplateForm>
 
         </v-sheet>
       </v-col>
@@ -38,12 +38,12 @@
 <script>
 import { mapGetters } from "vuex";
 import TaskShow from "./TaskShow";
-import TaskForm from "./TaskForm";
+import TaskTemplateForm from "./TaskTemplateForm";
 
   export default {
     components: {
       TaskShow,
-      TaskForm,
+      TaskTemplateForm,
     },
     data() {
       return {
