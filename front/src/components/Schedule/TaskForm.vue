@@ -257,7 +257,7 @@ export default {
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
       this.formData.start_date = this.selectedTask.start_date
-      this.formData.start_date = this.selectedTask.start_date
+      this.formData.end_date = this.selectedTask.end_date
       this.formData.start_time = this.selectedTask.start_time
       this.formData.end_time = this.selectedTask.end_time
     },

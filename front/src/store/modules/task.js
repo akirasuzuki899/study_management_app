@@ -9,6 +9,10 @@ const state = {
     name: '',
     start: '',
     end: '',
+    start_date: '',
+    end_date: '',
+    start_time: '',
+    end_time: '',
   }
 };
 
@@ -61,8 +65,10 @@ const actions = {
         {
           name: formData.name,
           study_material_id: formData.study_material_id,
-          start_at: formData.start_time,
-          end_at: formData.end_time
+          start_date: formData.start_date,
+          end_date: formData.end_date,
+          start_time: formData.start_time,
+          end_time: formData.end_time,
         },
         {
           headers: authTokens
@@ -82,9 +88,10 @@ const actions = {
         {
           name: formData.name,
           study_material_id: formData.study_material_id,
-          day_of_week: formData.day_of_week,
+          start_date: formData.start_date,
+          end_date: formData.end_date,
           start_time: formData.start_time,
-          end_time: formData.end_time
+          end_time: formData.end_time,
         },
         {
           headers: authTokens
