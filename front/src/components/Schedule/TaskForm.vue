@@ -60,6 +60,9 @@
                   </template>
                   <v-date-picker
                     v-model="formData.start_date"
+                    :day-format="onlyNum"
+                    :allowed-dates="afterToday"
+                    :first-day-of-week="1"
                     locale="ja-jp"
                     @input="datePickerStart = false"
                   ></v-date-picker>
@@ -129,6 +132,9 @@
                   </template>
                   <v-date-picker
                     v-model="formData.end_date"
+                    :day-format="onlyNum"
+                    :allowed-dates="afterToday"
+                    :first-day-of-week="1"
                     locale="ja-jp"
                     @input="datePickerEnd = false"
                   ></v-date-picker>
@@ -188,7 +194,6 @@
             :authTokens="authTokens"
             :formData="formData"
             :target="target"
-            @task-template="createTaskTemplate($event); close()"
             @task="createTask($event); close()"
           ></ButtonCreate>
           <ButtonUpdate
@@ -197,7 +202,6 @@
             :formData="formData"
             :target="target"
             :selectedTask="selectedTask"
-            @task-template="updateTaskTemplate($event); close()"
             @task="updateTask($event); close()"
           ></ButtonUpdate>
         </v-card-actions>
@@ -251,7 +255,7 @@ export default {
     ...mapGetters(["authTokens", "studyMaterials"]),
   },
   methods: {
-    ...mapActions(["createTaskTemplate","updateTaskTemplate", "createTask", "updateTask"]),
+    ...mapActions(["createTask", "updateTask"]),
 
     setDefaultFormData () {
       this.formData.name = this.selectedTask.name
@@ -262,6 +266,10 @@ export default {
       this.formData.end_time = this.selectedTask.end_time
     },
 
+    onlyNum: val => new Date(val).getDate(),
+
+    afterToday: val => val >= new Date().toISOString().substr(0, 10),
+      
     allowedMinutes: v => v % 5 === 0 || v === 0,
 
     open () {
