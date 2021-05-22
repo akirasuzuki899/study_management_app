@@ -35,7 +35,7 @@ module Api
       private
 
       def task_params
-        params.permit(:study_material_id, :name, :start_at, :end_at)
+        params.permit(:study_material_id, :name, :start_date, :end_date, :start_time, :end_time)
       end
 
       def correct_user

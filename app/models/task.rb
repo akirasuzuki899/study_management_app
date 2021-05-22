@@ -1,9 +1,11 @@
 class Task < ApplicationRecord
+  attr_accessor :start_date, :start_time, :end_date, :end_time
+  before_validation :set_start_at, :set_end_at
   belongs_to :user
   belongs_to :study_material
 
 
-  # private
+  private
 
   def self.set_next_week_date
     today = Time.now
@@ -39,5 +41,13 @@ class Task < ApplicationRecord
       end
       Task.insert_all(tasks)
     end
+  end
+
+  def set_start_at
+    self.start_at = start_date.present? && start_time.present? ? [start_date, start_time].join(" ") : nil
+  end
+
+  def set_end_at
+    self.end_at = end_date.present? && end_time.present? ? [end_date, end_time].join(" ") : nil
   end
 end
