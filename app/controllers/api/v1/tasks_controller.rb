@@ -11,11 +11,14 @@ module Api
       end
 
       def create
-        @task = current_user.tasks.build(task_params)
-        if @task.save
-          render json: @task, adapter: :json, serializer: TaskSerializer
+        task = current_user.tasks.build(task_params)
+        if task.save
+          render json: task, adapter: :json, serializer: TaskSerializer
         else
-          render json: { status: 'SUCCESS', message: 'Loaded posts', task: @task.errors }
+          render json: {
+            status: 400,
+            task: task.errors
+          }
         end
       end
 

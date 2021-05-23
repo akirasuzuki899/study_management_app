@@ -75,9 +75,12 @@ const actions = {
         }
       )
       .then(( { data } ) => {
+        console.log("success")
+        console.log(data)
         commit("addTask", data)
       })
       .catch(error => {
+        console.log("error");
         console.log(error);
       })
   },

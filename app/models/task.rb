@@ -1,8 +1,28 @@
 class Task < ApplicationRecord
   attr_accessor :start_date, :start_time, :end_date, :end_time
-  before_validation :set_start_at, :set_end_at
   belongs_to :user
   belongs_to :study_material
+  
+  before_validation :set_start_at, :set_end_at
+  validates :user_id, presence: true
+  validates :study_material_id, presence: true
+  validates :name, presence: true, length: { maximum: 50 }
+  VALID_DATE_REGEX = /\A(20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])\z/  # 2000-01-01
+  VALID_TIME_REGEX = /\A([01][0-9]|2[0-3]):[0-5][0-9]\z/                          # 00:00
+  validates :start_date, presence: true, format: { with: VALID_DATE_REGEX, message: "yyyy-mm-dd" }
+  validates :end_date, presence: true, format: { with: VALID_DATE_REGEX, message: "yyyy-mm-dd" }
+  validates :start_time, presence: true, format: { with: VALID_TIME_REGEX, message: "hh:mm" }
+  validates :end_time, presence: true, format: { with: VALID_TIME_REGEX, message: "hh:mm" }
+  validate :start_at_should_be_before_end_at
+  validate :start_at_should_be_after_now
+
+  def start_at_should_be_before_end_at
+    errors.add(:end_time, "は開始時刻より遅い時間を選択してください") if self.start_at > self.end_at
+  end
+
+  def start_at_should_be_after_now
+    errors.add(:start_time, "は現在の日時より遅い時間を選択してください") if self.start_at < Time.now
+  end
 
 
   private
@@ -23,10 +43,12 @@ class Task < ApplicationRecord
   def self.create_next_week_tasks_by_task_templates
     next_week = Task.set_next_week_date
     users = User.joins(:task_templates).group("users.id")
+
     users.each do | user |
       task_templates = user.task_templates
       tasks = []
       now = Time.current
+      
       task_templates.each do | task_template |
         task = {
           user_id: task_template.user_id,
