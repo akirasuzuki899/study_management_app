@@ -39,17 +39,23 @@
               </v-col>
               <v-col
                 cols="12"
-                sm="4"
-                md="4"
+                sm="12"
+                md="12"
               >
+                <v-select
+                  label="曜日"
+                  :items="dayOfWeek" 
+                  v-model="formData.day_of_week"
+                  required
+                ></v-select>
               </v-col>
 
               <!-- タイムピッカー -->
               <!-- 開始時間 -->
               <v-col
                 cols="12"
-                sm="4"
-                md="4"
+                sm="6"
+                md="6"
               >
                 <v-menu
                   ref="startMenu"
@@ -86,8 +92,8 @@
               <!-- 終了時間 -->
               <v-col
                 cols="12"
-                sm="4"
-                md="4"
+                sm="6"
+                md="6"
               >
                 <v-menu
                   ref="endMenu"
@@ -121,6 +127,18 @@
                 </v-menu>
               </v-col>
               <!-- タイムピッカー -->
+
+              <v-col
+                cols="12"
+                sm="12"
+                md="12"
+              >
+                <v-switch
+                  v-model="formData.is_until_tomorrow"
+                  inset
+                  label="翌日"
+                ></v-switch>
+              </v-col>
 
             </v-row>
           </v-container>
@@ -174,7 +192,8 @@ export default {
         name: '',
         study_material_id: '',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        is_until_tomorrow: false
       })
     },
     method: {}, 
@@ -191,7 +210,8 @@ export default {
         study_material_id: '',
         day_of_week: '',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        is_until_tomorrow: false
       }
     }
   },
@@ -207,6 +227,7 @@ export default {
       this.formData.day_of_week = this.selectedTask.day_of_week
       this.formData.start_time = this.selectedTask.start_time
       this.formData.end_time = this.selectedTask.end_time
+      this.formData.is_until_tomorrow = this.selectedTask.is_until_tomorrow
     },
 
     allowedMinutes: v => v % 5 === 0 || v === 0,

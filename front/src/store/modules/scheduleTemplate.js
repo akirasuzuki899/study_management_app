@@ -9,6 +9,7 @@ const state = {
     start_time: '',
     end_time: '',
     day_of_week: '',
+    is_until_tomorrow: false,
     created_at: '',
     updated_at: '',
   }
@@ -64,13 +65,15 @@ const actions = {
           study_material_id: formData.study_material_id,
           day_of_week: formData.day_of_week,
           start_time: formData.start_time,
-          end_time: formData.end_time
+          end_time: formData.end_time,
+          is_until_tomorrow: formData.is_until_tomorrow
         },
         {
           headers: authTokens
         }
       )
       .then(( { data } ) => {
+        console.log(data)
         commit("addTaskTemplate", data)
       })
       .catch(error => {

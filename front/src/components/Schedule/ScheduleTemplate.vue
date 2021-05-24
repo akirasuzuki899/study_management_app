@@ -16,12 +16,12 @@
             <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
           </v-calendar>
 
-          <TaskShow 
+          <TaskTemplateShow 
             ref="taskTemplateShow"
             :selectedTask="selectedTask" 
             :selectedElement="selectedElement"
             :target="target"
-          ></TaskShow>
+          ></TaskTemplateShow>
 
           <TaskTemplateForm
             ref="form"
@@ -37,12 +37,12 @@
 
 <script>
 import { mapGetters } from "vuex";
-import TaskShow from "./TaskShow";
+import TaskTemplateShow from "./TaskTemplateShow";
 import TaskTemplateForm from "./TaskTemplateForm";
 
   export default {
     components: {
-      TaskShow,
+      TaskTemplateShow,
       TaskTemplateForm,
     },
     data() {
