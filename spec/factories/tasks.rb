@@ -1,10 +1,13 @@
 FactoryBot.define do
   factory :task do
-    user { nil }
-    study_material { nil }
-    name { "MyString" }
-    start_time { "2021-05-17 14:51:55" }
-    end_time { "2021-05-17 14:51:55" }
-    day_of_week { "MyString" }
+    user { :user }
+    study_material { :study_material }
+    name { "Task" }
+    start_at { "2050-05-17 00:00:00" }
+    end_at { "2050-05-17 01:00:00" }
+    start_date { "2050-05-17" }
+    start_time { "00:00" } 
+    end_date { "2050-05-17" }
+    end_time { "01:00" }
   end
 end
