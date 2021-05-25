@@ -28,12 +28,6 @@ module Api
         "#{BASEWEEK[object.day_of_week]} #{start_time}"
       end
 
-      # def end
-      #   if until_tomorrow? then
-      #     next_date = BASEWEEK[object.day_of_week]
-      #   end
-
-      # end
       def end
         "#{BASEWEEK[object.day_of_week]} #{end_time}"
       end

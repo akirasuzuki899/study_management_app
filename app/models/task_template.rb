@@ -14,6 +14,8 @@ class TaskTemplate < ApplicationRecord
   validate :time_shoud_be_more_than_15min
 
   def time_shoud_be_more_than_15min
+    return if self.start_time.nil? || self.end_time.nil?  # start_time,end_timeの値が無い時、処理を中断する(エラーになるのを防ぐ)
+
     if until_tomorrow? then 
       total_time_sec = self.end_time.tomorrow - self.start_time
       errors.add(:total_time, "合計時間は15分以上にしてください") if total_time_sec < 15*60
@@ -24,6 +26,7 @@ class TaskTemplate < ApplicationRecord
   end
 
   def until_tomorrow?
+    return if self.start_time.nil? || self.end_time.nil?  # start_time,end_timeの値が無い時、処理を中断する(エラーになるのを防ぐ)
     self.start_time > self.end_time ? true : false
   end
 end
