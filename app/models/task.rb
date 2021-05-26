@@ -17,7 +17,7 @@ class Task < ApplicationRecord
   validate :start_at_should_be_after_now
 
   def start_at_should_be_before_end_at
-    return "aaa" if self.start_at.nil? || self.end_at.nil?  # start_time,end_timeの値が無い時、処理を中断する(エラーになるのを防ぐ)
+    return if self.start_at.nil? || self.end_at.nil?  # start_time,end_timeの値が無い時、処理を中断する(エラーになるのを防ぐ)
     errors.add(:end_at, "終了日時は開始日時より遅い時間を選択してください") if self.start_at > self.end_at
   end
 
