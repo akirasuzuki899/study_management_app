@@ -25,7 +25,8 @@ module Api
         expect(@subject[:end_time]).to eq("01:00")
       end
 
-      it 'end_time = 00:00 の時、当日の24:00に更新されれば有効 (dbでは深夜０時を00:00として扱うが,シリアライザーでは24:00として扱う)' do
+      it 'end_time = 00:00 の時、当日の24:00に更新されれば有効 
+          (dbでは深夜０時を00:00として扱うが,シリアライザーではend_timeだけ24:00として扱う)' do
         @task_template.assign_attributes({
           start_time: "23:00",
           end_time: "00:00",

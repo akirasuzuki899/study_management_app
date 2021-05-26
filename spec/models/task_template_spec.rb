@@ -15,7 +15,7 @@ RSpec.describe TaskTemplate, type: :model do
     expect(@task_template).to  be_valid
   end
   
-  it '有効な新規登録-日付をまたぐがない時( 00:00 - 00:15 )' do
+  it '有効な新規登録-日付をまたがない時( 00:00 - 00:15 )' do
     @task_template.assign_attributes({
       start_time: "00:00",
       end_time: "00:15",
@@ -59,7 +59,7 @@ RSpec.describe TaskTemplate, type: :model do
     expect(@task_template.errors[:day_of_week]).to  include("can't be blank")
   end
 
-  it '曜日が["月","火","水","木","金","土","日"]のどれかで無い時に無効' do
+  it '曜日が["月","火","水","木","金","土","日"]のどれでもない時に無効' do
     @task_template.day_of_week = "a"
     @task_template.valid?
     expect(@task_template.errors[:day_of_week]).to  include("is not included in the list")
@@ -93,19 +93,90 @@ RSpec.describe TaskTemplate, type: :model do
     })
     @task_template.valid?
     expect(@task_template.errors[:total_time]).to  include("合計時間は15分以上にしてください")
+
+    @task_template.assign_attributes({
+      start_time: "23:55",
+      end_time: "00:00",
+    })
+    @task_template.valid?
+    expect(@task_template.errors[:total_time]).to  include("合計時間は15分以上にしてください")
+
+    @task_template.assign_attributes({
+      start_time: "00:00",
+      end_time: "00:05",
+    })
+    @task_template.valid?
+    expect(@task_template.errors[:total_time]).to  include("合計時間は15分以上にしてください")
   end
 
-  it 'メソッドテスト until_tomorrow?' do
+  it '日曜日のタスクが当日中に終わらない時に無効' do
     @task_template.assign_attributes({
       start_time: "23:00",
-      end_time: "23:15",
+      end_time: "01:00",
+      day_of_week: "日"
     })
-    expect(@task_template.until_tomorrow?).to eq(false)
+    @task_template.valid?
+    expect(@task_template.errors[:total_time]).to  include("日曜日の予定は当日の範囲で選択してください")
+  end
 
+
+  it 'メソッドテスト until_tomorrow?' do
     @task_template.assign_attributes({
       start_time: "23:00",
       end_time: "00:15",
     })
     expect(@task_template.until_tomorrow?).to eq(true)
+
+    @task_template.assign_attributes({
+      start_time: "23:00",
+      end_time: "23:00",
+    })
+    expect(@task_template.until_tomorrow?).to eq(true)
+
+    @task_template.assign_attributes({
+      start_time: "00:00",
+      end_time: "00:00",
+    })
+    expect(@task_template.until_tomorrow?).to eq(false)
+
+    @task_template.assign_attributes({
+      start_time: "23:00",
+      end_time: "00:00",
+    })
+    expect(@task_template.until_tomorrow?).to eq(false)
+
+    @task_template.assign_attributes({
+      start_time: "23:00",
+      end_time: "23:15",
+    })
+    expect(@task_template.until_tomorrow?).to eq(false)
   end
+
+  it 'メソッドテスト until_midnight?' do
+    @task_template.assign_attributes({
+      start_time: "23:00",
+      end_time: "00:00",
+    })
+    expect(@task_template.until_midnight?).to eq(true)
+
+    @task_template.assign_attributes({
+      start_time: "00:00",
+      end_time: "00:00",
+    })
+    expect(@task_template.until_midnight?).to eq(true)
+
+    @task_template.assign_attributes({
+      start_time: "00:00",
+      end_time: "00:15",
+    })
+    expect(@task_template.until_midnight?).to eq(false)
+
+    @task_template.assign_attributes({
+      start_time: "23:00",
+      end_time: "00:15",
+    })
+    expect(@task_template.until_midnight?).to eq(false)
+  end
+
+
 end

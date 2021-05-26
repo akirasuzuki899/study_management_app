@@ -17,38 +17,23 @@ module Api
       }
     
       def start_time
-        # I18n.localize object.start_time
-        tmp =  I18n.localize object.start_time
-        Rails.logger.info "-----------------start_time method : #{tmp}-----------------"
-        return tmp
+        I18n.localize object.start_time
       end
 
       def end_time
-        # object.until_midnight? ? "24:00" : (I18n.localize object.end_time)
-        tmp =  object.until_midnight? ? "24:00" : (I18n.localize object.end_time)
-        Rails.logger.info "-----------------end_time method : #{tmp}-----------------"
-        return tmp
+        object.until_midnight? ? "24:00" : (I18n.localize object.end_time)
       end
 
       def start
-        # "#{BASEWEEK[object.day_of_week]} #{start_time}"
-        tmp = "#{BASEWEEK[object.day_of_week]} #{start_time}"
-        Rails.logger.info "-----------------start method : #{tmp}-----------------"
-        return tmp
+        "#{BASEWEEK[object.day_of_week]} #{start_time}"
       end
 
       def end
         if object.until_tomorrow?  then 
-          # end_date = Time.parse(BASEWEEK[object.day_of_week]).tomorrow
-          # return "#{I18n.localize(end_date, format: :date)} #{end_time}"
           end_date = Time.parse(BASEWEEK[object.day_of_week]).tomorrow
-          Rails.logger.info "-----------------end method true : #{end_date}-----------------"
           return "#{I18n.localize(end_date, format: :date)} #{end_time}"
         else
-          # return "#{BASEWEEK[object.day_of_week]} #{end_time}"
-          tmp = "#{BASEWEEK[object.day_of_week]} #{end_time}"
-          Rails.logger.info "-----------------end method false : #{tmp}-----------------"
-          return tmp
+          return "#{BASEWEEK[object.day_of_week]} #{end_time}"
         end
       end
 
