@@ -22,7 +22,7 @@ module Api
         if @task_template.update(task_template_params)
           render json: @task_template, adapter: :json, serializer: TaskTemplateSerializer
         else
-          render json: { status: 'SUCCESS', message: 'Loaded posts', task_template: @task_template.error }
+          render json: { status: 'SUCCESS', message: 'Loaded posts', task_template: @task_template.errors }
         end
       end
 

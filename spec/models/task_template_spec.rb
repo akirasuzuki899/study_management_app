@@ -119,6 +119,16 @@ RSpec.describe TaskTemplate, type: :model do
     expect(@task_template.errors[:total_time]).to  include("日曜日の予定は当日の範囲で選択してください")
   end
 
+  it '日曜日のタスクが当日中に終わる時に有効' do
+    @task_template.assign_attributes({
+      start_time: "23:00",
+      end_time: "00:00",
+      day_of_week: "日"
+    })
+    @task_template.valid?
+    expect(@task_template).to be_valid
+  end
+
 
   it 'メソッドテスト until_tomorrow?' do
     @task_template.assign_attributes({

@@ -28,7 +28,7 @@ class TaskTemplate < ApplicationRecord
 
   def sunday_task_should_be_end_by_midnight 
     return if self.start_time.nil? || self.end_time.nil?
-    errors.add(:total_time, "日曜日の予定は当日の範囲で選択してください") if self.day_of_week == "日"
+    errors.add(:total_time, "日曜日の予定は当日の範囲で選択してください") if self.day_of_week == "日" && until_tomorrow?
   end
 
   def until_midnight?
