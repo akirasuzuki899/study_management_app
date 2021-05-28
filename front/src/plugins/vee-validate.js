@@ -16,7 +16,9 @@ const minTime = {
       return ( totalTime >= min*60*1000 ? true : false )
 
     } else {
-      return true
+      const time_is_0h = start.getTime() == new Date(`${tmp_date} 00:00`).getTime() 
+      const time_is_24h = start.getTime() == new Date(`${tmp_date} 24:00`).getTime()
+      return ( start.getTime() == end.getTime() && time_is_0h || time_is_24h ? false : true ) 
     }
   },
   message: "合計時間は15分以上にしてください"
