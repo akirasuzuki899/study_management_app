@@ -9,7 +9,6 @@ class TaskTemplate < ApplicationRecord
   validates :day_of_week, presence: true, inclusion: {in: %w(月 火 水 木 金 土 日)}
   validates :start_time, presence: true
   validates :end_time, presence: true
-  validates :is_until_tomorrow, inclusion: {in: [true, false]}
 
   validate :time_should_be_more_than_15min
   validate :sunday_task_should_be_end_by_midnight
@@ -17,7 +16,7 @@ class TaskTemplate < ApplicationRecord
   def time_should_be_more_than_15min
     return if self.start_time.nil? || self.end_time.nil?  
 
-    if until_tomorrow? || until_midnight? then 
+    if until_tomorrow? then 
       total_time_sec = self.end_time.tomorrow - self.start_time
       errors.add(:total_time, "合計時間は15分以上にしてください") if total_time_sec < 15*60
     else
@@ -31,7 +30,9 @@ class TaskTemplate < ApplicationRecord
     errors.add(:total_time, "日曜日の予定は当日の範囲で選択してください") if self.day_of_week == "日" && until_tomorrow?
   end
 
-  def until_midnight?
+  #vueから送信された時点では24:00だが、オブジェクトに値を代入すると00:00に変換される
+  #railsではend_timeに限って24:00を00:00として扱う
+  def until_midnight? 
     return if self.start_time.nil? || self.end_time.nil? 
     (I18n.localize self.end_time)  == "00:00" ? true : false
   end

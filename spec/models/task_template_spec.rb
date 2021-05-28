@@ -96,7 +96,7 @@ RSpec.describe TaskTemplate, type: :model do
 
     @task_template.assign_attributes({
       start_time: "23:55",
-      end_time: "00:00",
+      end_time: "24:00",
     })
     @task_template.valid?
     expect(@task_template.errors[:total_time]).to  include("合計時間は15分以上にしてください")
@@ -122,7 +122,7 @@ RSpec.describe TaskTemplate, type: :model do
   it '日曜日のタスクが当日中に終わる時に有効' do
     @task_template.assign_attributes({
       start_time: "23:00",
-      end_time: "00:00",
+      end_time: "24:00",
       day_of_week: "日"
     })
     @task_template.valid?
@@ -145,13 +145,13 @@ RSpec.describe TaskTemplate, type: :model do
 
     @task_template.assign_attributes({
       start_time: "00:00",
-      end_time: "00:00",
+      end_time: "24:00",
     })
     expect(@task_template.until_tomorrow?).to eq(false)
 
     @task_template.assign_attributes({
       start_time: "23:00",
-      end_time: "00:00",
+      end_time: "24:00",
     })
     expect(@task_template.until_tomorrow?).to eq(false)
 
@@ -165,13 +165,13 @@ RSpec.describe TaskTemplate, type: :model do
   it 'メソッドテスト until_midnight?' do
     @task_template.assign_attributes({
       start_time: "23:00",
-      end_time: "00:00",
+      end_time: "24:00",
     })
     expect(@task_template.until_midnight?).to eq(true)
 
     @task_template.assign_attributes({
       start_time: "00:00",
-      end_time: "00:00",
+      end_time: "24:00",
     })
     expect(@task_template.until_midnight?).to eq(true)
 

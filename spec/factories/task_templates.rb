@@ -6,6 +6,5 @@ FactoryBot.define do
     start_time { "2021-05-01 00:00:00" }
     end_time { "2021-05-01 01:00:00" }
     day_of_week { "月" }
-    is_until_tomorrow { false }
   end
 end
