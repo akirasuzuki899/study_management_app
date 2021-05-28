@@ -205,8 +205,7 @@
                 :authTokens="authTokens"
                 :formData="formData"
                 :target="target"
-                @task-template="createTaskTemplate($event); close(); "
-                @task="createTask($event); close()"
+                @task-template="createTaskTemplate($event); close()"
               ></ButtonCreate>
               <ButtonUpdate
                 v-if="method=='update'"
@@ -215,7 +214,6 @@
                 :target="target"
                 :selectedTask="selectedTask"
                 @task-template="updateTaskTemplate($event); close()"
-                @task="updateTask($event); close()"
               ></ButtonUpdate>
             </v-card-actions>
           </form>
@@ -312,7 +310,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["createTaskTemplate","updateTaskTemplate", "createTask", "updateTask"]),
+    ...mapActions(["createTaskTemplate","updateTaskTemplate"]),
 
     setDefaultFormData () {
       this.formData.name = this.selectedTask.name

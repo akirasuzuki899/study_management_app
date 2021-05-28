@@ -6,12 +6,20 @@
           <v-calendar
             ref="calendar"
             :events="tasks"
+            locale="ja"
             color="primary"
             type="week"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             @click:event="showTask"
             @click:time="createTask"
+            :interval-format="intervalFormat"
           >
+            <template v-slot:event="{ event }">
+              <div>
+                <strong>{{ event.name }}</strong><br>
+                {{ event.start.slice( -5 ) }} - {{ event.end.slice( -5 ) }}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
+              </div>
+            </template>
             <!-- <template v-slot:day-body="{ date, week }">
               <div
                 class="v-current-time"
@@ -98,6 +106,9 @@ import TaskForm from "./TaskForm";
       },
       updateTime () {
         setInterval(() => this.cal.updateTimes(), 60 * 1000)
+      },
+      intervalFormat(interval) {  //縦軸の時間フォーマットを hh:mm に変更
+        return interval.time
       },
     },
     mounted () {
