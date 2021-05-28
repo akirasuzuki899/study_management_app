@@ -7,12 +7,20 @@
             ref="calendar"
             :value="baseDate"
             :events="taskTemplates"
+            locale="ja"
             color="primary"
             type="week"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             @click:event="showTaskTemplate"
             @click:time="createTaskTemplate"
+            :interval-format="intervalFormat"
           >
+            <template v-slot:event="{ event }">
+              <div>
+                <strong>{{ event.name }}</strong><br>
+                {{ event.start.slice( -5 ) }} - {{ event.end.slice( -5 ) }}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
+              </div>
+            </template>
             <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
           </v-calendar>
 
@@ -75,6 +83,9 @@ import TaskTemplateForm from "./TaskTemplateForm";
         }
 
         nativeEvent.stopPropagation()
+      },
+      intervalFormat(interval) {  //縦軸の時間フォーマットを hh:mm に変更
+        return interval.time
       },
     },
     mounted () {
