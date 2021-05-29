@@ -7,29 +7,29 @@ module Api
       belongs_to :study_material
 
       def start_date
-        I18n.l(object.start_at, format: :date)
+        I18n.l(object.start_date, format: :date)
+      end
+            
+      def start_time
+        I18n.l object.start_time
       end
 
       def end_date
-        I18n.l(object.end_at, format: :date)
-      end
-
-      def start_time
-        I18n.l object.start_at
+        object.until_tomorrow? ? I18n.l(Time.parse(start_date).tomorrow, format: :date) : start_date
       end
 
       def end_time
-        I18n.l object.end_at
+        object.until_midnight? ? "24:00" : (I18n.localize object.end_time)
       end
     
       def start
-        I18n.l(object.start_at, format: :dateTime)
+        "#{start_date} #{start_time}"
       end
     
       def end
-        I18n.l(object.end_at, format: :dateTime)
+        "#{end_date} #{end_time}"
       end
-    end
 
+    end
   end
 end

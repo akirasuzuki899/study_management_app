@@ -6,7 +6,7 @@ module Api
 
       def index
         today = Time.now
-        @tasks = current_user.tasks.where(start_at: today.beginning_of_week...today.end_of_week)
+        @tasks = current_user.tasks.where(start_date: today.beginning_of_week..today.end_of_week)
         render json: @tasks, adapter: :json, each_serializer: TaskSerializer
       end
 
@@ -38,7 +38,7 @@ module Api
       private
 
       def task_params
-        params.permit(:study_material_id, :name, :start_date, :end_date, :start_time, :end_time)
+        params.permit(:study_material_id, :name, :start_date, :start_time, :end_time)
       end
 
       def correct_user

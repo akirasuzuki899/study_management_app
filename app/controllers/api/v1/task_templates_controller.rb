@@ -34,7 +34,7 @@ module Api
       private
 
       def task_template_params
-        params.permit(:study_material_id, :name, :start_time, :end_time, :day_of_week, :is_until_tomorrow)
+        params.permit(:study_material_id, :name, :start_time, :end_time, :day_of_week)
       end
 
       def correct_user

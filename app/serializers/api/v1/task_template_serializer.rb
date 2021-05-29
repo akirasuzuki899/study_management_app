@@ -15,9 +15,17 @@ module Api
         "土" => "2000-01-08" , 
         "日" => "2000-01-09" , 
       }
+
+      def start_date
+        BASEWEEK[object.day_of_week]
+      end
     
       def start_time
         I18n.localize object.start_time
+      end
+
+      def end_date
+        object.until_tomorrow? ? I18n.l(Time.parse(start_date).tomorrow, format: :date) : start_date
       end
 
       def end_time
@@ -25,16 +33,11 @@ module Api
       end
 
       def start
-        "#{BASEWEEK[object.day_of_week]} #{start_time}"
+        "#{start_date} #{start_time}"
       end
 
       def end
-        if object.until_tomorrow?  then 
-          end_date = Time.parse(BASEWEEK[object.day_of_week]).tomorrow
-          return "#{I18n.localize(end_date, format: :date)} #{end_time}"
-        else
-          return "#{BASEWEEK[object.day_of_week]} #{end_time}"
-        end
+        "#{end_date} #{end_time}"
       end
 
     end

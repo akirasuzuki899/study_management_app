@@ -24,6 +24,69 @@ module Api
         expect(@subject[:start_time]).to eq("00:00")
         expect(@subject[:end_time]).to eq("01:00")
       end
+
+      it 'end_time = 00:00 の時、当日の24:00に更新されれば有効 
+          (dbでは深夜０時を00:00として扱うが,シリアライザーではend_timeだけ24:00として扱う)' do
+        @task.assign_attributes({
+          start_time: "23:00",
+          end_time: "00:00",
+        })
+        subject = TaskSerializer.new(@task).serializable_hash
+        expect(subject[:start]).to eq("2050-05-17 23:00")
+        expect(subject[:end]).to eq("2050-05-17 24:00")
+      end
+
+      #以下, it 'dbの値が〇〇の時、シリアライザーの値が□□であると有効' do
+
+      it 'end_time ≠ 00:00 かつ start_time > end_timeの時、endの値はstartの翌日であると有効' do
+        @task.assign_attributes({
+          start_time: "23:00",
+          end_time: "00:15",
+        })
+        subject = TaskSerializer.new(@task).serializable_hash
+        expect(subject[:start]).to eq("2050-05-17 23:00")
+        expect(subject[:end]).to eq("2050-05-18 00:15")
+      end
+
+      it 'end_time ≠ 00:00 かつ start_time < end_timeの時、endとstartの値は同日であると有効' do
+        @task.assign_attributes({
+          start_time: "08:00",
+          end_time: "10:00",
+        })
+        subject = TaskSerializer.new(@task).serializable_hash
+        expect(subject[:start]).to eq("2050-05-17 08:00")
+        expect(subject[:end]).to eq("2050-05-17 10:00")
+      end
+
+      it 'end_time ≠ 00:00 かつ start_time = end_timeの時、endの値はstartの翌日であると有効' do
+        @task.assign_attributes({
+          start_time: "08:00",
+          end_time: "08:00",
+        })
+        subject = TaskSerializer.new(@task).serializable_hash
+        expect(subject[:start]).to eq("2050-05-17 08:00")
+        expect(subject[:end]).to eq("2050-05-18 08:00")
+      end
+
+      it 'end_time = 00:00 かつ start_time > end_timeの時、endとstartの値は同日であると有効' do
+        @task.assign_attributes({
+          start_time: "23:00",
+          end_time: "00:00",
+        })
+        subject = TaskSerializer.new(@task).serializable_hash
+        expect(subject[:start]).to eq("2050-05-17 23:00")
+        expect(subject[:end]).to eq("2050-05-17 24:00")
+      end
+
+      it 'end_time = 00:00 かつ start_time = end_timeの時、endとstartの値は同日であると有効' do
+        @task.assign_attributes({
+          start_time: "00:00",
+          end_time: "00:00",
+        })
+        subject = TaskSerializer.new(@task).serializable_hash
+        expect(subject[:start]).to eq("2050-05-17 00:00")
+        expect(subject[:end]).to eq("2050-05-17 24:00")
+      end
     end
 
   end

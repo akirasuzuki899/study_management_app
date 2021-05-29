@@ -35,3 +35,6 @@ en:
       default: "%H:%M"
       date: "%Y-%m-%d"
       dateTime: "%Y-%m-%d %H:%M"
+  date:
+    formats:
+      date: "%Y-%m-%d"
