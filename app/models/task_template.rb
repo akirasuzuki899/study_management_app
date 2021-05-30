@@ -1,5 +1,8 @@
 class TaskTemplate < ApplicationRecord
+  include TaskBase
   include Rails.application.routes.url_helpers
+  before_validation :set_start_date
+
   belongs_to :user
   belongs_to :study_material
 
@@ -9,37 +12,26 @@ class TaskTemplate < ApplicationRecord
   validates :day_of_week, presence: true, inclusion: {in: %w(月 火 水 木 金 土 日)}
   validates :start_time, presence: true
   validates :end_time, presence: true
-
   validate :time_should_be_more_than_15min
   validate :sunday_task_should_be_end_by_midnight
 
-  def time_should_be_more_than_15min
-    return if self.start_time.nil? || self.end_time.nil?  
+  BASEWEEK = { 
+    "月" => "2000-01-03" , 
+    "火" => "2000-01-04" , 
+    "水" => "2000-01-05" , 
+    "木" => "2000-01-06" , 
+    "金" => "2000-01-07" , 
+    "土" => "2000-01-08" , 
+    "日" => "2000-01-09" , 
+  }
 
-    if until_tomorrow? then 
-      total_time_sec = self.end_time.tomorrow - self.start_time
-      errors.add(:total_time, "合計時間は15分以上にしてください") if total_time_sec < 15*60
-    else
-      total_time_sec = self.end_time - self.start_time
-      errors.add(:total_time, "合計時間は15分以上にしてください") if total_time_sec < 15*60
-    end
-  end
-
-  def sunday_task_should_be_end_by_midnight 
+  def sunday_task_should_be_end_by_midnight
     return if self.start_time.nil? || self.end_time.nil?
     errors.add(:total_time, "日曜日の予定は当日の範囲で選択してください") if self.day_of_week == "日" && until_tomorrow?
   end
 
-  #vueから送信された時点では24:00だが、オブジェクトに値を代入すると00:00に変換される
-  #railsではend_timeに限って24:00を00:00として扱う
-  def until_midnight? 
-    return if self.start_time.nil? || self.end_time.nil? 
-    (I18n.localize self.end_time)  == "00:00" ? true : false
-  end
-
-  def until_tomorrow?
-    return if self.start_time.nil? || self.end_time.nil?  
-    !until_midnight? && self.start_time >= self.end_time ? true : false
+  def set_start_date
+    self.start_date = BASEWEEK[day_of_week]
   end
 
 end

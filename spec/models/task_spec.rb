@@ -123,24 +123,6 @@ RSpec.describe Task, type: :model do
     expect(@task.errors[:total_time]).to  include("合計時間は15分以上にしてください")
   end
 
-  # it '合計時間が24時間を超過で無効' do
-  #   @task.assign_attributes({
-  #     start_date: "2050-05-17",
-  #     start_time: "23:55",
-  #     end_date: "2050-05-18",
-  #     end_time: "24:00",
-  #   })
-  #   @task.valid?
-  #   expect(@task.errors[:total_time]).to  include("合計時間は24時間以内にしてください")
-
-  #   @task.assign_attributes({
-  #     start_date: "2050-05-17",
-  #     start_time: "00:00",
-  #     end_date: "2050-05-17",
-  #     end_time: "24:00",
-  #   })
-  #   expect(@task).to  be_valid
-  # end
 
   it 'メソッドテスト until_tomorrow?' do
     @task.assign_attributes({
@@ -202,42 +184,42 @@ RSpec.describe Task, type: :model do
 
   it 'メソッドテスト start' do
     @task.start_date = nil
-    expect(@task.start).to  eq(nil)
+    expect(@task.start_at).to  eq(nil)
 
     @task.start_time = nil
-    expect(@task.start).to  eq(nil)
+    expect(@task.start_at).to  eq(nil)
 
     @task.assign_attributes({
       start_date: "2050-05-17",
       start_time: "00:00",                       #start_timeの最小値
       })
     @task.valid?
-    expect(@task.start).to  eq("2050-05-17 00:00:00.000000000 +0900")
+    expect(@task.start_at).to  eq("2050-05-17 00:00:00.000000000 +0900")
 
     @task.assign_attributes({
       start_date: "2050-05-17",
       start_time: "23:45",                       #start_timeの最大値
       })
     @task.valid?
-    expect(@task.start).to  eq("2050-05-17 23:45:00.000000000 +0900")
+    expect(@task.start_at).to  eq("2050-05-17 23:45:00.000000000 +0900")
   end
 
   it 'メソッドテスト end' do
     @task.end_time = nil
-    expect(@task.end).to  eq(nil)
+    expect(@task.end_at).to  eq(nil)
     
     @task.assign_attributes({
       start_time: "23:00",
       end_time: "00:15",                           #end_timeの最小値
       })
     @task.valid?
-    expect(@task.end).to  eq("2050-05-18 00:15:00.000000000 +0900")
+    expect(@task.end_at).to  eq("2050-05-18 00:15:00.000000000 +0900")
 
     @task.assign_attributes({
       end_time: "24:00",                           #end_timeの最大値
       })
     @task.valid?
-    expect(@task.end).to  eq("2050-05-18 00:00:00.000000000 +0900")
+    expect(@task.end_at).to  eq("2050-05-18 00:00:00.000000000 +0900")
 
   end
 

@@ -1,4 +1,5 @@
 class Task < ApplicationRecord
+  include TaskBase
   belongs_to :user
   belongs_to :study_material
 
@@ -10,45 +11,13 @@ class Task < ApplicationRecord
   validates :start_date, presence: true
   validates :start_time, presence: true
   validates :end_time, presence: true
-  # validate :start_should_be_before_end
   validate :start_should_be_after_now
   validate :time_should_be_more_than_15min
-  validate :time_should_be_less_than_24h
 
-
-  # def start_should_be_before_end
-  #   return if self.start.nil? || self.end.nil?
-  #   errors.add(:end, "終了日時は開始日時より遅い時間を選択してください") if self.start > self.end
-  # end
 
   def start_should_be_after_now
-    return if self.start.nil?
-    errors.add(:start, "開始日時は現在の日時以降を選択してください") if self.start < Time.now
-  end
-
-  def time_should_be_more_than_15min
-    return if self.start.nil? || self.end.nil?
-    total_time_sec = self.end - self.start
-    errors.add(:total_time, "合計時間は15分以上にしてください") if total_time_sec < 15*60
-  end
-
-  def time_should_be_less_than_24h
-    return if self.start.nil? || self.end.nil?  
-    total_time_sec = self.end - self.start
-    errors.add(:total_time, "合計時間は24時間以内にしてください") if total_time_sec > 24*60*60
-  end
-
-
-  # private
-
-  def until_midnight? 
-    return if self.start_time.nil? || self.end_time.nil? 
-    (I18n.localize self.end_time)  == "00:00" ? true : false
-  end
-
-  def until_tomorrow?
-    return if self.start_time.nil? || self.end_time.nil?  
-    !until_midnight? && self.start_time >= self.end_time ? true : false
+    return if start_at.nil?
+    errors.add(:start, "開始日時は現在の日時以降を選択してください") if start_at < Time.now
   end
 
   def self.set_next_week_date
@@ -87,18 +56,5 @@ class Task < ApplicationRecord
       end
       Task.insert_all(tasks)
     end
-  end
-
-  def start
-    start_at = start_date.present? && start_time.present? ? [start_date, I18n.l(start_time)].join(" ") : nil
-    start_at ? Time.parse(start_at) : nil
-  end
-  
-  def end
-    return unless start_date.present? && start_time.present? && end_time.present?
-    end_date = until_tomorrow? ? start_date.tomorrow : start_date
-    end_time = until_midnight? ? "24:00" : I18n.l(self.end_time)
-    end_at = [end_date, end_time].join(" ")
-    return Time.parse(end_at)
   end
 end
