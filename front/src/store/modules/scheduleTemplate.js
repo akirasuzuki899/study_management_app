@@ -9,9 +9,9 @@ const state = {
     start_time: '',
     end_time: '',
     day_of_week: '',
-    is_until_tomorrow: false,
     created_at: '',
     updated_at: '',
+    prev_week_sunday_task: '',
   }
 };
 
@@ -21,27 +21,44 @@ const getters = {
 
 const mutations = {
   setTaskTemplates(state, data) {
-    state.taskTemplates = data.task_templates;
+    const task_templates = data.task_templates
+    const prev_week_sunday_tasks = task_templates.reduce( function(result, task) {
+      if ( task.day_of_week == "日" ){
+        result.push(task.prev_week_sunday_task);
+      }
+      return result;
+    },[]);
+
+    task_templates.push(...prev_week_sunday_tasks)
+
+    state.taskTemplates = task_templates;
   },
   addTaskTemplate(state, data) {
-    state.taskTemplates.push(data.task_template)
+    const task_templates = [data.task_template]
+    if(task_templates[0].day_of_week == "日"){
+      task_templates.push(task_templates[0].prev_week_sunday_task)
+    }
+    state.taskTemplates.push(...task_templates)
   },
   updateTaskTemplate(state, data) {
-    const index = state.taskTemplates.findIndex((v) => v.id === data.task_template.id);
-    console.log(data)
-    state.taskTemplates.splice(index, 1, data.task_template)
+    const task_templates = [data.task_template]
+    if (task_templates[0].day_of_week == "日"){
+      task_templates.push(task_templates[0].prev_week_sunday_task);
+    }
+
+    const state_tasks = state.taskTemplates.filter( state_task => 
+      state_task.id !== task_templates[0].id 
+    )
+
+    task_templates.push(...state_tasks)
+
+    state.taskTemplates = task_templates
   },
   destroyTaskTemplate(state, data) {
-    console.log("taskTemplates")
-    console.log(state.taskTemplates)
-    
-    console.log("data")
-    console.log(data)
-
-    const index = state.taskTemplates.findIndex((v) => v.id === data.task_template.id);
-    console.log("index")
-    console.log(index)
-    state.taskTemplates.splice(index, 1)
+    const state_tasks = state.taskTemplates.filter( state_task => 
+      state_task.id !== data.task_template.id 
+    )
+    state.taskTemplates = state_tasks
   }
 };
 
@@ -73,7 +90,7 @@ const actions = {
         }
       )
       .then(( { data } ) => {
-        console.log(data)
+        // console.log(data)
         commit("addTaskTemplate", data)
       })
       .catch(error => {
@@ -118,6 +135,8 @@ const actions = {
       })
   }
 };
+
+
 
 export default {
   state,
