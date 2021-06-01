@@ -127,64 +127,6 @@
                     </validation-provider>
                   </v-col>
 
-
-                  <!-- <v-col
-                    cols="12"
-                    sm="6"
-                    md="6"
-                  >
-                    <v-menu
-                      ref="endMenu"
-                      v-model="timePickerEnd"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      :return-value.sync="formData.end_time"
-                      transition="scale-transition"
-                      offset-y
-                      max-width="290px"
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <validation-provider
-                        v-slot="{ errors }"
-                        name="終了時刻"
-                        rules="required|minTime:@start_time,15"
-                        >
-                          <v-text-field
-                            v-model="formData.end_time"
-                            label="終了時刻"
-                            prepend-icon="mdi-clock-time-four-outline"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                            :error-messages="errors"
-                          ></v-text-field>
-                        </validation-provider>
-                      </template>
-                      <v-time-picker
-                        v-if="timePickerEnd"
-                        v-model="formData.end_time"
-                        format="24hr"
-                        :allowed-minutes="allowedMinutes"
-                        full-width
-                        @click:minute="$refs.endMenu.save(formData.end_time)"
-                      ></v-time-picker>
-                    </v-menu>
-                  </v-col> -->
-                  <!-- タイムピッカー -->
-
-                  <v-col
-                    cols="12"
-                    sm="12"
-                    md="12"
-                  >
-                    <v-switch
-                      v-model="formData.is_until_tomorrow"
-                      inset
-                      label="翌日"
-                    ></v-switch>
-                  </v-col>
-
                 </v-row>
               </v-container>
               <small>*indicates required field</small>

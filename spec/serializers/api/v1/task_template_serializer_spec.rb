@@ -88,6 +88,19 @@ module Api
         expect(subject[:end]).to eq("2000-01-03 24:00")
       end
 
+      it '日曜日のタスクが月曜日に及ぶ場合、prev_week_sunday_taskに一週間前の日付で日曜日のタスクが作成されると有効' do
+        @task_template.assign_attributes({
+          start_time: "23:00",
+          end_time: "02:00",
+          day_of_week: "日",
+          start_date: "2000-01-09",
+        })
+        subject = TaskTemplateSerializer.new(@task_template).serializable_hash
+        expect(subject[:start]).to eq("2000-01-09 23:00")
+        expect(subject[:end]).to eq("2000-01-10 02:00")
+        expect(subject[:prev_week_sunday_task][:start]).to eq("2000-01-02 23:00")
+        expect(subject[:prev_week_sunday_task][:end]).to eq("2000-01-03 02:00")
+      end
 
       it '属性値start,endは曜日に対して特定の日付( 2000-01-03 ~ 2000-01-09 )に決まること'
 
