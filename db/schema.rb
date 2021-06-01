@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_30_141206) do
+ActiveRecord::Schema.define(version: 2021_06_01_074300) do
 
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -70,6 +70,20 @@ ActiveRecord::Schema.define(version: 2021_05_30_141206) do
     t.index ["user_id"], name: "index_study_notes_on_user_id"
   end
 
+  create_table "study_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "task_id", null: false
+    t.bigint "study_material_id", null: false
+    t.time "start_time"
+    t.time "end_time"
+    t.boolean "is_finished", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["study_material_id"], name: "index_study_records_on_study_material_id"
+    t.index ["task_id"], name: "index_study_records_on_task_id"
+    t.index ["user_id"], name: "index_study_records_on_user_id"
+  end
+
   create_table "task_templates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "study_material_id", null: false
@@ -120,6 +134,9 @@ ActiveRecord::Schema.define(version: 2021_05_30_141206) do
   add_foreign_key "study_materials", "users"
   add_foreign_key "study_notes", "study_materials"
   add_foreign_key "study_notes", "users"
+  add_foreign_key "study_records", "study_materials"
+  add_foreign_key "study_records", "tasks"
+  add_foreign_key "study_records", "users"
   add_foreign_key "task_templates", "study_materials"
   add_foreign_key "task_templates", "users"
   add_foreign_key "tasks", "study_materials"

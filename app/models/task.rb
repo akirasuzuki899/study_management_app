@@ -1,5 +1,6 @@
 class Task < ApplicationRecord
   include TaskBase
+  has_one :study_record, dependent: :destroy
   belongs_to :user
   belongs_to :study_material
 
