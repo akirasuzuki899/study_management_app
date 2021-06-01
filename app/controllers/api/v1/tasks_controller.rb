@@ -13,12 +13,11 @@ module Api
       def create
         task = current_user.tasks.build(task_params)
         if task.save
-          render json: task, adapter: :json, serializer: TaskSerializer
+          study_record = set_study_record(task)
+          study_record.save(validate: false)
+          render json: task, adapter: :json, serializer: TaskSerializer      
         else
-          render json: {
-            status: 400,
-            task: task.errors
-          }
+          render json: { status: 400, task: task.errors }
         end
       end
 
@@ -44,6 +43,14 @@ module Api
       def correct_user
         @task = current_user.tasks.find(params[:id])
         redirect_to root_url if @task.nil?
+      end
+
+      def set_study_record(task)
+        StudyRecord.new(
+          user_id: task.user_id,
+          task_id: task.id,
+          study_material_id: task.study_material_id,
+        )
       end
 
     end
