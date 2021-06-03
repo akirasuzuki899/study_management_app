@@ -22,10 +22,10 @@ services:
 
   front:
     build: ./front
-    container_name: vue
-    command: npm run serve
+    container_name: nuxt
+    command: npm run dev
     volumes:
-      - ./front:/study_management_app_front
+      - ./front:/app/
     ports:
       - '8080:8080'
     stdin_open: true
