@@ -47,6 +47,7 @@
         method="update"
         :target="target"
         :selectedTask="selectedTask"
+        @close="close"
       ></TaskTemplateForm>
       
     </v-menu>

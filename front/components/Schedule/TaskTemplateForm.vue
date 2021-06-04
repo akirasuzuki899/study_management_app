@@ -155,7 +155,7 @@
                 :formData="formData"
                 :target="target"
                 :selectedTask="selectedTask"
-                @task-template="updateTaskTemplate($event); close()"
+                @task-template="updateTaskTemplate($event); close(); closeShow()"
               ></ButtonUpdate>
             </v-card-actions>
           </form>
@@ -271,6 +271,10 @@ export default {
     close () {
       this.Dialog = false
       this.$refs.observer.reset()
+    },
+
+    closeShow() {
+      this.$emit('close')
     }
   },
 }
