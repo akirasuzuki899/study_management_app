@@ -160,7 +160,7 @@
                 :formData="formData"
                 :target="target"
                 :selectedTask="selectedTask"
-                @task="updateTask($event); close()"
+                @task="updateTask($event); close(); closeShow()"
               ></ButtonUpdate>
             </v-card-actions>
           </form>
@@ -214,7 +214,7 @@ export default {
       Dialog: false,
       dayOfWeek: ['月', '火', '水', '木', '金', '土', '日'],
       baseAllowedTime: [
-                "00:15", "00:30", "00:45", 
+                 "00:15", "00:30", "00:45", 
         "01:00", "01:15", "01:30", "01:45", 
         "02:00", "02:15", "02:30", "02:45", 
         "03:00", "03:15", "03:30", "03:45", 
@@ -289,6 +289,10 @@ export default {
     close () {
       this.Dialog = false
       this.$refs.observer.reset()
+    },
+
+    closeShow() {
+      this.$emit('close')
     }
   },
 }
