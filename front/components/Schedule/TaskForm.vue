@@ -56,7 +56,7 @@
 
                 <!-- イベントのカラー -->
                 <v-row>
-                  <v-col cols="12" sm="12" md="12">
+                  <v-col cols="12" sm="2" md="2">
                     <v-menu 
                       v-model="colorMenu"
                       :close-on-content-click="false"

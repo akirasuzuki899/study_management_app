@@ -25,7 +25,7 @@ module Api
         if @task.update(task_params)
           render json: @task, adapter: :json, serializer: TaskSerializer
         else
-          render json: { status: 'SUCCESS', message: 'Loaded posts', task: @task.error }
+          render json: { status: 'SUCCESS', message: 'Loaded posts', task: @task.errors }
         end
       end
 
@@ -37,7 +37,7 @@ module Api
       private
 
       def task_params
-        params.permit(:study_material_id, :name, :start_date, :start_time, :end_time)
+        params.permit(:study_material_id, :name, :start_date, :start_time, :end_time, :color)
       end
 
       def correct_user

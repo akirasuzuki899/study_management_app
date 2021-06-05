@@ -11,6 +11,7 @@ export const state = () => ({
     end_date: '',
     start_time: '',
     end_time: '',
+    color: '',
   }
 })
 
@@ -68,6 +69,7 @@ export const actions = {
           end_date: formData.end_date,
           start_time: formData.start_time,
           end_time: formData.end_time,
+          color: formData.color,
         },
         {
           headers: authTokens
@@ -94,6 +96,7 @@ export const actions = {
           end_date: formData.end_date,
           start_time: formData.start_time,
           end_time: formData.end_time,
+          color: formData.color,
         },
         {
           headers: authTokens
