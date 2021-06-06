@@ -59,6 +59,48 @@
                     </validation-provider>
                   </v-col>
 
+                  <!-- イベントのカラー -->
+                  
+                  <v-col cols="12" sm="2" md="2">
+                    <v-menu 
+                      v-model="colorMenu"
+                      :close-on-content-click="false"
+                      transition="scale-transition"
+                      offset-y
+                    >
+                      <template v-slot:activator="{ attrs }">
+                        <v-text-field
+                          readonly
+                          append-icon="mdi-menu-down"
+                          v-bind="attrs"
+                          @mouseup="colorMenu = true"
+                        >
+                          <template v-slot:prepend-inner>
+                            <div 
+                              class="pa-2 rounded-circle"
+                              v-bind:class="formData.color"
+                            ></div>
+                          </template>
+                        </v-text-field>
+                      </template>
+                      <v-list
+                        class="d-flex justify-center"
+                      >
+                        <v-list-item
+                          v-for="(color, index) in colors"
+                          :key="index"
+                          @click="formData.color = color; colorMenu = false"
+                        >
+                          <div 
+                            class="pa-2 rounded-circle"
+                            v-bind:class="color"
+                          ></div>
+                        </v-list-item>
+                      </v-list> 
+                    </v-menu>
+                  </v-col>
+                  
+                  <!-- 曜日 -->
                   <v-col
                     cols="12"
                     sm="12"
@@ -206,7 +248,9 @@ export default {
   data () {
     return {
       Dialog: false,
+      colorMenu: false,
       dayOfWeek: ['月', '火', '水', '木', '金', '土', '日'],
+      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       baseAllowedTime: [
                  "00:15", "00:30", "00:45", 
         "01:00", "01:15", "01:30", "01:45", 
@@ -261,6 +305,7 @@ export default {
       this.formData.day_of_week = this.selectedTask.day_of_week
       this.formData.start_time = this.selectedTask.start_time
       this.formData.end_time = this.selectedTask.end_time
+      this.formData.color = this.selectedTask.color || "blue"
     },
     
     open () {

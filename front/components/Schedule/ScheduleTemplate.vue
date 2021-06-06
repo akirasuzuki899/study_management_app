@@ -11,6 +11,7 @@
             color="primary"
             type="week"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+            :event-color="getEventColor"
             @click:event="showTaskTemplate"
             @click:time="createTaskTemplate"
             :interval-format="intervalFormat"
@@ -59,6 +60,7 @@ import TaskTemplateForm from "./TaskTemplateForm";
         baseDate: '2000-01-03',
         selectedTask: {},
         selectedElement: null,
+        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       }
     },
     computed: {
@@ -87,6 +89,9 @@ import TaskTemplateForm from "./TaskTemplateForm";
       },
       intervalFormat(interval) {  //縦軸の時間フォーマットを hh:mm に変更
         return interval.time
+      },
+       getEventColor (event) {
+        return event.color
       },
     },
     mounted () {
