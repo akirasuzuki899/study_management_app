@@ -63,12 +63,12 @@
                       transition="scale-transition"
                       offset-y
                     >
-                      <template v-slot:activator="{ on, attrs }">
+                      <template v-slot:activator="{ attrs }">
                         <v-text-field
                           readonly
                           append-icon="mdi-menu-down"
                           v-bind="attrs"
-                          v-on="on"
+                          @mouseup="colorMenu = true"
                         >
                           <template v-slot:prepend-inner>
                             <div 

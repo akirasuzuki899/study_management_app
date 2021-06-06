@@ -6,6 +6,7 @@ module Api
     
       belongs_to :user
       belongs_to :study_material
+      has_one :study_record
       
     end
   end
