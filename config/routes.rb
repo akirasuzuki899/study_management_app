@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       mount_devise_token_auth_for 'User', at: 'auth'
       resources :tasks
       resources :task_templates
+      resources :study_records
       resources :study_notes
       resources :study_materials do
         collection do

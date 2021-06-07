@@ -1,10 +1,11 @@
 FactoryBot.define do
   factory :study_record do
-    user { nil }
-    task { nil }
-    study_material { nil }
-    start_time { "2021-06-01 16:43:00" }
-    end_time { "2021-06-01 16:43:00" }
+    user { :user }
+    task { :task }
+    study_material { :study_material }
+    start_date { "2050-05-17" }
+    start_time { "10:00" }
+    end_time { "11:00" }
     is_finished { false }
   end
 end

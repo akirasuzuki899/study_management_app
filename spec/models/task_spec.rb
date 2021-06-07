@@ -21,18 +21,18 @@ RSpec.describe Task, type: :model do
       start_date: "2050-05-17",
       start_time: "23:00:00",
       end_time: "23:30:00",
-      })
-      expect(@task).to  be_valid
-    end
+    })
+    expect(@task).to  be_valid
+  end
 
-    it '有効な新規登録-日付をまたがない時(24時終了)' do
-      @task.assign_attributes({
-        start_date: "2050-05-17",
-        start_time: "23:00:00",
-        end_time: "24:00:00",
-      })
-      expect(@task).to  be_valid
-    end
+  it '有効な新規登録-日付をまたがない時(24時終了)' do
+    @task.assign_attributes({
+      start_date: "2050-05-17",
+      start_time: "23:00:00",
+      end_time: "24:00:00",
+    })
+    expect(@task).to  be_valid
+  end
 
   it '関連するユーザーが存在しなければ無効' do
     @task.user_id = nil
