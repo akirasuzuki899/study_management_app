@@ -5,7 +5,7 @@ class StudyMaterial < ApplicationRecord
 
   belongs_to :user
   has_many :study_notes, dependent: :destroy
-  has_many :study_records
+  has_many :study_records,  dependent: :destroy
   has_one_attached :image
   validates :user_id, presence: true
   validates :title, presence: true, length: { maximum: 50 }, uniqueness: { case_sensitive: false , scope: :user}
