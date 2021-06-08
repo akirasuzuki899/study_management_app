@@ -3,7 +3,7 @@
     <v-dialog
       v-model="Dialog"
       width="500"
-      @click:outside="close()"
+      @click:outside.stop="close()"
     >
       <v-card>
         <v-card-title>
@@ -184,7 +184,7 @@
               <v-btn
                 color="blue darken-1"
                 text
-                @click.stop="close()"
+                @click="close()"
               >
                 取消
               </v-btn>
@@ -254,7 +254,6 @@ export default {
       datePickerStart: false,
       Dialog: false,
       colorMenu: false,
-      dayOfWeek: ['月', '火', '水', '木', '金', '土', '日'],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       baseAllowedTime: [
                  "00:15", "00:30", "00:45", 
@@ -315,7 +314,6 @@ export default {
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
       this.formData.start_date = this.selectedTask.start_date
-      this.formData.end_date = this.selectedTask.end_date
       this.formData.start_time = this.selectedTask.start_time
       this.formData.end_time = this.selectedTask.end_time
       this.formData.color = this.selectedTask.color || "blue"
@@ -333,6 +331,7 @@ export default {
     close () {
       this.Dialog = false
       this.$refs.observer.reset()
+      console.log("close from taskform")
     },
 
     closeShow() {

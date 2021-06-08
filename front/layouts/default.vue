@@ -95,6 +95,7 @@
 
 <script>
 export default {
+  name: "default",
   data () {
     return {
       clipped: false,

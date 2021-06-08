@@ -16,6 +16,7 @@
     "core-js": "^3.9.1",
     "nuxt": "^2.15.3",
     "vee-validate": "^3.4.8",
+    "vue-click-outside": "^1.1.0",
     "vue-infinite-loading": "^2.4.5",
     "vue-trix": "^1.2.0"
   },
