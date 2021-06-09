@@ -44,6 +44,9 @@
           ></TaskForm>
 
         </v-sheet>
+        <v-card :disabled="true">
+          てすと
+        </v-card>
       </v-col>
     </v-row>
   </v-app>
