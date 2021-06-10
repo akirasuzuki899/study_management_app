@@ -44,18 +44,18 @@
             {{ `${formatDateTime(selectedTask.start_date, selectedTask.start_time)} 〜 ${formatDateTime(selectedTask.end_date, selectedTask.end_time)}` }}
           </v-card-text>
 
-          <v-expansion-panels flat >
+          <v-expansion-panels flat v-model="openedPanel">
             <v-expansion-panel>
 
               <v-expansion-panel-header>
                 <div class="d-flex" v-if="selectedTask.study_record.is_finished == true">
-                  <v-card-text v-if="selectedTask.start_date == selectedTask.end_date">
+                  <v-card-text v-if="selectedTask.study_record.start_date == selectedTask.study_record.end_date">
                     <v-icon>mdi-timer</v-icon>
                     {{ `${formatDate(selectedTask.study_record.start_date)} ${selectedTask.study_record.start_time} 〜 ${selectedTask.study_record.end_time}` }}
                   </v-card-text>
                   <v-card-text v-else>
                     <v-icon>mdi-timer</v-icon>
-                    {{ `${formatDateTime(selectedTask.study_record.start_date, selectedTask.start_time)} 〜 ${formatDateTime(selectedTask.study_record.end_date, selectedTask.end_time)}` }}
+                    {{ `${formatDateTime(selectedTask.study_record.start_date, selectedTask.study_record.start_time)} 〜 ${formatDateTime(selectedTask.study_record.end_date, selectedTask.study_record.end_time)}` }}
                   </v-card-text>
                 </div>
                 <v-card-text v-else>
@@ -68,6 +68,7 @@
                 <StudyRecordForm
                   ref="StudyRecordForm"
                   :selectedStudyRecord="selectedTask.study_record"
+                  @close="closePanel"
                 ></StudyRecordForm>
               </v-expansion-panel-content>
 
@@ -109,6 +110,7 @@ export default {
   data() {
     return {
       isOpen: false,
+      openedPanel: null
     }
   } ,
   computed: {
@@ -120,6 +122,8 @@ export default {
         this.$refs.StudyRecordForm.setDefaultFormData()
       } else {
         this.$refs.StudyRecordForm.initValidation()
+        this.closePanel()
+
       }
     }
   },
@@ -142,6 +146,9 @@ export default {
     formatDate(date){
       const d = new Date(date)
       return `${d.getMonth() + 1}月${d.getDate()}日`
+    },
+    closePanel () {
+      this.openedPanel = null
     },
   },
 }

@@ -33,7 +33,7 @@ export const mutations = {
   }
 };
 
-export const action = {
+export const actions = {
   getStudyRecords( { commit }, authTokens ){
     this.$axios
       .get('/api/v1/study_records', {
@@ -47,10 +47,11 @@ export const action = {
   createStudyRecords( { commit }, { authTokens, formData }){
     this.$axios
       .post(
-        '/api/v1/tasks',
+        '/api/v1/study_records',
         {
           task_id: formData.task_id,
           study_material_id: formData.study_material_id,
+          start_date: formData.start_date,
           start_time: formData.start_time,
           end_time: formData.end_time,
           is_finished: formData.is_finished,
@@ -69,13 +70,16 @@ export const action = {
         console.log(error);
       })
   },
-  updateStudyRecord( { commit }, { authTokens, formData, id }){
-    this.$axios
+  async updateStudyRecord( { commit }, { authTokens, formData, id } ){
+    console.log("store id")
+    console.log(id)
+    await this.$axios
       .put(
-        '/api/v1/tasks/' + id,
+        '/api/v1/study_records/' + id,
         {
           task_id: formData.task_id,
           study_material_id: formData.study_material_id,
+          start_date: formData.start_date,
           start_time: formData.start_time,
           end_time: formData.end_time,
           is_finished: formData.is_finished,

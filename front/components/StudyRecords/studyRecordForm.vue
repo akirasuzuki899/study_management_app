@@ -88,15 +88,21 @@
             </v-container>
           </v-card-text>
           <v-card-actions>
+            <v-alert
+              v-model="alert"
+              class="ma-0 pa-1"
+              :color="alertColor"
+              text
+            >{{alertMessage}}
+            </v-alert>
             <v-spacer></v-spacer>
             <v-btn
-              :disabled="invalid"
-              text
-              @click="updateStudyRecord({
-                authTokens: authTokens,
-                formData: formData,
-                id: selectedStudyRecord.id
-              });"
+              :disabled="invalid || btnDisabled"
+              :loading="loading"
+              plain
+              @click="updateRecord(
+                formData, authTokens, selectedStudyRecord
+              )"
             >
             更新
             </v-btn>
@@ -129,7 +135,12 @@ export default {
   data(){
     return {
       isOpen: false,
+      alert: false,
       datePickerStart: false,
+      loading: false,
+      btnDisabled: false,
+      alertMessage: "",
+      alertColor: "",
       baseAllowedTime: [
                  "00:15", "00:30", "00:45", 
         "01:00", "01:15", "01:30", "01:45", 
@@ -180,6 +191,30 @@ export default {
   methods: {
     ...mapActions('studyRecord', ['updateStudyRecord']),
 
+    updateRecord(formData, authTokens, selectedStudyRecord){
+      this.loading = true
+      console.log("selectedStudyRecord")
+      console.log(selectedStudyRecord.id)
+      this.updateStudyRecord({
+        formData: formData,
+        authTokens: authTokens,
+        id: selectedStudyRecord.id
+      }).then((res) => {
+        setTimeout(() => {
+          this.loading = false
+          this.btnDisabled = true
+          this.alert = true
+          this.alertMessage = "更新しました"
+          this.alertColor = "green"
+          }, 2000)
+        setTimeout(() => {
+          this.btnDisabled = false
+          this.alert = false
+          this.close()
+          }, 4000)
+      })
+    },
+
     setDefaultFormData () {
       this.formData.task_id = this.selectedStudyRecord.task_id
       this.formData.study_material_id = this.selectedStudyRecord.study_material_id
@@ -196,6 +231,9 @@ export default {
     initValidation() {
       this.$refs.observer.reset()
     },
+    close(){
+      this.$emit('close');
+    }
   }
 }
 </script>
