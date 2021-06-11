@@ -89,7 +89,7 @@
           </v-card-text>
           <v-card-actions>
             <v-alert
-              v-model="alert"
+              v-model="alertable"
               class="ma-0 pa-1"
               :color="alertColor"
               text
@@ -97,7 +97,7 @@
             </v-alert>
             <v-spacer></v-spacer>
             <v-btn
-              :disabled="invalid || btnDisabled"
+              :disabled="invalid || disabled"
               :loading="loading"
               plain
               @click="updateRecord(
@@ -135,12 +135,13 @@ export default {
   data(){
     return {
       isOpen: false,
-      alert: false,
       datePickerStart: false,
-      loading: false,
-      btnDisabled: false,
-      alertMessage: "",
-      alertColor: "",
+      alert: [false],
+      load: [false],
+      btnDisabled: [false],
+      underUpgrteId: [""],
+      alertMessage: "更新しました",
+      alertColor: "green",
       baseAllowedTime: [
                  "00:15", "00:30", "00:45", 
         "01:00", "01:15", "01:30", "01:45", 
@@ -187,31 +188,92 @@ export default {
     allowedTimeEnd: function() {
       return [...this.baseAllowedTime, "24:00"]
     },
+    alertable: function() {
+      console.log("")
+      console.log("alertable start")
+      console.log(this.underUpgrteId.includes(this.selectedStudyRecord.id))
+      console.log(this.alert[this.selectedStudyRecord.id] == true )
+      console.log(this.underUpgrteId.includes(this.selectedStudyRecord.id) && this.alert[this.selectedStudyRecord.id] == true )
+      console.log("alertable end")
+      console.log("")
+      return this.underUpgrteId.includes(this.selectedStudyRecord.id) && this.alert[this.selectedStudyRecord.id] == true 
+    },
+    disabled: function () {
+      return this.underUpgrteId.includes(this.selectedStudyRecord.id) && this.btnDisabled[this.selectedStudyRecord.id] == true 
+    },
+    loading: function() {
+      // console.log("this.underUpgrteId.includes(this.selectedStudyRecord.id)")
+      // console.log(this.underUpgrteId.includes(this.selectedStudyRecord.id))
+      // console.log("this.load[this.selectedStudyRecord.id]")
+      // console.log(this.load[this.selectedStudyRecord.id])
+      return this.underUpgrteId.includes(this.selectedStudyRecord.id) && this.load[this.selectedStudyRecord.id]  == true 
+    }
   },
   methods: {
     ...mapActions('studyRecord', ['updateStudyRecord']),
 
     updateRecord(formData, authTokens, selectedStudyRecord){
-      this.loading = true
-      console.log("selectedStudyRecord")
+      console.log("---------start of updateRecord---------")
+      this.underUpgrteId.splice(selectedStudyRecord.id, 0, selectedStudyRecord.id)
+      this.load[selectedStudyRecord.id] = true
+
+      console.log("underUpgrteId")
+      console.log(this.underUpgrteId)
+      console.log("selectedStudyRecord.id")
       console.log(selectedStudyRecord.id)
+
       this.updateStudyRecord({
         formData: formData,
         authTokens: authTokens,
         id: selectedStudyRecord.id
       }).then((res) => {
-        setTimeout(() => {
-          this.loading = false
-          this.btnDisabled = true
-          this.alert = true
-          this.alertMessage = "更新しました"
-          this.alertColor = "green"
-          }, 2000)
-        setTimeout(() => {
-          this.btnDisabled = false
-          this.alert = false
-          this.close()
-          }, 4000)
+        return new Promise(resolve => {
+          console.log("res")
+          console.log(res)
+          setTimeout(() => {
+            console.log("")
+            console.log("------------setTimeout 1st start------------")
+            this.load[selectedStudyRecord.id] = false
+            this.btnDisabled[selectedStudyRecord.id] = true
+            this.alert[selectedStudyRecord.id] = true
+            console.log("this.load[selectedStudyRecord.id] = false")
+            console.log(this.load[selectedStudyRecord.id])
+            console.log("this.btnDisabled[selectedStudyRecord.id] = true")
+            console.log(this.btnDisabled[selectedStudyRecord.id])
+            console.log("this.alert[selectedStudyRecord.id] = true")
+            console.log(this.alert[selectedStudyRecord.id])
+            console.log(this.alert)
+            console.log("------------setTimeout 1st end------------")
+            console.log("")
+            resolve()
+            }, 2000)
+        })
+
+      }).then((res) => {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            console.log("")
+            console.log("------------setTimeout 2nd start------------")
+            this.btnDisabled[selectedStudyRecord.id] = false
+            this.alert[selectedStudyRecord.id] = false
+            this.close()
+            console.log("this.btnDisabled[selectedStudyRecord.id] = false")
+            console.log(this.btnDisabled[selectedStudyRecord.id])
+            console.log("this.alert[selectedStudyRecord.id] = false")
+            console.log(this.alert[selectedStudyRecord.id])
+            console.log("------------setTimeout 2nd end------------")
+            console.log("")
+            resolve()
+            }, 4000)
+        })
+
+      }).then((res) => {
+        this.underUpgrteId.splice(selectedStudyRecord.id, 1)
+        console.log("")
+        console.log("this.underUpgrteId.splice(selectedStudyRecord.id, 1)")
+        console.log(this.underUpgrteId)
+        console.log("")
+        console.log("---------end of updateRecord---------")
       })
     },
 

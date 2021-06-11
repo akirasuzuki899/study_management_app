@@ -28,7 +28,7 @@ export const mutations = {
   },
   updateStudyRecord(state, data){
     const index = state.studyRecords.findIndex((v) => v.id === data.study_records.id);
-    console.log(data)
+    // console.log(data)
     state.studyRecords.splice(index, 1, data.study_records)
   }
 };
@@ -70,10 +70,8 @@ export const actions = {
         console.log(error);
       })
   },
-  async updateStudyRecord( { commit }, { authTokens, formData, id } ){
-    console.log("store id")
-    console.log(id)
-    await this.$axios
+  updateStudyRecord( { commit }, { authTokens, formData, id } ){
+    return this.$axios
       .put(
         '/api/v1/study_records/' + id,
         {
@@ -90,6 +88,7 @@ export const actions = {
       )
       .then(( { data } ) => {
         commit("updateStudyRecord", data)
+        return data
       })
       .catch(error => {
         console.log(error);
