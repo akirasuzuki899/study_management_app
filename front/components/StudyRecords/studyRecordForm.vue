@@ -136,10 +136,13 @@ export default {
     return {
       isOpen: false,
       datePickerStart: false,
-      alert: [false],
-      load: [false],
-      btnDisabled: [false],
-      underUpgrteId: [""],
+      alertable: false,
+      alertIDs: [false],
+      loading: false,
+      loadIDs: [false],
+      disabled: false,
+      disabledIDs: [false],
+      underUpgrteIDs: [],
       alertMessage: "更新しました",
       alertColor: "green",
       baseAllowedTime: [
@@ -178,6 +181,53 @@ export default {
       }
     }
   },
+  watch: {
+    alertIDs: {
+      handler: function() {
+        console.log("")
+        console.log("----------------- watch alertIDs start ---------------------")
+        console.log("this.underUpgrteIDs.includes(this.selectedStudyRecord.id)")
+        console.log(this.underUpgrteIDs.includes(this.selectedStudyRecord.id))
+        console.log("this.alertIDs[this.selectedStudyRecord.id] == true")
+        console.log(this.alertIDs[this.selectedStudyRecord.id] == true)
+        console.log("sum")
+        console.log(this.underUpgrteIDs.includes(this.selectedStudyRecord.id) && this.alertIDs[this.selectedStudyRecord.id] == true)
+        console.log("----------------- watch alertIDs end ---------------------")
+        console.log("")
+        this.alertable = this.underUpgrteIDs.includes(this.selectedStudyRecord.id) && this.alertIDs[this.selectedStudyRecord.id] == true
+      },
+      deep: true
+    },
+    loadIDs: {
+
+      handler: function() {
+        console.log("")
+        console.log("----------------- watch loadIDs start ---------------------")
+        console.log("this.underUpgrteIDs.includes(this.selectedStudyRecord.id)")
+        console.log(this.underUpgrteIDs.includes(this.selectedStudyRecord.id))
+        console.log("this.loadIDs[this.selectedStudyRecord.id]  == true")
+        console.log(this.loadIDs[this.selectedStudyRecord.id]  == true)
+        console.log("----------------- watch loadIDs end ---------------------")
+        console.log("")
+        this.loading = this.underUpgrteIDs.includes(this.selectedStudyRecord.id) && this.loadIDs[this.selectedStudyRecord.id]  == true
+      },
+      deep: true
+    },
+    disabledIDs: {
+      handler: function() {
+        console.log("")
+        console.log("----------------- watch disabledIDs start ---------------------")
+        console.log("this.underUpgrteIDs.includes(this.selectedStudyRecord.id)")
+        console.log(this.underUpgrteIDs.includes(this.selectedStudyRecord.id))
+        console.log("this.disabledIDs[this.selectedStudyRecord.id] == true")
+        console.log(this.disabledIDs[this.selectedStudyRecord.id] == true)
+        console.log("----------------- watch disabledIDs end ---------------------")
+        console.log("")
+        this.disabled = this.underUpgrteIDs.includes(this.selectedStudyRecord.id) && this.disabledIDs[this.selectedStudyRecord.id] == true
+      },
+      deep: true
+    }
+  },
   computed: {
     // ...mapGetters('studyRecord', ['studyRecords']),
     ...mapGetters(['authTokens']),
@@ -188,90 +238,68 @@ export default {
     allowedTimeEnd: function() {
       return [...this.baseAllowedTime, "24:00"]
     },
-    alertable: function() {
-      console.log("")
-      console.log("alertable start")
-      console.log(this.underUpgrteId.includes(this.selectedStudyRecord.id))
-      console.log(this.alert[this.selectedStudyRecord.id] == true )
-      console.log(this.underUpgrteId.includes(this.selectedStudyRecord.id) && this.alert[this.selectedStudyRecord.id] == true )
-      console.log("alertable end")
-      console.log("")
-      return this.underUpgrteId.includes(this.selectedStudyRecord.id) && this.alert[this.selectedStudyRecord.id] == true 
-    },
-    disabled: function () {
-      return this.underUpgrteId.includes(this.selectedStudyRecord.id) && this.btnDisabled[this.selectedStudyRecord.id] == true 
-    },
-    loading: function() {
-      // console.log("this.underUpgrteId.includes(this.selectedStudyRecord.id)")
-      // console.log(this.underUpgrteId.includes(this.selectedStudyRecord.id))
-      // console.log("this.load[this.selectedStudyRecord.id]")
-      // console.log(this.load[this.selectedStudyRecord.id])
-      return this.underUpgrteId.includes(this.selectedStudyRecord.id) && this.load[this.selectedStudyRecord.id]  == true 
-    }
   },
   methods: {
     ...mapActions('studyRecord', ['updateStudyRecord']),
 
     updateRecord(formData, authTokens, selectedStudyRecord){
       console.log("---------start of updateRecord---------")
-      this.underUpgrteId.splice(selectedStudyRecord.id, 0, selectedStudyRecord.id)
-      this.load[selectedStudyRecord.id] = true
-
-      console.log("underUpgrteId")
-      console.log(this.underUpgrteId)
-      console.log("selectedStudyRecord.id")
-      console.log(selectedStudyRecord.id)
+      this.underUpgrteIDs[selectedStudyRecord.id] = selectedStudyRecord.id
+      this.loadIDs[selectedStudyRecord.id] = true
+      console.log("-------------------------now--------------------------")
+      // console.log("underUpgrteIDs")
+      // console.log(this.underUpgrteIDs)
+      // console.log("selectedStudyRecord.id")
+      // console.log(selectedStudyRecord.id)
 
       this.updateStudyRecord({
         formData: formData,
         authTokens: authTokens,
         id: selectedStudyRecord.id
-      }).then((res) => {
-        return new Promise(resolve => {
-          console.log("res")
-          console.log(res)
-          setTimeout(() => {
-            console.log("")
-            console.log("------------setTimeout 1st start------------")
-            this.load[selectedStudyRecord.id] = false
-            this.btnDisabled[selectedStudyRecord.id] = true
-            this.alert[selectedStudyRecord.id] = true
-            console.log("this.load[selectedStudyRecord.id] = false")
-            console.log(this.load[selectedStudyRecord.id])
-            console.log("this.btnDisabled[selectedStudyRecord.id] = true")
-            console.log(this.btnDisabled[selectedStudyRecord.id])
-            console.log("this.alert[selectedStudyRecord.id] = true")
-            console.log(this.alert[selectedStudyRecord.id])
-            console.log(this.alert)
-            console.log("------------setTimeout 1st end------------")
-            console.log("")
-            resolve()
-            }, 2000)
-        })
+      })
 
-      }).then((res) => {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            console.log("")
-            console.log("------------setTimeout 2nd start------------")
-            this.btnDisabled[selectedStudyRecord.id] = false
-            this.alert[selectedStudyRecord.id] = false
-            this.close()
-            console.log("this.btnDisabled[selectedStudyRecord.id] = false")
-            console.log(this.btnDisabled[selectedStudyRecord.id])
-            console.log("this.alert[selectedStudyRecord.id] = false")
-            console.log(this.alert[selectedStudyRecord.id])
-            console.log("------------setTimeout 2nd end------------")
-            console.log("")
-            resolve()
-            }, 4000)
-        })
-
-      }).then((res) => {
-        this.underUpgrteId.splice(selectedStudyRecord.id, 1)
+      setTimeout(() => {
         console.log("")
-        console.log("this.underUpgrteId.splice(selectedStudyRecord.id, 1)")
-        console.log(this.underUpgrteId)
+        console.log("------------setTimeout 1st start------------")
+        this.loadIDs[selectedStudyRecord.id] = false
+        this.disabledIDs[selectedStudyRecord.id] = true
+        this.alertIDs[selectedStudyRecord.id] = true
+        
+        console.log("this.loadIDs[selectedStudyRecord.id] = false")
+        console.log(this.loadIDs[selectedStudyRecord.id])
+        console.log("this.disabledIDs[selectedStudyRecord.id] = true")
+        console.log(this.disabledIDs[selectedStudyRecord.id])
+        console.log("this.alertIDs[selectedStudyRecord.id] = true")
+        console.log(this.alertIDs[selectedStudyRecord.id])
+        console.log(this.alertIDs[23])
+        console.log(this.alertIDs[24])
+        console.log(this.alertIDs[25])
+        console.log(this.alertIDs)
+        console.log("------------setTimeout 1st end------------")
+        console.log("")
+            }, 2000)
+
+      return new Promise(resolve => {
+        setTimeout(() => {
+          console.log("")
+          console.log("------------setTimeout 2nd start------------")
+          this.disabledIDs[selectedStudyRecord.id] = false
+          this.alertIDs[selectedStudyRecord.id] = false
+          this.close()
+          console.log("this.disabledIDs[selectedStudyRecord.id] = false")
+          console.log(this.disabledIDs[selectedStudyRecord.id])
+          console.log("this.alertIDs[selectedStudyRecord.id] = false")
+          console.log(this.alertIDs[selectedStudyRecord.id])
+          console.log("------------setTimeout 2nd end------------")
+          console.log("")
+          resolve()
+          }, 4000)
+
+      }).then((res) => {
+        this.underUpgrteIDs.splice(selectedStudyRecord.id, 1)
+        console.log("")
+        console.log("this.underUpgrteIDs.splice(selectedStudyRecord.id, 1)")
+        console.log(this.underUpgrteIDs)
         console.log("")
         console.log("---------end of updateRecord---------")
       })
