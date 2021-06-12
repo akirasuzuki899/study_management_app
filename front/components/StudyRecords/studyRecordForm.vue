@@ -238,19 +238,27 @@ export default {
     allowedTimeEnd: function() {
       return [...this.baseAllowedTime, "24:00"]
     },
+    
+
+
+
+
+
+
+
   },
   methods: {
     ...mapActions('studyRecord', ['updateStudyRecord']),
 
     updateRecord(formData, authTokens, selectedStudyRecord){
       console.log("---------start of updateRecord---------")
-      this.underUpgrteIDs[selectedStudyRecord.id] = selectedStudyRecord.id
-      this.loadIDs[selectedStudyRecord.id] = true
+      this.$set(this.underUpgrteIDs, selectedStudyRecord.id, selectedStudyRecord.id)
+      this.$set(this.loadIDs, selectedStudyRecord.id, true)
+      console.log("underUpgrteIDs")
+      console.log(this.underUpgrteIDs)
+      console.log("loadIDs")
+      console.log(this.loadIDs)
       console.log("-------------------------now--------------------------")
-      // console.log("underUpgrteIDs")
-      // console.log(this.underUpgrteIDs)
-      // console.log("selectedStudyRecord.id")
-      // console.log(selectedStudyRecord.id)
 
       this.updateStudyRecord({
         formData: formData,
@@ -261,9 +269,9 @@ export default {
       setTimeout(() => {
         console.log("")
         console.log("------------setTimeout 1st start------------")
-        this.loadIDs[selectedStudyRecord.id] = false
-        this.disabledIDs[selectedStudyRecord.id] = true
-        this.alertIDs[selectedStudyRecord.id] = true
+        this.$set(this.loadIDs, selectedStudyRecord.id, false)
+        this.$set(this.disabledIDs, selectedStudyRecord.id, true)
+        this.$set(this.alertIDs, selectedStudyRecord.id, true)
         
         console.log("this.loadIDs[selectedStudyRecord.id] = false")
         console.log(this.loadIDs[selectedStudyRecord.id])
@@ -283,8 +291,8 @@ export default {
         setTimeout(() => {
           console.log("")
           console.log("------------setTimeout 2nd start------------")
-          this.disabledIDs[selectedStudyRecord.id] = false
-          this.alertIDs[selectedStudyRecord.id] = false
+          this.$set(this.disabledIDs, selectedStudyRecord.id, false)
+          this.$set(this.alertIDs, selectedStudyRecord.id, false)
           this.close()
           console.log("this.disabledIDs[selectedStudyRecord.id] = false")
           console.log(this.disabledIDs[selectedStudyRecord.id])
