@@ -23,18 +23,18 @@
             @task="deleteTask($event); close()"
           ></ButtonDelete>
         </v-toolbar>
-        <v-card-text v-if="selectedTask.study_material" >  <!--titleが参照できないのを防ぐ-->
+
+        <v-card-text v-if="selectedTask.study_material" >  <!--参照エラーを防ぐ-->
           <div class="d-flex align-center">
-            <v-avatar
-              class="ma-3"
-              size="60"
-              tile
-            >
-              <v-img :src="selectedTask.study_material.image_url"></v-img>
+            <v-avatar tile class="ma-3" size="60">
+              <v-img 
+                :src="selectedTask.study_material.image_url"
+                contain
+              >
+              </v-img>
             </v-avatar>
             <v-card-text>{{ selectedTask.study_material.title }}</v-card-text>
           </div>
-
           <v-card-text v-if="selectedTask.start_date == selectedTask.end_date">
             <v-icon>mdi-calendar-month</v-icon>
             {{ `${formatDate(selectedTask.start_date)} ${selectedTask.start_time} 〜 ${selectedTask.end_time}` }}
@@ -43,39 +43,13 @@
             <v-icon>mdi-calendar-month</v-icon>
             {{ `${formatDateTime(selectedTask.start_date, selectedTask.start_time)} 〜 ${formatDateTime(selectedTask.end_date, selectedTask.end_time)}` }}
           </v-card-text>
-
-          <v-expansion-panels flat v-model="openedPanel">
-            <v-expansion-panel>
-
-              <v-expansion-panel-header>
-                <div class="d-flex" v-if="selectedTask.study_record.is_finished == true">
-                  <v-card-text v-if="selectedTask.study_record.start_date == selectedTask.study_record.end_date">
-                    <v-icon>mdi-timer</v-icon>
-                    {{ `${formatDate(selectedTask.study_record.start_date)} ${selectedTask.study_record.start_time} 〜 ${selectedTask.study_record.end_time}` }}
-                  </v-card-text>
-                  <v-card-text v-else>
-                    <v-icon>mdi-timer</v-icon>
-                    {{ `${formatDateTime(selectedTask.study_record.start_date, selectedTask.study_record.start_time)} 〜 ${formatDateTime(selectedTask.study_record.end_date, selectedTask.study_record.end_time)}` }}
-                  </v-card-text>
-                </div>
-                <v-card-text v-else>
-                  <v-icon>mdi-timer</v-icon>
-                  記録がありません
-                </v-card-text>
-              </v-expansion-panel-header>
-
-              <v-expansion-panel-content :eager="true">
-                <StudyRecordForm
-                  ref="StudyRecordForm"
-                  :selectedStudyRecord="selectedTask.study_record"
-                  @close="closePanel"
-                ></StudyRecordForm>
-              </v-expansion-panel-content>
-
-            </v-expansion-panel>
-          </v-expansion-panels>
-
+          <StudyRecordExpansionPanel
+            :studyRecord="selectedTask.study_record"
+            :showMenu="isOpen"
+          >
+          </StudyRecordExpansionPanel>
         </v-card-text>
+        
         <v-card-actions>
           <v-btn
             text
@@ -99,33 +73,21 @@
 import { mapGetters, mapActions } from "vuex";
 import TaskForm from "./TaskForm";
 import ButtonDelete from "./TaskButtonDelete";
-import StudyRecordForm from "../StudyRecords/studyRecordForm.vue";
+import StudyRecordExpansionPanel from "../StudyRecords/studyRecordExpansionPanel";
 export default {
   components: {
       TaskForm,
-      StudyRecordForm,
+      StudyRecordExpansionPanel,
       ButtonDelete,
     },
   props: ["selectedTask", "selectedElement", "target"],
   data() {
     return {
       isOpen: false,
-      openedPanel: null
     }
   } ,
   computed: {
     ...mapGetters(["authTokens"])
-  },
-  watch: {
-    isOpen: function(isOpen) {
-      if (isOpen == true) {
-        this.$refs.StudyRecordForm.setDefaultFormData()
-      } else {
-        this.$refs.StudyRecordForm.initValidation()
-        this.closePanel()
-
-      }
-    }
   },
   methods: {
     ...mapActions('task', ['deleteTask']),
@@ -146,9 +108,6 @@ export default {
     formatDate(date){
       const d = new Date(date)
       return `${d.getMonth() + 1}月${d.getDate()}日`
-    },
-    closePanel () {
-      this.openedPanel = null
     },
   },
 }
