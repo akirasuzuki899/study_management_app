@@ -30,7 +30,7 @@
               size="60"
               tile
             >
-              <v-img src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
+              <v-img :src="selectedTask.study_material.image_url"></v-img>
             </v-avatar>
             <v-card-text>{{ selectedTask.study_material.title }}</v-card-text>
           </div>
