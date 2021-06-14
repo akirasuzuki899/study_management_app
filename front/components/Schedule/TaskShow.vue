@@ -49,7 +49,7 @@
           >
           </StudyRecordExpansionPanel>
         </v-card-text>
-        
+
         <v-card-actions>
           <v-btn
             text

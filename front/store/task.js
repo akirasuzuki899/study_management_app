@@ -1,3 +1,15 @@
+import { normalize, schema } from 'normalizr';
+
+const user = new schema.Entity('users');
+const study_record = new schema.Entity('studyRecords');
+const study_material = new schema.Entity('studyMaterials');
+const task = new schema.Entity('tasks', {
+  user: user,
+  study_material: study_material,
+  study_record: study_record,
+});
+
+
 export const state = () => ({
   tasks: [],
   task: {
@@ -54,7 +66,11 @@ export const actions = {
         headers: authTokens
       })
       .then(({ data }) => {
-        console.log(data)
+        console.log("success")
+        console.log(data.tasks)
+        const normalizedData = normalize(data.tasks, [task]);
+        console.log("normalizedData")
+        console.log(normalizedData)
         commit("setTasks", data)
       });
   },
@@ -77,8 +93,11 @@ export const actions = {
       )
       .then(( { data } ) => {
         console.log("success")
-        console.log(data)
-        commit("addTask", data)
+        console.log(data.task)
+        const normalizedData = normalize(data.task, task);
+        console.log("normalizedData")
+        console.log(normalizedData)
+        // commit("addTask", data)
       })
       .catch(error => {
         console.log("error");
@@ -103,6 +122,11 @@ export const actions = {
         }
       )
       .then(( { data } ) => {
+        console.log("success")
+        console.log(data.task)
+        const normalizedData = normalize(data.task, task);
+        console.log("normalizedData")
+        console.log(normalizedData)
         commit("updateTask", data)
       })
       .catch(error => {
@@ -118,6 +142,11 @@ export const actions = {
         }
       )
       .then(({ data }) => {
+        console.log("success")
+        console.log(data.task)
+        const normalizedData = normalize(data.task, task);
+        console.log("normalizedData")
+        console.log(normalizedData)
         commit("destroyTask", data)
       })
       .catch( error => {
