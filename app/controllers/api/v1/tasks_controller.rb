@@ -6,8 +6,12 @@ module Api
 
       def index
         today = Time.now
-        @tasks = current_user.tasks.where(start_date: today.beginning_of_week..today.end_of_week)
-        render json: @tasks, adapter: :json, each_serializer: TaskSerializer
+        tasks = current_user.tasks.where(start_date: today.beginning_of_week..today.end_of_week)
+        unfinished_tasks = current_user.tasks.left_joins(:study_record).where(study_record: {is_finished: false} )
+        render  json: {
+          tasks: ActiveModelSerializers::SerializableResource.new(tasks, each_serializer: TaskSerializer).as_json,
+          unfinished_tasks: ActiveModelSerializers::SerializableResource.new(unfinished_tasks, each_serializer: TaskSerializer).as_json
+        }
       end
 
       def create
