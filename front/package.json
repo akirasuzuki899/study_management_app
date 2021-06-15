@@ -14,7 +14,6 @@
     "@nuxtjs/axios": "^5.13.1",
     "@rails/activestorage": "^6.0.3-7",
     "core-js": "^3.9.1",
-    "normalizr": "^3.6.1",
     "nuxt": "^2.15.3",
     "vee-validate": "^3.4.8",
     "vue-click-outside": "^1.1.0",
