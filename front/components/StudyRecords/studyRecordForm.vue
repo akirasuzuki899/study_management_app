@@ -180,7 +180,6 @@ export default {
   },
 
   computed: {
-    // ...mapGetters('studyRecord', ['studyRecords']),
     ...mapGetters(['authTokens']),
 
     allowedTimeStart: function() {
@@ -190,36 +189,12 @@ export default {
       return [...this.baseAllowedTime, "24:00"]
     },
     alertable: function() {
-        console.log("")
-        console.log("----------------- computed alertable start ---------------------")
-        console.log("this.underUpgrteIDs[this.selectedStudyRecord.id] == true")
-        console.log(this.underUpgrteIDs[this.selectedStudyRecord.id] == true)
-        console.log("this.alertIDs[this.selectedStudyRecord.id] == true")
-        console.log(this.alertIDs[this.selectedStudyRecord.id] == true)
-        console.log("----------------- computed alertIableend ---------------------")
-        console.log("")
         return this.underUpgrteIDs[this.selectedStudyRecord.id] == true && this.alertIDs[this.selectedStudyRecord.id] == true
     },
     loading: function() {
-        console.log("")
-        console.log("----------------- computed loading start ---------------------")
-        console.log("this.underUpgrteIDs[this.selectedStudyRecord.id] == true")
-        console.log(this.underUpgrteIDs[this.selectedStudyRecord.id] == true)
-        console.log("this.loadIDs[this.selectedStudyRecord.id]  == true")
-        console.log(this.loadIDs[this.selectedStudyRecord.id]  == true)
-        console.log("----------------- computed loading end ---------------------")
-        console.log("")
         return this.underUpgrteIDs[this.selectedStudyRecord.id] == true && this.loadIDs[this.selectedStudyRecord.id]  == true
     },
     disabled: function() {
-        console.log("")
-        console.log("----------------- computed disabled start ---------------------")
-        console.log("this.underUpgrteIDs[this.selectedStudyRecord.id] == true")
-        console.log(this.underUpgrteIDs[this.selectedStudyRecord.id] == true)
-        console.log("this.disabledIDs[this.selectedStudyRecord.id] == true")
-        console.log(this.disabledIDs[this.selectedStudyRecord.id] == true)
-        console.log("----------------- computed disabled end ---------------------")
-        console.log("")
         return this.underUpgrteIDs[this.selectedStudyRecord.id] == true && this.disabledIDs[this.selectedStudyRecord.id] == true
     },
 
@@ -228,7 +203,6 @@ export default {
     ...mapActions('studyRecord', ['updateStudyRecord']),
 
     updateRecord(formData, authTokens, selectedStudyRecord){
-      console.log("---------start of updateRecord---------")
       this.$set(this.underUpgrteIDs, selectedStudyRecord.id, true)
       this.$set(this.loadIDs, selectedStudyRecord.id, true)
 
@@ -237,41 +211,17 @@ export default {
         authTokens: authTokens,
         id: selectedStudyRecord.id
       }).then (() => {
-        setTimeout(() => {
-          console.log("")
-          console.log("------------setTimeout 1st start------------")
-          this.$set(this.loadIDs, selectedStudyRecord.id, false)
-          this.$set(this.disabledIDs, selectedStudyRecord.id, true)
-          this.$set(this.alertIDs, selectedStudyRecord.id, true)
-          
-          console.log("this.loadIDs[selectedStudyRecord.id] = false")
-          console.log(this.loadIDs[selectedStudyRecord.id])
-          console.log("this.disabledIDs[selectedStudyRecord.id] = true")
-          console.log(this.disabledIDs[selectedStudyRecord.id])
-          console.log("this.alertIDs[selectedStudyRecord.id] = true")
-          console.log(this.alertIDs[selectedStudyRecord.id])
-          console.log("------------setTimeout 1st end------------")
-          console.log("")
-              }, 2000)
+        this.$set(this.loadIDs, selectedStudyRecord.id, false)
+        this.$set(this.disabledIDs, selectedStudyRecord.id, true)
+        this.$set(this.alertIDs, selectedStudyRecord.id, true)
   
         setTimeout(() => {
-          console.log("")
-          console.log("------------setTimeout 2nd start------------")
           this.$set(this.disabledIDs, selectedStudyRecord.id, false)
           this.$set(this.alertIDs, selectedStudyRecord.id, false)
           if (this.underUpgrteIDs[this.selectedStudyRecord.id] == true) this.close()
-          console.log("this.disabledIDs[selectedStudyRecord.id] = false")
-          console.log(this.disabledIDs[selectedStudyRecord.id])
-          console.log("this.alertIDs[selectedStudyRecord.id] = false")
-          console.log(this.alertIDs[selectedStudyRecord.id])
   
           this.underUpgrteIDs.splice(selectedStudyRecord.id, 1, false)
-          console.log("this.underUpgrteIDs.splice(selectedStudyRecord.id, 1, false")
-          console.log(this.underUpgrteIDs)
-          console.log("------------setTimeout 2nd end------------")
-          console.log("---------end of updateRecord---------")
-          console.log("")
-          }, 4000)
+          }, 3000)
       })
     },
 

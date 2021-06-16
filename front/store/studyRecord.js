@@ -26,11 +26,11 @@ export const mutations = {
   addStudyRecords(state, data) {
     state.studyRecords.push(data.study_records)
   },
-  updateStudyRecord(state, data){
-    const index = state.studyRecords.findIndex((v) => v.id === data.study_records.id);
-    // console.log(data)
-    state.studyRecords.splice(index, 1, data.study_records)
-  }
+  // updateStudyRecord(state, data){
+
+  //   console.log(data)
+  //   state.studyRecords.splice(index, 1, data.study_records)
+  // }
 };
 
 export const actions = {
@@ -87,7 +87,9 @@ export const actions = {
         }
       )
       .then(( { data } ) => {
-        commit("updateStudyRecord", data)
+        if (data.study_record.task_id){
+          commit("task/updateStudyRecord", data, { root: true })
+        }
         return data
       })
       .catch(error => {

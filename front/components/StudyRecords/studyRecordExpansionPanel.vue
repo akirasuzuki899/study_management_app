@@ -4,13 +4,9 @@
 
       <v-expansion-panel-header>
         <div class="d-flex" v-if="studyRecord.is_finished == true">
-          <v-card-text v-if="studyRecord.start_date == studyRecord.end_date">
+          <v-card-text>
             <v-icon>mdi-timer</v-icon>
-            {{ `${formatDate(studyRecord.start_date)} ${studyRecord.start_time} 〜 ${studyRecord.end_time}` }}
-          </v-card-text>
-          <v-card-text v-else>
-            <v-icon>mdi-timer</v-icon>
-            {{ `${formatDateTime(studyRecord.start_date, studyRecord.start_time)} 〜 ${formatDateTime(studyRecord.end_date, studyRecord.end_time)}` }}
+            {{ dateTime(studyRecord) }}
           </v-card-text>
         </div>
         <v-card-text v-else>
@@ -41,6 +37,17 @@ export default {
   data() {
     return {
       openedPanel: null
+    }
+  },
+  computed: {
+    dateTime: function() {
+      return function(item){
+        if (item.start_date == item.end_date){
+          return `${this.formatDate(item.start_date)} ${item.start_time} 〜 ${item.end_time}`
+        } else {
+          return `${this.formatDateTime(item.start_date, item.start_time)} 〜 ${this.formatDateTime(item.end_date, item.end_time)}`
+        }
+      }
     }
   },
   watch: {
