@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-row>
-      <v-col>
+      <v-col cols="12" sm="8" md="8">
         <v-sheet height="900">
           <v-calendar
             ref="calendar"
@@ -44,9 +44,11 @@
           ></TaskForm>
 
         </v-sheet>
-        <v-card :disabled="true">
-          てすと
-        </v-card>
+      </v-col>
+      <v-col cols="12" sm="4" md="4">
+        <StudyRecordList
+        >
+        </StudyRecordList>
       </v-col>
     </v-row>
   </v-app>
@@ -56,11 +58,13 @@
 import { mapGetters } from "vuex";
 import TaskShow from "./TaskShow";
 import TaskForm from "./TaskForm";
+import StudyRecordList from "../StudyRecords/StudyRecordsList.vue"
 
   export default {
     components: {
       TaskShow,
       TaskForm,
+      StudyRecordList,
     },
     data() {
       return {
@@ -72,7 +76,7 @@ import TaskForm from "./TaskForm";
       }
     },
     computed: {
-      ...mapGetters('task', ['tasks']),
+      ...mapGetters('task', ['tasks', 'unfinished_tasks']),
       ...mapGetters(["authTokens"]),
       cal () {
         return this.ready ? this.$refs.calendar : null

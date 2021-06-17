@@ -3,8 +3,9 @@ export const state = () => ({
   unfinished_tasks: [],
   task: {
     id: '',
-    user_id: '',
-    study_material_id: '',
+    user: '',
+    study_material: '',
+    study_record: '',
     name: '',
     start: '',
     end: '',

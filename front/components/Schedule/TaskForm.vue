@@ -240,10 +240,18 @@ export default {
   props: {
     selectedTask: {
       default:() => ({
+        id: '',
+        user: '',
+        study_material: '',
+        study_record: '',
         name: '',
-        study_material_id: '',
+        start: '',
+        end: '',
+        start_date: '',
+        end_date: '',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        color: '',
       })
     },
     method: {}, 
@@ -292,6 +300,17 @@ export default {
       }
     }
   },
+  watch: {
+    Dialog: function() {
+      if (this.Dialog == false){
+        this.$emit('formClosed')
+      }
+    },
+    selectedTask: function() {
+      console.log("watch")
+      this.setDefaultFormData()
+    }
+  },
   computed: {
     ...mapGetters('studyMaterial', ['studyMaterials']),
     ...mapGetters(['authTokens']),
@@ -311,6 +330,8 @@ export default {
     ...mapActions('task', ['createTask', 'updateTask']),
 
     setDefaultFormData () {
+      console.log("setDefaultFormData")
+      console.log(this.selectedTask)
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
       this.formData.start_date = this.selectedTask.start_date
@@ -324,14 +345,15 @@ export default {
     afterToday: val => val >= new Date().toISOString().substr(0, 10),
 
     open () {
-      this.setDefaultFormData()
+      console.log("open from form")
+      console.log(this.selectedTask)
+      // this.setDefaultFormData()
       this.Dialog = true
     },
     
     close () {
       this.Dialog = false
       this.$refs.observer.reset()
-      console.log("close from taskform")
     },
 
     closeShow() {

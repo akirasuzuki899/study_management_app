@@ -35,13 +35,9 @@
             </v-avatar>
             <v-card-text>{{ selectedTask.study_material.title }}</v-card-text>
           </div>
-          <v-card-text v-if="selectedTask.start_date == selectedTask.end_date">
+          <v-card-text>
             <v-icon>mdi-calendar-month</v-icon>
-            {{ `${formatDate(selectedTask.start_date)} ${selectedTask.start_time} 〜 ${selectedTask.end_time}` }}
-          </v-card-text>
-          <v-card-text v-else>
-            <v-icon>mdi-calendar-month</v-icon>
-            {{ `${formatDateTime(selectedTask.start_date, selectedTask.start_time)} 〜 ${formatDateTime(selectedTask.end_date, selectedTask.end_time)}` }}
+            {{ dateTime(selectedTask) }}
           </v-card-text>
           <StudyRecordExpansionPanel
             :studyRecord="selectedTask.study_record"
@@ -87,7 +83,16 @@ export default {
     }
   } ,
   computed: {
-    ...mapGetters(["authTokens"])
+    ...mapGetters(["authTokens"]),
+    dateTime: function() {
+        return function(item){
+          if (item.start_date == item.end_date){
+            return `${this.formatDate(item.start_date)} ${item.start_time} 〜 ${item.end_time}`
+          } else {
+            return `${this.formatDateTime(item.start_date, item.start_time)} 〜 ${this.formatDateTime(item.end_date, item.end_time)}`
+          }
+        }
+      }
   },
   methods: {
     ...mapActions('task', ['deleteTask']),
