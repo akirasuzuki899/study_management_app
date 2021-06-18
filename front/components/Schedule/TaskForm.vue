@@ -296,7 +296,7 @@ export default {
         start_date: '',
         start_time: '',
         end_time: '',
-        color: '',
+        color: 'blue',
       }
     }
   },
@@ -307,7 +307,6 @@ export default {
       }
     },
     selectedTask: function() {
-      console.log("watch")
       this.setDefaultFormData()
     }
   },
@@ -330,14 +329,12 @@ export default {
     ...mapActions('task', ['createTask', 'updateTask']),
 
     setDefaultFormData () {
-      console.log("setDefaultFormData")
-      console.log(this.selectedTask)
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
       this.formData.start_date = this.selectedTask.start_date
       this.formData.start_time = this.selectedTask.start_time
       this.formData.end_time = this.selectedTask.end_time
-      this.formData.color = this.selectedTask.color || "blue"
+      this.formData.color = this.selectedTask.color || 'blue'
     },
 
     onlyNum: val => new Date(val).getDate(),
@@ -345,9 +342,6 @@ export default {
     afterToday: val => val >= new Date().toISOString().substr(0, 10),
 
     open () {
-      console.log("open from form")
-      console.log(this.selectedTask)
-      // this.setDefaultFormData()
       this.Dialog = true
     },
     

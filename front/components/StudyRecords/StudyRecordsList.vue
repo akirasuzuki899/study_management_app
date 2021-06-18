@@ -17,7 +17,7 @@
           v-model="selectedId"
         >
           <template v-for="(item, index) in unfinished_tasks">
-            <v-list-item :key="item.id" @click="openScheduleForm()">
+            <v-list-item :key="item.id" @click="openScheduleForm(index)">
               <v-list-item-avatar tile size="50">
                 <v-img 
                   :src="item.study_material.image_url"
@@ -72,6 +72,7 @@ import TaskForm from "../Schedule/TaskForm.vue"
     data() {
       return {
         selectedId: "",
+        selectedTask: "",
       }
     },
     watch: {
@@ -88,12 +89,10 @@ import TaskForm from "../Schedule/TaskForm.vue"
           }
         }
       },
-      selectedTask: function(){
-        return this.unfinished_tasks[this.selectedId]
-      }
     },
     methods: {
-      openScheduleForm() {
+      openScheduleForm(index) {
+        this.selectedTask = this.unfinished_tasks[index]
         this.$refs.scheduleForm.open()
       },
       formatDateTime(date, time){
