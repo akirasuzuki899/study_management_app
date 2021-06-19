@@ -4,6 +4,8 @@ class Task < ApplicationRecord
   belongs_to :user
   belongs_to :study_material
 
+  before_validation :set_end_date
+
   validates :user_id, presence: true
   validates :study_material_id, presence: true
   validates :name, presence: true, length: { maximum: 50 }
@@ -32,6 +34,14 @@ class Task < ApplicationRecord
       "土" => I18n.l( today.next_week(:saturday), format: :date )  , 
       "日" => I18n.l( today.next_week(:sunday), format: :date )  , 
     } 
+  end
+
+  def set_end_date
+    if until_tomorrow? 
+      self.end_date = self.start_date + 1
+    else 
+      self.end_date = self.start_date
+    end
   end
 
   def self.create_next_week_tasks_by_task_templates

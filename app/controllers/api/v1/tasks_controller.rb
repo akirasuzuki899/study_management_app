@@ -5,9 +5,11 @@ module Api
       before_action :correct_user, only: [:update, :destroy]
 
       def index
-        today = Time.now
+        today = Date.today
         tasks = current_user.tasks.where(start_date: today.beginning_of_week..today.end_of_week)
-        unfinished_tasks = current_user.tasks.left_joins(:study_record).where(study_record: {is_finished: false} )
+        unfinished_tasks = current_user.tasks.left_joins(:study_record)
+          .where('end_date < ? ', today)
+          .where(study_record: {is_finished: false})
         render  json: {
           tasks: ActiveModelSerializers::SerializableResource.new(tasks, each_serializer: TaskSerializer).as_json,
           unfinished_tasks: ActiveModelSerializers::SerializableResource.new(unfinished_tasks, each_serializer: TaskSerializer).as_json
@@ -19,7 +21,7 @@ module Api
         if task.save
           study_record = set_study_record(task)
           study_record.save(validate: false)
-          render json: task, adapter: :json, serializer: TaskSerializer      
+          render json: task, adapter: :json, serializer: TaskSerializer
         else
           render json: { status: 400, task: task.errors }
         end
@@ -60,4 +62,3 @@ module Api
     end
   end
 end
-
