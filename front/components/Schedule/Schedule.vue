@@ -9,7 +9,7 @@
             locale="ja"
             color="primary"
             type="week"
-            :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+            :weekdays="[0,1, 2, 3, 4, 5, 6]"
             :event-color="getEventColor"
             @click:event="showTask"
             @click:time="createTask"
@@ -21,15 +21,15 @@
                 {{ event.start.slice( -5 ) }} - {{ event.end.slice( -5 ) }}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
               </div>
             </template>
-            <template v-slot:day-body="{ date, week }">
+            <template v-slot:day-body="{ date }">
               <div
-                :class="{ first: date === week[getCurrentWeekday()].date, 'v-current-time':  date === week[getCurrentWeekday()].date}"
+                :class="[date === getCurrentDate() ? ['first', 'v-current-time'] : '']"
                 :style="{ top: nowY }"
               ></div>
             </template>
           </v-calendar>
 
-          <TaskShow 
+          <TaskShow
             ref="taskShow"
             :selectedTask="selectedTask" 
             :selectedElement="selectedElement"
@@ -81,7 +81,7 @@ import StudyRecordList from "../StudyRecords/StudyRecordsList.vue"
         return this.ready ? this.$refs.calendar : null
       },
       nowY () {
-        return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'     // 現在時刻からY軸のpxを返す関数
+        return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
       },
     },
     methods: {
@@ -107,10 +107,8 @@ import StudyRecordList from "../StudyRecords/StudyRecordsList.vue"
       getCurrentTime () {
         return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
       },
-      getCurrentWeekday () {
-        console.log("this.cal ? this.cal.times.now.weekday : 0")
-        console.log(this.cal ? this.cal.times.now.weekday : 0)
-        return this.cal ? this.cal.times.now.weekday -1 : 0
+      getCurrentDate () {
+        return this.cal ? this.cal.times.now.date : ''
       },
       scrollToTime () {
         const time = this.getCurrentTime()
