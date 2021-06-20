@@ -51,7 +51,7 @@
     <TaskForm
       ref="scheduleForm"
       method="update"
-      target="task"
+      target="unfinishedTask"
       :selectedTask="selectedTask"
       @formClosed="clearID"
     >

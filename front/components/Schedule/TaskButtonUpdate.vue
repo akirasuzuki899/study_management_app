@@ -17,6 +17,8 @@ export default {
         this.taskTemplate()
       } else if (this.target === "task") {
         this.task()
+      } else if (this.target === "unfinishedTask") {
+        this.unfinishedTask()
       } else {
         console.log("値が不正")
         console.log(this.target)
@@ -38,6 +40,14 @@ export default {
         selectedTask: this.selectedTask
       })
     },
+    unfinishedTask(){
+      console.log("unfinished_task")
+      this.$emit('unfinished-task', {
+        authTokens: this.authTokens,
+        formData: this.formData,
+        selectedTask: this.selectedTask
+      })
+    }
   },
 }
 </script>

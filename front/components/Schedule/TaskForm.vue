@@ -203,6 +203,7 @@
                 :target="target"
                 :selectedTask="selectedTask"
                 @task="updateTask($event); close(); closeShow()"
+                @unfinished-task="updateUnfinishedTask($event); close(); closeShow()"
               ></ButtonUpdate>
             </v-card-actions>
           </form>
@@ -326,7 +327,7 @@ export default {
     // }
   },
   methods: {
-    ...mapActions('task', ['createTask', 'updateTask']),
+    ...mapActions('task', ['createTask', 'updateTask', 'updateUnfinishedTask']),
 
     setDefaultFormData () {
       this.formData.name = this.selectedTask.name

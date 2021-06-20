@@ -25,41 +25,27 @@ export const getters = {
 export const mutations = {
   setTasks(state, tasks) {
     state.tasks = tasks;
-    console.log("state")
-    console.log(state.tasks)
   },
   addTask(state, data) {
     state.tasks.push(data.task)
   },
   updateTask(state, data) {
     const index = state.tasks.findIndex((v) => v.id === data.task.id);
-    console.log(data)
     state.tasks.splice(index, 1, data.task)
   },
   destroyTask(state, data) {
-    console.log("tasks")
-    console.log(state.tasks)
-    
-    console.log("data")
-    console.log(data)
-
     const index = state.tasks.findIndex((v) => v.id === data.task.id);
-    console.log("index")
-    console.log(index)
     state.tasks.splice(index, 1)
   },
   setUnfinishedTask(state, unfinished_tasks){
     state.unfinished_tasks = unfinished_tasks;
-    console.log("state")
-    console.log(state.unfinished_tasks)
   },
+  destroyUnfinishedTask(state, data) {
+    const index = state.unfinished_tasks.findIndex((v) => v.id === data.task.id);
+    state.unfinished_tasks.splice(index, 1)
+  },  
   updateStudyRecord(state, data){
     const index = state.tasks.findIndex((v) => v.id === data.study_record.task_id);
-    console.log("--------------------------updateStudyRecord from task--------------------------")
-    console.log("data")
-    console.log(data)
-    console.log("state.tasks[index].study_record")
-    console.log(state.tasks[index].study_record)
     state.tasks[index].study_record = data.study_record
   }
 };
@@ -146,7 +132,34 @@ export const actions = {
       .catch( error => {
         console.log(error);
       })
-  }
+  },
+  updateUnfinishedTask( { commit }, { authTokens, selectedTask, formData } )  {
+    this.$axios
+      .put(
+        '/api/v1/tasks/' + selectedTask.id,
+        {
+          name: formData.name,
+          study_material_id: formData.study_material_id,
+          start_date: formData.start_date,
+          end_date: formData.end_date,
+          start_time: formData.start_time,
+          end_time: formData.end_time,
+          color: formData.color,
+        },
+        {
+          headers: authTokens
+        }
+      )
+      .then(( { data } ) => {
+        console.log("success")
+        console.log(data.task)
+        commit("addTask", data)
+        commit("destroyUnfinishedTask", data)
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  },
 };
 
 export default {

@@ -9,7 +9,7 @@
             locale="ja"
             color="primary"
             type="week"
-            :weekdays="[0,1, 2, 3, 4, 5, 6]"
+            :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             :event-color="getEventColor"
             @click:event="showTask"
             @click:time="createTask"
