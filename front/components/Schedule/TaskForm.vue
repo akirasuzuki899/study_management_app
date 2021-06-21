@@ -19,159 +19,73 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="12" md="12">
-                    <validation-provider
-                      v-slot="{ errors }"
+                    <TextInput
+                      v-model="formData.name"
                       name="タイトル"
+                      label="タイトル"
                       rules="required|max:50"
-                    >
-                      <v-text-field
-                        label="タイトル"
-                        v-model="formData.name"
-                        :error-messages="errors"
-                        required
-                      ></v-text-field>
-                    </validation-provider>
+                    ></TextInput>
                   </v-col>
                 </v-row>
 
                 <v-row>
                   <v-col cols="12" sm="12" md="12">
-                    <validation-provider
-                      v-slot="{ errors }"
+                    <BaseSelect
+                      v-model="formData.study_material_id"
                       name="教材"
+                      label="教材"
                       rules="required"
-                    >
-                      <v-select 
-                        label="教材"
-                        :items="studyMaterials"
-                        item-text="title"
-                        item-value="id"
-                        v-model="formData.study_material_id"
-                        :error-messages="errors"
-                        required
-                      />
-                    </validation-provider>
+                      :items="studyMaterials"
+                      item-text="title"
+                      item-value="id"
+                    ></BaseSelect>
                   </v-col>
                 </v-row>
 
-                <!-- イベントのカラー -->
                 <v-row>
                   <v-col cols="12" sm="2" md="2">
-                    <v-menu 
-                      v-model="colorMenu"
-                      :close-on-content-click="false"
-                      transition="scale-transition"
-                      offset-y
-                    >
-                      <template v-slot:activator="{ attrs }">
-                        <v-text-field
-                          readonly
-                          append-icon="mdi-menu-down"
-                          v-bind="attrs"
-                          @mouseup="colorMenu = true"
-                        >
-                          <template v-slot:prepend-inner>
-                            <div 
-                              class="pa-2 rounded-circle"
-                              v-bind:class="formData.color"
-                            ></div>
-                          </template>
-                        </v-text-field>
-                      </template>
-                      <v-list
-                        class="d-flex justify-center"
-                      >
-                        <v-list-item
-                          v-for="(color, index) in colors"
-                          :key="index"
-                          @click="formData.color = color; colorMenu = false"
-                        >
-                          <div 
-                            class="pa-2 rounded-circle"
-                            v-bind:class="color"
-                          ></div>
-                        </v-list-item>
-                      </v-list> 
-                    </v-menu>
+                    <SelectorColor
+                      v-model="formData.color"
+                    ></SelectorColor>
                   </v-col>
                 </v-row>
 
                 <!-- 開始日 -->
                 <v-row>
-
                   <v-col cols="12" sm="12" md="12" >
-                    <v-menu
-                      v-model="datePickerStart"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <validation-provider
-                          v-slot="{ errors }"
-                          name="日付"
-                          rules="required"
-                        >
-                          <v-text-field
-                            v-model="formData.start_date"
-                            label="日付"
-                            prepend-icon="mdi-calendar"
-                            :error-messages="errors"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                          ></v-text-field>
-                        </validation-provider>
-                      </template>
-                      <v-date-picker
-                        v-model="formData.start_date"
-                        :day-format="onlyNum"
-                        :allowed-dates="afterToday"
-                        :first-day-of-week="1"
-                        locale="ja-jp"
-                        @input="datePickerStart = false"
-                      ></v-date-picker>
-                    </v-menu>
+                    <DatePicker
+                      v-model="formData.start_date"
+                      name="日付"
+                      label="日付"
+                      rules="required"
+                    ></DatePicker>
                   </v-col>
                   <!-- 開始日 -->
 
                   <!-- 開始時間 -->
                   <v-col cols="12" sm="6" md="6" >
-                    <validation-provider
-                      vid="start_time"
-                      v-slot="{ errors }"
+                    <BaseSelect
+                      v-model="formData.start_time"
                       name="開始時刻"
+                      label="開始時間"
                       rules="required"
-                    >
-                      <v-select
-                        :items="allowedTimeStart"
-                        v-model="formData.start_time"
-                        prepend-icon="mdi-clock-time-four-outline"
-                        label="開始時間"
-                        :error-messages="errors"
-                        dense
-                      ></v-select>
-                    </validation-provider>
+                      :items="allowedTimeStart"
+                      prepend-icon="mdi-clock-time-four-outline"
+                      :dense="true"
+                    ></BaseSelect>
                   </v-col>
 
                   <!-- 終了時間 -->
                   <v-col cols="12" sm="6" md="6" >
-                    <validation-provider
-                      v-slot="{ errors }"
+                    <BaseSelect
+                      v-model="formData.end_time"
                       name="終了時刻"
+                      label="終了時間"
                       rules="required|minTime:@start_time,15"
-                    >
-                      <v-select
-                        :items="allowedTimeEnd"
-                        v-model="formData.end_time"
-                        prepend-icon="mdi-clock-time-four-outline"
-                        label="終了時間"
-                        :error-messages="errors"
-                        dense
-                      ></v-select>
-                    </validation-provider>
+                      :items="allowedTimeEnd"
+                      prepend-icon="mdi-clock-time-four-outline"
+                      :dense="true"
+                    ></BaseSelect>
                   </v-col>
                 </v-row>
                 <!-- 終了時間 -->
@@ -215,10 +129,15 @@
 </template>
 
 <script>
+import TextInput from "../Form/BaseTextInput";
+import BaseSelect from "../Form/BaseSelect";
+import SelectorColor from "../Form/SelectorColor";
+import DatePicker from "../Form/DatePicker";
+
 import { mapGetters, mapActions } from "vuex";
 import ButtonCreate from "./TaskButtonCreate";
 import ButtonUpdate from "./TaskButtonUpdate";
-import { required, max, oneOf } from 'vee-validate/dist/rules';
+import { required, max, oneOf, confirmed } from 'vee-validate/dist/rules';
 import { minTime } from '../../plugins/vee-validate';
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode, localize} from 'vee-validate';
 import ja from 'vee-validate/dist/locale/ja';
@@ -235,6 +154,10 @@ export default {
   components: {
     ButtonCreate,
     ButtonUpdate,
+    TextInput,
+    BaseSelect,
+    SelectorColor,
+    DatePicker,
     ValidationProvider,
     ValidationObserver,
   },
@@ -260,10 +183,7 @@ export default {
   },
   data () {
     return {
-      datePickerStart: false,
       Dialog: false,
-      colorMenu: false,
-      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       baseAllowedTime: [
                  "00:15", "00:30", "00:45", 
         "01:00", "01:15", "01:30", "01:45", 
@@ -293,7 +213,6 @@ export default {
       formData: {
         name: '',
         study_material_id: '',
-        day_of_week: '',
         start_date: '',
         start_time: '',
         end_time: '',
@@ -320,11 +239,6 @@ export default {
     allowedTimeEnd: function() {
       return [...this.baseAllowedTime, "24:00"]
     },
-    // afterToday(val) {
-    //   if (val >= new Date().toISOString().substr(0, 10)) {
-    //     return val
-    //   }
-    // }
   },
   methods: {
     ...mapActions('task', ['createTask', 'updateTask', 'updateUnfinishedTask']),
@@ -335,12 +249,8 @@ export default {
       this.formData.start_date = this.selectedTask.start_date
       this.formData.start_time = this.selectedTask.start_time
       this.formData.end_time = this.selectedTask.end_time
-      this.formData.color = this.selectedTask.color || 'blue'
+      this.formData.color = this.selectedTask.color
     },
-
-    onlyNum: val => new Date(val).getDate(),
-
-    afterToday: val => val >= new Date().toISOString().substr(0, 10),
 
     open () {
       this.Dialog = true
