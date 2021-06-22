@@ -10,8 +10,8 @@
       :label="label"
       @input="$emit('input', $event)"
       :error-messages="errors"
+      :dense="dense"
     ></v-text-field>
-    <p></p>
   </validation-provider>
 </template>
 
@@ -43,6 +43,10 @@ export default {
     label: {
       type: String,
       default: ''
+    },
+    dense: {
+      type: Boolean,
+      default: false
     }
   },
 };

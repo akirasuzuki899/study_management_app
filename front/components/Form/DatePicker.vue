@@ -19,6 +19,7 @@
           prepend-icon="mdi-calendar"
           :error-messages="errors"
           readonly
+          :dense="dense"
           v-bind="attrs"
           v-on="on"
         ></v-text-field>
@@ -68,6 +69,10 @@ export default {
     label: {
       type: String,
       default: ''
+    },
+    dense: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

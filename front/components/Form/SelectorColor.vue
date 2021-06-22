@@ -9,6 +9,7 @@
       <v-text-field
         readonly
         append-icon="mdi-menu-down"
+        :dense="dense"
         v-bind="attrs"
         @mouseup="colorMenu = true"
       >
@@ -54,6 +55,10 @@ export default {
     value: {
       type: String,
       default: 'blue'
+    },
+    dense: {
+      type: Boolean,
+      default: false
     }
   },
 }

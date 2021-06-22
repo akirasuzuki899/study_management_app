@@ -4,56 +4,36 @@
     v-slot="{ invalid }"
   >
     <v-form>
-
       <v-row>
         <v-col cols="12" sm="12" md="12">
-          <validation-provider
-            v-slot="{ errors }"
+          <TextInput
+            v-model="name"
             name="名前"
-            rules="required"
-          >
-            <v-text-field
-              label="名前"
-              v-model="name"
-              :error-messages="errors"
-              required
-            ></v-text-field>
-          </validation-provider>
+            label="名前"
+            rules="required|max:50"
+          ></TextInput>
         </v-col>
       </v-row>
 
       <v-row>
         <v-col cols="12" sm="12" md="12">
-          <validation-provider
-            v-slot="{ errors }"
+          <TextInput
+            v-model="email"
             name="メールアドレス"
-            rules="required"
-          >
-            <v-text-field
-              label="メールアドレス"
-              v-model="email"
-              :error-messages="errors"
-              required
-            ></v-text-field>
-          </validation-provider>
+            label="メールアドレス"
+            rules="required|max:50"
+          ></TextInput>
         </v-col>
       </v-row>
 
       <v-row>
         <v-col cols="12" sm="12" md="12">
-          <validation-provider
-            v-slot="{ errors }"
+          <TextInput
+            v-model="password"
             name="パスワード"
-            rules="required"
-          >
-            <v-text-field
-              label="パスワード"
-              v-model="password"
-              :error-messages="errors"
-              type="password"
-              required
-            ></v-text-field>
-          </validation-provider>  
+            label="パスワード"
+            rules="required|max:50"
+          ></TextInput>
         </v-col>
       </v-row>
 
@@ -70,22 +50,12 @@
 </template>
 
 <script>
-import { required, max, oneOf } from 'vee-validate/dist/rules';
-import { minTime } from '../plugins/vee-validate';
-import { extend, ValidationObserver, ValidationProvider, setInteractionMode, localize} from 'vee-validate';
-import ja from 'vee-validate/dist/locale/ja';
+import TextInput from "../components/Form/BaseTextInput";
 
-setInteractionMode('eager')
-
-extend('required', required)
-extend('max', max)
-extend('oneOf', oneOf)
-extend('minTime', minTime)
-localize('ja', ja)
-
+import { ValidationObserver } from 'vee-validate';
 export default {
   components: {
-    ValidationProvider,
+    TextInput,
     ValidationObserver,
   },
   data() {

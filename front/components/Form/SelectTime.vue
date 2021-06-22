@@ -3,12 +3,12 @@
   :value="value"
   @change="$emit('change', $event)"
   :name="name"
-  :vid="vid"
   :label="label"
-  :rules="rules"
+  :vid="vid"
   :items="items"
   prepend-icon="mdi-clock-time-four-outline"
   :dense="dense"
+  :rules="rules"
 ></BaseSelect>
 </template>
 
@@ -56,7 +56,7 @@ export default {
   },
   data: () => ({
     baseAllowedTime: [
-               "00:15", "00:30", "00:45", 
+       "00:05",        "00:15", "00:30", "00:45", 
       "01:00", "01:15", "01:30", "01:45", 
       "02:00", "02:15", "02:30", "02:45", 
       "03:00", "03:15", "03:30", "03:45", 
