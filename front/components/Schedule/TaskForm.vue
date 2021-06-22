@@ -30,15 +30,9 @@
 
                 <v-row>
                   <v-col cols="12" sm="12" md="12">
-                    <BaseSelect
+                    <SelectStudyMaterial
                       v-model="formData.study_material_id"
-                      name="教材"
-                      label="教材"
-                      rules="required"
-                      :items="studyMaterials"
-                      item-text="title"
-                      item-value="id"
-                    ></BaseSelect>
+                    ></SelectStudyMaterial>
                   </v-col>
                 </v-row>
 
@@ -64,28 +58,27 @@
 
                   <!-- 開始時間 -->
                   <v-col cols="12" sm="6" md="6" >
-                    <BaseSelect
+                    <SelectTime
+                      vid="start_time"
                       v-model="formData.start_time"
                       name="開始時刻"
                       label="開始時間"
                       rules="required"
-                      :items="allowedTimeStart"
-                      prepend-icon="mdi-clock-time-four-outline"
+                      time="start"
                       :dense="true"
-                    ></BaseSelect>
+                    ></SelectTime>
                   </v-col>
 
                   <!-- 終了時間 -->
                   <v-col cols="12" sm="6" md="6" >
-                    <BaseSelect
+                    <SelectTime
                       v-model="formData.end_time"
                       name="終了時刻"
                       label="終了時間"
                       rules="required|minTime:@start_time,15"
-                      :items="allowedTimeEnd"
-                      prepend-icon="mdi-clock-time-four-outline"
+                      time="end"
                       :dense="true"
-                    ></BaseSelect>
+                    ></SelectTime>
                   </v-col>
                 </v-row>
                 <!-- 終了時間 -->
@@ -112,6 +105,7 @@
               ></ButtonCreate>
               <ButtonUpdate
                 v-if="method=='update'"
+                :disabled="invalid"
                 :authTokens="authTokens"
                 :formData="formData"
                 :target="target"
@@ -130,16 +124,17 @@
 
 <script>
 import TextInput from "../Form/BaseTextInput";
-import BaseSelect from "../Form/BaseSelect";
 import SelectorColor from "../Form/SelectorColor";
 import DatePicker from "../Form/DatePicker";
+import SelectStudyMaterial from "../Form/SelectStudyMaterial";
+import SelectTime from "../Form/SelectTime";
 
 import { mapGetters, mapActions } from "vuex";
 import ButtonCreate from "./TaskButtonCreate";
 import ButtonUpdate from "./TaskButtonUpdate";
 import { required, max, oneOf, confirmed } from 'vee-validate/dist/rules';
 import { minTime } from '../../plugins/vee-validate';
-import { extend, ValidationObserver, ValidationProvider, setInteractionMode, localize} from 'vee-validate';
+import { extend, ValidationObserver, setInteractionMode, localize} from 'vee-validate';
 import ja from 'vee-validate/dist/locale/ja';
 
 setInteractionMode('eager')
@@ -155,10 +150,10 @@ export default {
     ButtonCreate,
     ButtonUpdate,
     TextInput,
-    BaseSelect,
     SelectorColor,
     DatePicker,
-    ValidationProvider,
+    SelectStudyMaterial,
+    SelectTime,
     ValidationObserver,
   },
   props: {
@@ -184,39 +179,13 @@ export default {
   data () {
     return {
       Dialog: false,
-      baseAllowedTime: [
-                 "00:15", "00:30", "00:45", 
-        "01:00", "01:15", "01:30", "01:45", 
-        "02:00", "02:15", "02:30", "02:45", 
-        "03:00", "03:15", "03:30", "03:45", 
-        "04:00", "04:15", "04:30", "04:45", 
-        "05:00", "05:15", "05:30", "05:45", 
-        "06:00", "06:15", "06:30", "06:45", 
-        "07:00", "07:15", "07:30", "07:45", 
-        "08:00", "08:15", "08:30", "08:45", 
-        "09:00", "09:15", "09:30", "09:45", 
-        "10:00", "10:15", "10:30", "10:45", 
-        "11:00", "11:15", "11:30", "11:45", 
-        "12:00", "12:15", "12:30", "12:45", 
-        "13:00", "13:15", "13:30", "13:45", 
-        "14:00", "14:15", "14:30", "14:45", 
-        "15:00", "15:15", "15:30", "15:45", 
-        "16:00", "16:15", "16:30", "16:45", 
-        "17:00", "17:15", "17:30", "17:45", 
-        "18:00", "18:15", "18:30", "18:45", 
-        "19:00", "19:15", "19:30", "19:45", 
-        "20:00", "20:15", "20:30", "20:45", 
-        "21:00", "21:15", "21:30", "21:45", 
-        "22:00", "22:15", "22:30", "22:45", 
-        "23:00", "23:15", "23:30", "23:45", 
-      ],
       formData: {
         name: '',
         study_material_id: '',
+        color: 'blue',
         start_date: '',
         start_time: '',
         end_time: '',
-        color: 'blue',
       }
     }
   },
@@ -231,14 +200,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('studyMaterial', ['studyMaterials']),
     ...mapGetters(['authTokens']),
-    allowedTimeStart: function() {
-      return ["00:00", ...this.baseAllowedTime]
-    },
-    allowedTimeEnd: function() {
-      return [...this.baseAllowedTime, "24:00"]
-    },
   },
   methods: {
     ...mapActions('task', ['createTask', 'updateTask', 'updateUnfinishedTask']),

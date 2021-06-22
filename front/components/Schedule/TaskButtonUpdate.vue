@@ -2,6 +2,7 @@
   <v-btn
     color="blue darken-1"
     text
+    :disabled="disabled"
     @click="updateTarget"
   >
     更新
@@ -10,7 +11,7 @@
 
 <script>
 export default {
-  props: ["target", "authTokens", "formData", "selectedTask"],
+  props: ["target", "authTokens", "formData", "selectedTask", "disabled"],
   methods: {
     updateTarget(){
       if (this.target === "taskTemplate"){

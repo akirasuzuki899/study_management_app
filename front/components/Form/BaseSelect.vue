@@ -33,7 +33,7 @@ export default {
   },
   props: {
     value: {
-      type: [Number, String],      //Numberを想定。新規作成時にStringが渡されてしまうので、後日修正する
+      type: [Number, String],
       default: ''
     },
     rules: {

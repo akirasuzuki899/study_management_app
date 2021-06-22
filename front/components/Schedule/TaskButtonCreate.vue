@@ -2,6 +2,7 @@
   <v-btn
     color="blue darken-1"
     text
+    :disabled="disabled"
     @click="createTarget"
   >
     保存
@@ -10,7 +11,7 @@
 
 <script>
 export default {
-  props: ["target", "authTokens", "formData"],
+  props: ["target", "authTokens", "formData", "disabled"],
   methods: {
     createTarget(){
       if (this.target === "taskTemplate"){
