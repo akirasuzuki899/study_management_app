@@ -36,7 +36,6 @@
                   </v-col>
                 </v-row>
 
-                <!-- イベントのカラー -->
                 <v-row>
                   <v-col cols="12" sm="2" md="2">
                     <SelectorColor
@@ -45,14 +44,12 @@
                   </v-col>
                 </v-row>
                 
-                <!-- 曜日 -->
                 <v-row>
                   <v-col cols="12" sm="12" md="12">
                     <SelectDayOfWeek
                       v-model="formData.day_of_week"
                     ></SelectDayOfWeek>
                   </v-col>
-                <!-- 開始時間 -->
 
                   <v-col cols="12" sm="6" md="6" >
                     <SelectTime
@@ -65,9 +62,6 @@
                       :dense="true"
                     ></SelectTime>
                   </v-col>
-
-
-                  <!-- 終了時間 -->
 
                   <v-col cols="12" sm="6" md="6" >
                     <SelectTime
@@ -121,38 +115,26 @@
 
 <script>
 import TextInput from "../Form/BaseTextInput";
+import SelectStudyMaterial from "../Form/SelectStudyMaterial";
 import SelectorColor from "../Form/SelectorColor";
 import SelectDayOfWeek from "../Form/SelectDayOfWeek";
-import SelectStudyMaterial from "../Form/SelectStudyMaterial";
 import SelectTime from "../Form/SelectTime";
-
-import { mapGetters, mapActions } from "vuex";
 import ButtonCreate from "./TaskButtonCreate";
 import ButtonUpdate from "./TaskButtonUpdate";
-import { required, max, oneOf } from 'vee-validate/dist/rules';
-import { minTime } from '../../plugins/vee-validate';
-import { extend, ValidationObserver, ValidationProvider, setInteractionMode, localize} from 'vee-validate';
-import ja from 'vee-validate/dist/locale/ja';
 
-setInteractionMode('eager')
-
-extend('required', required)
-extend('max', max)
-extend('oneOf', oneOf)
-extend('minTime', minTime)
-localize('ja', ja)
+import { mapGetters, mapActions } from "vuex";
+import { ValidationObserver} from 'vee-validate';
 
 
 export default {
   components: {
-    ButtonCreate,
-    ButtonUpdate,
     TextInput,
-    SelectorColor,
     SelectStudyMaterial,
+    SelectorColor,
     SelectDayOfWeek,
     SelectTime,
-    ValidationProvider,
+    ButtonCreate,
+    ButtonUpdate,
     ValidationObserver,
   },
   props: {
@@ -189,10 +171,10 @@ export default {
     setDefaultFormData () {
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
+      this.formData.color = this.selectedTask.color
       this.formData.day_of_week = this.selectedTask.day_of_week
       this.formData.start_time = this.selectedTask.start_time
       this.formData.end_time = this.selectedTask.end_time
-      this.formData.color = this.selectedTask.color
     },
     
     open () {
