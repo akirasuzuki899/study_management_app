@@ -44,7 +44,6 @@
 
           </template>
         </v-list-item-group>
-        <div>{{selectedId}}</div>
       </v-list>
 
     </v-card>
@@ -54,8 +53,7 @@
       target="unfinishedTask"
       :selectedTask="selectedTask"
       @formClosed="clearID"
-    >
-    </TaskForm>
+    ></TaskForm>
 
   </div>
 </template>
@@ -72,7 +70,7 @@ import TaskForm from "../Schedule/TaskForm.vue"
     data() {
       return {
         selectedId: "",
-        selectedTask: "",
+        selectedTask: {},
       }
     },
     watch: {

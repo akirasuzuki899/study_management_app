@@ -30,7 +30,15 @@
 <script>
 import StudyRecordForm from "../StudyRecords/studyRecordForm.vue";
 export default {
-  props: ["studyRecord", "showMenu"],
+  props: {
+    studyRecord: {
+      type: Object
+    }, 
+    showMenu: {
+      type: Boolean,
+      default: false
+    },
+  },
   components: {
       StudyRecordForm,
   },

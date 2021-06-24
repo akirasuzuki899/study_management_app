@@ -87,7 +87,11 @@ export default {
     SelectTime,
     ValidationObserver,
   },
-  props:["selectedStudyRecord"],
+  props:{
+    selectedStudyRecord: {
+      type: Object
+    }
+  },
   data(){
     return {
       isOpen: false,
