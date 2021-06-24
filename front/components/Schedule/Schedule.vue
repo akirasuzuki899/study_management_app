@@ -16,9 +16,9 @@
             :interval-format="intervalFormat"
           >
             <template v-slot:event="{ event }">
-              <div>
+              <div style="pointer-events:none">
                 <strong>{{ event.name }}</strong><br>
-                {{ event.start.slice( -5 ) }} - {{ event.end.slice( -5 ) }}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
+                {{ event.start.slice( -5 ) }} - {{ event.end.slice( -5 ) }}
               </div>
             </template>
             <template v-slot:day-body="{ date }">
@@ -31,7 +31,7 @@
 
           <TaskShow
             ref="taskShow"
-            :selectedTask="selectedTask" 
+            :selectedTask="selectedTask"
             :selectedElement="selectedElement"
             :target="target"
           ></TaskShow>
@@ -46,8 +46,7 @@
       </v-col>
       <v-col cols="12" sm="4" md="4">
         <StudyRecordList
-        >
-        </StudyRecordList>
+        ></StudyRecordList>
       </v-col>
     </v-row>
   </v-app>
@@ -71,7 +70,6 @@ import StudyRecordList from "../StudyRecords/StudyRecordsList.vue"
         target: "task",
         selectedTask: {},
         selectedElement: null,
-        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       }
     },
     computed: {
