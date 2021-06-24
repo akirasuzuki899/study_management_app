@@ -17,7 +17,7 @@
             :interval-format="intervalFormat"
           >
             <template v-slot:event="{ event }">
-              <div>
+              <div style="pointer-events:none">
                 <strong>{{ event.name }}</strong><br>
                 {{ event.start.slice( -5 ) }} - {{ event.end.slice( -5 ) }}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
               </div>
@@ -60,7 +60,6 @@ import TaskTemplateForm from "./TaskTemplateForm";
         baseDate: '2000-01-03',
         selectedTask: {},
         selectedElement: null,
-        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       }
     },
     computed: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center" :key="selectedTask.id || null">
+  <div class="text-center">
     <v-dialog
       v-model="Dialog"
       width="500"
@@ -139,11 +139,18 @@ export default {
   },
   props: {
     selectedTask: {
+      type: Object,
       default:() => ({
+        id: '',
+        user: '',
         name: '',
-        study_material_id: '',
+        color: 'blue',
+        day_of_week: '',
+        start: '',
         start_time: '',
+        end: '',
         end_time: '',
+        study_material: '',
       })
     },
     method: {}, 
@@ -162,6 +169,16 @@ export default {
       }
     }
   },
+  watch: {
+    Dialog: function() {
+      if (this.Dialog == true){
+        this.setDefaultFormData()
+
+      } else if (this.Dialog == false) {
+        this.$refs.observer.reset()
+      }
+    },
+  },
   computed: {
     ...mapGetters(['authTokens']),
   },
@@ -178,13 +195,11 @@ export default {
     },
     
     open () {
-      this.setDefaultFormData()
       this.Dialog = true
     },
     
     close () {
       this.Dialog = false
-      this.$refs.observer.reset()
     },
 
     closeShow() {
