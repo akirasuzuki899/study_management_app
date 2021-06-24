@@ -1,9 +1,9 @@
 <template>
-  <div class="text-center" :key="selectedTask.id || null">
+  <div class="text-center">
     <v-dialog
       v-model="Dialog"
       width="500"
-      @click:outside.stop="close()"
+      @click:outside="close()"
     >
       <v-card>
         <v-card-title>
@@ -44,32 +44,29 @@
                   </v-col>
                 </v-row>
 
-                <!-- 開始日 -->
                 <v-row>
                   <v-col cols="12" sm="12" md="12" >
                     <DatePicker
+                      vid="start_date"
                       v-model="formData.start_date"
                       name="日付"
                       label="日付"
                       rules="required"
                     ></DatePicker>
                   </v-col>
-                  <!-- 開始日 -->
 
-                  <!-- 開始時間 -->
                   <v-col cols="12" sm="6" md="6" >
                     <SelectTime
                       vid="start_time"
                       v-model="formData.start_time"
                       name="開始時刻"
                       label="開始時間"
-                      rules="required"
+                      rules="required|afterNow:@start_date"
                       time="start"
                       :dense="true"
                     ></SelectTime>
                   </v-col>
 
-                  <!-- 終了時間 -->
                   <v-col cols="12" sm="6" md="6" >
                     <SelectTime
                       v-model="formData.end_time"
@@ -81,8 +78,6 @@
                     ></SelectTime>
                   </v-col>
                 </v-row>
-                <!-- 終了時間 -->
-
               </v-container>
               <small>*indicates required field</small>
             </v-card-text>
@@ -124,53 +119,43 @@
 
 <script>
 import TextInput from "../Form/BaseTextInput";
+import SelectStudyMaterial from "../Form/SelectStudyMaterial";
 import SelectorColor from "../Form/SelectorColor";
 import DatePicker from "../Form/DatePicker";
-import SelectStudyMaterial from "../Form/SelectStudyMaterial";
 import SelectTime from "../Form/SelectTime";
-
-import { mapGetters, mapActions } from "vuex";
 import ButtonCreate from "./TaskButtonCreate";
 import ButtonUpdate from "./TaskButtonUpdate";
-import { required, max, oneOf, confirmed } from 'vee-validate/dist/rules';
-import { minTime } from '../../plugins/vee-validate';
-import { extend, ValidationObserver, setInteractionMode, localize} from 'vee-validate';
-import ja from 'vee-validate/dist/locale/ja';
 
-setInteractionMode('eager')
-
-extend('required', required)
-extend('max', max)
-extend('oneOf', oneOf)
-extend('minTime', minTime)
-localize('ja', ja)
+import { mapGetters, mapActions } from "vuex";
+import { ValidationObserver } from 'vee-validate';
 
 export default {
   components: {
-    ButtonCreate,
-    ButtonUpdate,
     TextInput,
+    SelectStudyMaterial,
     SelectorColor,
     DatePicker,
-    SelectStudyMaterial,
     SelectTime,
+    ButtonCreate,
+    ButtonUpdate,
     ValidationObserver,
   },
   props: {
     selectedTask: {
+      type: Object,
       default:() => ({
         id: '',
         user: '',
+        name: '',
+        color: 'blue',
+        start: '',
+        start_date: '',
+        start_time: '',
+        end: '',
+        end_date: '',
+        end_time: '',
         study_material: '',
         study_record: '',
-        name: '',
-        start: '',
-        end: '',
-        start_date: '',
-        end_date: '',
-        start_time: '',
-        end_time: '',
-        color: '',
       })
     },
     method: {}, 
@@ -182,7 +167,7 @@ export default {
       formData: {
         name: '',
         study_material_id: '',
-        color: 'blue',
+        color: '',
         start_date: '',
         start_time: '',
         end_time: '',
@@ -191,13 +176,14 @@ export default {
   },
   watch: {
     Dialog: function() {
-      if (this.Dialog == false){
+      if (this.Dialog == true){
+        this.setDefaultFormData()
+
+      } else if (this.Dialog == false) {
         this.$emit('formClosed')
+        this.$refs.observer.reset()
       }
     },
-    selectedTask: function() {
-      this.setDefaultFormData()
-    }
   },
   computed: {
     ...mapGetters(['authTokens']),
@@ -208,10 +194,10 @@ export default {
     setDefaultFormData () {
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
+      this.formData.color = this.selectedTask.color
       this.formData.start_date = this.selectedTask.start_date
       this.formData.start_time = this.selectedTask.start_time
       this.formData.end_time = this.selectedTask.end_time
-      this.formData.color = this.selectedTask.color
     },
 
     open () {
@@ -220,7 +206,6 @@ export default {
     
     close () {
       this.Dialog = false
-      this.$refs.observer.reset()
     },
 
     closeShow() {

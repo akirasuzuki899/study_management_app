@@ -30,7 +30,6 @@ export default {
     { src: '@/plugins/vee-validate'},
     { src: '~/plugins/vue_trix'},
     { src: '~/plugins/vue-infinite-loading'},
-
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -40,6 +39,7 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    '@nuxtjs/moment',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -71,6 +71,9 @@ export default {
         }
       }
     }
+  },
+  moment: {
+    locales: ['ja']
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

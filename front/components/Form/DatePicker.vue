@@ -11,6 +11,7 @@
       <validation-provider
         v-slot="{ errors }"
         :name="name"
+        :vid="vid"
         :rules="rules"
       >
         <v-text-field
@@ -78,7 +79,9 @@ export default {
   methods: {
     onlyNum: val => new Date(val).getDate(),
 
-    afterToday: val => val >= new Date().toISOString().substr(0, 10),
+    afterToday: function (val){
+      return val >= this.$moment().format('YYYY-MM-DD');
+    }
   },
 }
 </script>
