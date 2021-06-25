@@ -90,11 +90,14 @@ export default {
   props:{
     selectedStudyRecord: {
       type: Object
+    },
+    isOpen: {
+      type: Boolean,
+      isOpen: false
     }
   },
   data(){
     return {
-      isOpen: false,
       alertIDs: [false],
       loadIDs: [false],
       disabledIDs: [false],
@@ -128,6 +131,7 @@ export default {
   },
   methods: {
     ...mapActions('studyRecord', ['updateStudyRecord']),
+    ...mapActions('snackbar', ['successMessage']),
 
     updateRecord(formData, authTokens, selectedStudyRecord){
       this.$set(this.underUpgrteIDs, selectedStudyRecord.id, true)
@@ -138,17 +142,23 @@ export default {
         authTokens: authTokens,
         id: selectedStudyRecord.id
       }).then (() => {
-        this.$set(this.loadIDs, selectedStudyRecord.id, false)
-        this.$set(this.disabledIDs, selectedStudyRecord.id, true)
-        this.$set(this.alertIDs, selectedStudyRecord.id, true)
-  
-        setTimeout(() => {
-          this.$set(this.disabledIDs, selectedStudyRecord.id, false)
-          this.$set(this.alertIDs, selectedStudyRecord.id, false)
-          if (this.underUpgrteIDs[this.selectedStudyRecord.id] == true) this.close()
-  
-          this.underUpgrteIDs.splice(selectedStudyRecord.id, 1, false)
-          }, 3000)
+        if ( this.isOpen ){
+          this.$set(this.loadIDs, selectedStudyRecord.id, false)
+          this.$set(this.disabledIDs, selectedStudyRecord.id, true)
+          this.$set(this.alertIDs, selectedStudyRecord.id, true)
+    
+          setTimeout(() => {
+            this.$set(this.disabledIDs, selectedStudyRecord.id, false)
+            this.$set(this.alertIDs, selectedStudyRecord.id, false)
+            if (this.underUpgrteIDs[this.selectedStudyRecord.id] == true) this.close()
+    
+            this.$set(this.underUpgrteIDs, selectedStudyRecord.id, false)
+            }, 3000)
+        } else {
+          this.successMessage('更新しました')
+          this.$set(this.underUpgrteIDs, selectedStudyRecord.id, false)
+          this.$set(this.loadIDs, selectedStudyRecord.id, false)
+        }
       })
     },
 
@@ -160,7 +170,6 @@ export default {
       this.formData.end_time = this.selectedStudyRecord.end_time
       this.formData.is_finished = true
     },
-
     initValidation() {
       this.$refs.observer.reset()
     },

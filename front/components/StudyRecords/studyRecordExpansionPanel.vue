@@ -16,9 +16,11 @@
       </v-expansion-panel-header>
 
       <v-expansion-panel-content :eager="true">
+        <!-- パネルが複数の場合、opendPanelを配列にする必要がある -->
         <StudyRecordForm
           ref="StudyRecordForm"
           :selectedStudyRecord="studyRecord"
+          :isOpen="openedPanel == 0" 
           @close="closePanel"
         ></StudyRecordForm>
       </v-expansion-panel-content>
@@ -65,9 +67,8 @@ export default {
       } else {
         this.$refs.StudyRecordForm.initValidation()
         this.closePanel()
-
       }
-    }
+    },
   },
   methods: {
     formatDateTime(date, time){
