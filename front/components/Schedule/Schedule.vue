@@ -56,7 +56,7 @@
 import { mapGetters } from "vuex";
 import TaskShow from "./TaskShow";
 import TaskForm from "./TaskForm";
-import StudyRecordList from "../StudyRecords/StudyRecordsList.vue"
+import StudyRecordList from "../StudyRecords/StudyRecordsList"
 
   export default {
     components: {

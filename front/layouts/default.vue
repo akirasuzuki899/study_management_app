@@ -64,6 +64,8 @@
           <NuxtLink to="/schedule">Schedule</NuxtLink>
           <NuxtLink to="/plan">plan</NuxtLink>
         </template>
+        <Snackbar
+        ></Snackbar>
         <nuxt />
       </v-container>
     </v-main>
@@ -94,8 +96,13 @@
 </template>
 
 <script>
+import Snackbar from "../components/Snackbar.vue"
+
 export default {
   name: "default",
+  components: {
+    Snackbar,
+  },
   data () {
     return {
       clipped: false,

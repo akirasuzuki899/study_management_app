@@ -63,7 +63,8 @@ export const actions = {
         commit("setUnfinishedTask", data.unfinished_tasks)
       });
   },
-  createTask( { commit } , { authTokens, formData} ) {
+  createTask( { commit, dispatch } , { authTokens, formData} ) {
+    dispatch("snackbar/processMessage", '作成しています...', { root: true })
     this.$axios
       .post(
         '/api/v1/tasks',
@@ -84,13 +85,15 @@ export const actions = {
         console.log("success")
         console.log(data.task)
         commit("addTask", data)
+        dispatch("snackbar/successMessage", '作成しました', { root: true })
       })
       .catch(error => {
         console.log("error");
         console.log(error);
       })
   },
-  updateTask( { commit }, { authTokens, selectedTask, formData } )  {
+  updateTask( { commit, dispatch }, { authTokens, selectedTask, formData } )  {
+    dispatch("snackbar/processMessage", '更新しています...', { root: true })
     this.$axios
       .put(
         '/api/v1/tasks/' + selectedTask.id,
@@ -111,12 +114,14 @@ export const actions = {
         console.log("success")
         console.log(data.task)
         commit("updateTask", data)
+        dispatch("snackbar/successMessage", '更新しました', { root: true })
       })
       .catch(error => {
         console.log(error);
       })
   },
-  deleteTask( { commit }, { authTokens, selectedTask } ) {
+  deleteTask( { commit, dispatch }, { authTokens, selectedTask } ) {
+    dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios
       .delete(
         '/api/v1/tasks/' + selectedTask.id,
@@ -128,12 +133,14 @@ export const actions = {
         console.log("success")
         console.log(data.task)
         commit("destroyTask", data)
+        dispatch("snackbar/successMessage", '削除しました', { root: true })
       })
       .catch( error => {
         console.log(error);
       })
   },
-  updateUnfinishedTask( { commit }, { authTokens, selectedTask, formData } )  {
+  updateUnfinishedTask( { commit, dispatch, state }, { authTokens, selectedTask, formData } )  {
+    dispatch("snackbar/processMessage", '更新しています...', { root: true })
     this.$axios
       .put(
         '/api/v1/tasks/' + selectedTask.id,
@@ -153,8 +160,13 @@ export const actions = {
       .then(( { data } ) => {
         console.log("success")
         console.log(data.task)
-        commit("addTask", data)
+        if(state.tasks.some(task => task.id === data.task.id)){
+          commit("updateTask", data)
+        } else {
+          commit("addTask", data)
+        }
         commit("destroyUnfinishedTask", data)
+        dispatch("snackbar/successMessage", '更新しました', { root: true })
       })
       .catch(error => {
         console.log(error);
