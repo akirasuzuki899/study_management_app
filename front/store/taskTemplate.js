@@ -62,7 +62,7 @@ export const mutations = {
 };
 
 export const actions = {
-  getTaskTemplates( { commit }, authTokens ) {
+  getTaskTemplates( { commit, dispatch }, authTokens ) {
     this.$axios
       .get('/api/v1/task_templates', {
         headers: authTokens
@@ -72,7 +72,8 @@ export const actions = {
         commit("setTaskTemplates", data)
       });
   },
-  createTaskTemplate( { commit } , { authTokens, formData} ) {
+  createTaskTemplate( { commit, dispatch } , { authTokens, formData} ) {
+    dispatch("snackbar/processMessage", '作成しています...', { root: true })
     this.$axios
       .post(
         '/api/v1/task_templates',
@@ -91,12 +92,14 @@ export const actions = {
       .then(( { data } ) => {
         // console.log(data)
         commit("addTaskTemplate", data)
+        dispatch("snackbar/successMessage", '作成しました', { root: true })
       })
       .catch(error => {
         console.log(error);
       })
   },
-  updateTaskTemplate( { commit }, { authTokens, selectedTask, formData } )  {
+  updateTaskTemplate( { commit, dispatch }, { authTokens, selectedTask, formData } )  {
+    dispatch("snackbar/processMessage", '更新しています...', { root: true })
     this.$axios
       .put(
         '/api/v1/task_templates/' + selectedTask.id,
@@ -114,12 +117,14 @@ export const actions = {
       )
       .then(( { data } ) => {
         commit("updateTaskTemplate", data)
+        dispatch("snackbar/successMessage", '更新しました', { root: true })
       })
       .catch(error => {
         console.log(error);
       })
   },
-  deleteTaskTemplate( { commit }, { authTokens, selectedTask } ) {
+  deleteTaskTemplate( { commit, dispatch }, { authTokens, selectedTask } ) {
+    dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios
       .delete(
         '/api/v1/task_templates/' + selectedTask.id,
@@ -129,6 +134,7 @@ export const actions = {
       )
       .then(({ data }) => {
         commit("destroyTaskTemplate", data)
+        dispatch("snackbar/successMessage", '削除しました', { root: true })
       })
       .catch( error => {
         console.log(error);
