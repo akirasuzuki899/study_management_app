@@ -22,15 +22,15 @@
 
                 <!-- 開始時間 -->
                 <v-col cols="12" sm="6" md="6">
-                    <SelectTime
-                      vid="start_time"
-                      v-model="formData.start_time"
-                      name="開始時刻"
-                      label="開始時間"
-                      rules="required"
-                      time="start"
-                      :dense="true"
-                    ></SelectTime>
+                  <SelectTime
+                    vid="start_time"
+                    v-model="formData.start_time"
+                    name="開始時刻"
+                    label="開始時間"
+                    rules="required"
+                    time="start"
+                    :dense="true"
+                  ></SelectTime>
                 </v-col>
 
                 <!-- 終了時間 -->
@@ -165,7 +165,7 @@ export default {
     setDefaultFormData () {
       this.formData.task_id = this.selectedStudyRecord.task_id
       this.formData.study_material_id = this.selectedStudyRecord.study_material_id
-      this.formData.start_date = this.selectedStudyRecord.start_date
+      this.formData.start_date = this.selectedStudyRecord.start_date || this.$moment().format('YYYY-MM-DD');
       this.formData.start_time = this.selectedStudyRecord.start_time
       this.formData.end_time = this.selectedStudyRecord.end_time
       this.formData.is_finished = true

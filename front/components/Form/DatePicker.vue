@@ -29,7 +29,7 @@
     <v-date-picker
       :value="value"
       :day-format="onlyNum"
-      :allowed-dates="afterToday"
+      :allowed-dates="dates ? allowedDates : null"
       :first-day-of-week="1"
       locale="ja-jp"
       @input="datePicker = false; $emit('input', $event)"
@@ -74,13 +74,19 @@ export default {
     dense: {
       type: Boolean,
       default: false
+    },
+    dates: {
+      type: String,
+      default: null
     }
   },
   methods: {
     onlyNum: val => new Date(val).getDate(),
 
-    afterToday: function (val){
-      return val >= this.$moment().format('YYYY-MM-DD');
+    allowedDates: function (val){
+      if( this.dates == "afterToday") {
+        return val >= this.$moment().format('YYYY-MM-DD');
+      }
     }
   },
 }

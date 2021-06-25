@@ -52,6 +52,7 @@
                       name="日付"
                       label="日付"
                       rules="required"
+                      dates="afterToday"
                     ></DatePicker>
                   </v-col>
 
