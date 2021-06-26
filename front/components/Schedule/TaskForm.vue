@@ -24,6 +24,7 @@
                       name="タイトル"
                       label="タイトル"
                       rules="required|max:50"
+                      :dense="true"
                     ></TextInput>
                   </v-col>
                 </v-row>
@@ -32,6 +33,7 @@
                   <v-col cols="12" sm="12" md="12">
                     <SelectStudyMaterial
                       v-model="formData.study_material_id"
+                      :dense="true"
                     ></SelectStudyMaterial>
                   </v-col>
                 </v-row>
@@ -40,6 +42,7 @@
                   <v-col cols="12" sm="2" md="2">
                     <SelectorColor
                       v-model="formData.color"
+                      :dense="true"
                     ></SelectorColor>
                   </v-col>
                 </v-row>
@@ -53,6 +56,7 @@
                       label="日付"
                       rules="required"
                       dates="afterToday"
+                      :dense="true"
                     ></DatePicker>
                   </v-col>
 
@@ -80,7 +84,6 @@
                   </v-col>
                 </v-row>
               </v-container>
-              <small>*indicates required field</small>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>

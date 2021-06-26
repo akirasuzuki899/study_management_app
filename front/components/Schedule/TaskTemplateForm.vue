@@ -24,6 +24,7 @@
                       name="タイトル"
                       label="タイトル"
                       rules="required|max:50"
+                      :dense="true"
                     ></TextInput>
                   </v-col>
                 </v-row>
@@ -32,6 +33,7 @@
                   <v-col cols="12" sm="12" md="12">
                     <SelectStudyMaterial
                       v-model="formData.study_material_id"
+                      :dense="true"
                     ></SelectStudyMaterial>
                   </v-col>
                 </v-row>
@@ -40,6 +42,7 @@
                   <v-col cols="12" sm="2" md="2">
                     <SelectorColor
                       v-model="formData.color"
+                      :dense="true"
                     ></SelectorColor>
                   </v-col>
                 </v-row>
@@ -48,6 +51,7 @@
                   <v-col cols="12" sm="12" md="12">
                     <SelectDayOfWeek
                       v-model="formData.day_of_week"
+                      :dense="true"
                     ></SelectDayOfWeek>
                   </v-col>
 
@@ -75,7 +79,11 @@
                   </v-col>
                 </v-row>
               </v-container>
-              <small>*indicates required field</small>
+              <div class="px-3 text-caption text--disabled">
+                テンプレートを元に一週間の予定を自動で作成します。<br>
+                週間カレンダーに手動で反映させるには、
+                「週間カレンダーに反映」チェックボックスを有効にします。
+              </div>
             </v-card-text>
 
             <v-card-actions>
