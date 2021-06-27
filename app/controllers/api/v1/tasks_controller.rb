@@ -27,6 +27,19 @@ module Api
         end
       end
 
+      def create_from_tesk_templates
+        today = %w(日 月 火 水 木 金 土)[Date.today.wday]
+        from = TaskTemplate::BASEWEEK[today].to_date
+        to = TaskTemplate::BASEWEEK["日"].to_date
+        task_templates = current_user.task_templates.where(start_date: from..to)
+        tasks = Task.create_this_week_tasks_from_templates(task_templates)
+        if tasks.present?
+          render json: tasks, adapter: :json, each_serializer: TaskSerializer
+        else
+          render json: { status: 400, task: tasks }   #バリデーションエラー時の処理を追加する
+        end
+      end
+
       def update
         if @task.update(task_params)
           render json: @task, adapter: :json, serializer: TaskSerializer
