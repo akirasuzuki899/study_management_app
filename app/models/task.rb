@@ -5,6 +5,7 @@ class Task < ApplicationRecord
   belongs_to :study_material
 
   before_validation :set_end_date
+  after_create :create_study_record
 
   validates :user_id, presence: true
   validates :study_material_id, presence: true
@@ -91,4 +92,18 @@ class Task < ApplicationRecord
     end
       Task.create!(tasks)
   end
+
+  def create_study_record
+    study_record = set_study_record()
+    study_record.save(validate: false)
+  end
+
+  def set_study_record
+    StudyRecord.new(
+      user_id: self.user_id,
+      task_id: self.id,
+      study_material_id: self.study_material_id,
+    )
+  end
+
 end
