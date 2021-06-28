@@ -3,6 +3,16 @@
     <v-row>
       <v-col>
         <v-sheet height="900">
+          <v-toolbar
+            flat
+          >
+            <v-btn
+              outlined
+              text
+              @click="openAlert"
+            >週間カレンダーに反映
+            </v-btn>
+          </v-toolbar>
           <v-calendar
             ref="calendar"
             :value="baseDate"
@@ -25,7 +35,7 @@
             <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
           </v-calendar>
 
-          <TaskTemplateShow 
+          <TaskTemplateShow
             ref="taskTemplateShow"
             :selectedTask="selectedTask" 
             :selectedElement="selectedElement"
@@ -38,6 +48,21 @@
             :target="target"
           ></TaskTemplateForm>
 
+          <Alert
+            ref="alert"
+            @clicked="createTasksFromTemplates(authTokens)"
+          >
+            <template v-slot:title>
+              テンプレートを反映
+            </template>
+            <template v-slot:content>
+              週間カレンダーの予定はテンプレートを元に毎週日曜日に自動で作成されます。
+            </template>
+            <template v-slot:btnText>
+              作成
+            </template>
+          </Alert>
+
         </v-sheet>
       </v-col>
     </v-row>
@@ -45,14 +70,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import TaskTemplateShow from "./TaskTemplateShow";
 import TaskTemplateForm from "./TaskTemplateForm";
+import Alert from "../Alert";
 
   export default {
     components: {
       TaskTemplateShow,
       TaskTemplateForm,
+      Alert,
     },
     data() {
       return {
@@ -67,6 +94,7 @@ import TaskTemplateForm from "./TaskTemplateForm";
       ...mapGetters(['authTokens']),
     },
     methods: {
+      ...mapActions('task', ['createTasksFromTemplates']),
       createTaskTemplate() {
         if(this.$refs.taskTemplateShow.isOpen === false) this.$refs.form.open();
       },
@@ -85,6 +113,9 @@ import TaskTemplateForm from "./TaskTemplateForm";
         }
 
         nativeEvent.stopPropagation()
+      },
+      openAlert() {
+        this.$refs.alert.open();
       },
       intervalFormat(interval) {  //縦軸の時間フォーマットを hh:mm に変更
         return interval.time

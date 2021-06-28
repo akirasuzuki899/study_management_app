@@ -26,8 +26,12 @@ export const mutations = {
   setTasks(state, tasks) {
     state.tasks = tasks;
   },
-  addTask(state, data) {
-    state.tasks.push(data.task)
+  addTask(state, task) {
+    if (Array.isArray(task)) {
+      state.tasks.push(...task)
+    } else {
+      state.tasks.push(task)
+    }
   },
   updateTask(state, data) {
     const index = state.tasks.findIndex((v) => v.id === data.task.id);
@@ -84,7 +88,7 @@ export const actions = {
       .then(( { data } ) => {
         console.log("success")
         console.log(data.task)
-        commit("addTask", data)
+        commit("addTask", data.task)
         dispatch("snackbar/successMessage", '作成しました', { root: true })
       })
       .catch(error => {
@@ -138,6 +142,31 @@ export const actions = {
       .catch( error => {
         console.log(error);
       })
+  },
+
+  createTasksFromTemplates( { commit, dispatch }, authTokens){
+    dispatch("snackbar/processMessage", '更新しています...', { root: true })
+    this.$axios
+      .post(
+        '/api/v1/tasks/create_from_tesk_templates', {},
+        {
+          headers: authTokens
+        }
+        )
+        .then(( { data } ) => {
+          console.log("success")
+          console.log(data)
+          commit("addTask", data.tasks)
+          dispatch("snackbar/successMessage", '更新しました', { root: true })
+        })
+        .catch(error => {
+          console.log("error");
+          console.log(error.response.data);
+          dispatch(
+            "snackbar/errorMessage", 
+            `更新に失敗しました。${error.response.data.message}`, 
+            { root: true })
+        })
   },
   updateUnfinishedTask( { commit, dispatch, state }, { authTokens, selectedTask, formData } )  {
     dispatch("snackbar/processMessage", '更新しています...', { root: true })

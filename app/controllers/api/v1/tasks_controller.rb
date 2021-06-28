@@ -30,11 +30,11 @@ module Api
         from = TaskTemplate::BASEWEEK[today].to_date
         to = TaskTemplate::BASEWEEK["日"].to_date
         task_templates = current_user.task_templates.where(start_date: from..to)
-        tasks = Task.create_this_week_tasks_from_templates(task_templates)
-        if tasks.present?
-          render json: tasks, adapter: :json, each_serializer: TaskSerializer
+        if task_templates.empty?
+          render json: { message: "テンプレートを作成してください。" }, status: 400
         else
-          render json: { status: 400, task: tasks }   #バリデーションエラー時の処理を追加する
+          tasks = Task.create_this_week_tasks_from_templates(task_templates)
+          render json: tasks, adapter: :json, each_serializer: TaskSerializer  #バリデーションエラー時の処理を追加する
         end
       end
 
