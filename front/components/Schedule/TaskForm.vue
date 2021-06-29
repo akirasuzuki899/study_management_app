@@ -50,7 +50,6 @@
                 <v-row>
                   <v-col cols="12" sm="12" md="12" >
                     <DatePicker
-                      vid="start_date"
                       v-model="formData.start_date"
                       name="日付"
                       label="日付"
@@ -66,7 +65,7 @@
                       v-model="formData.start_time"
                       name="開始時刻"
                       label="開始時間"
-                      rules="required|afterNow:@start_date"
+                      rules="required"
                       time="start"
                       :dense="true"
                     ></SelectTime>

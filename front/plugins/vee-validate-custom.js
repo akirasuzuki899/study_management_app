@@ -24,18 +24,18 @@ const minTime = {
   message: "合計時間は15分以上にしてください"
 };
 
-const afterNow = {
-  params: ["date"],
-  validate: ( startTime, { date }) => {
-    const now = new Date
-    const start = new Date(`${date} ${startTime}`)
+// const afterNow = {
+//   params: ["date"],
+//   validate: ( startTime, { date }) => {
+//     const now = new Date
+//     const start = new Date(`${date} ${startTime}`)
   
-    if ( !date ) return true;
+//     if ( !date ) return true;
 
-    return start - now >= 0
-  },
-  message: "現在時刻より後にしてください(仮)"
-}
+//     return start - now >= 0
+//   },
+//   message: "当日以前の予定は作成できません"
+// }
 
 
-export { minTime, afterNow }
+export { minTime }
