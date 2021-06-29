@@ -50,13 +50,22 @@
 
           <Alert
             ref="alert"
-            @clicked="createTasksFromTemplates(authTokens)"
+            @clicked="createTasksFromTemplates({authTokens: authTokens, copy_all: copy_all})"
           >
             <template v-slot:title>
               テンプレートを反映
             </template>
             <template v-slot:content>
-              週間カレンダーの予定はテンプレートを元に毎週日曜日に自動で作成されます。
+              <RadioButton
+                v-model="copy_all"
+                :items="[
+                  {label: '月曜〜日曜', value: true},
+                  {label: '今日〜日曜', value: false}]"
+                :dense="true"
+              >
+              作成する範囲を選択してください。
+              </RadioButton>
+              ※週間カレンダーの予定はテンプレートを元に毎週日曜日に自動で作成されます。
             </template>
             <template v-slot:btnText>
               作成
@@ -74,12 +83,14 @@ import { mapGetters, mapActions } from "vuex";
 import TaskTemplateShow from "./TaskTemplateShow";
 import TaskTemplateForm from "./TaskTemplateForm";
 import Alert from "../Alert";
+import RadioButton from "../Form/BaseRadioButton"
 
   export default {
     components: {
       TaskTemplateShow,
       TaskTemplateForm,
       Alert,
+      RadioButton,
     },
     data() {
       return {
@@ -87,6 +98,7 @@ import Alert from "../Alert";
         baseDate: '2000-01-03',
         selectedTask: {},
         selectedElement: null,
+        copy_all: false,
       }
     },
     computed: {

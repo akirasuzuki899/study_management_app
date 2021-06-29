@@ -144,11 +144,11 @@ export const actions = {
       })
   },
 
-  createTasksFromTemplates( { commit, dispatch }, authTokens){
+  createTasksFromTemplates( { commit, dispatch }, { authTokens, copy_all }){
     dispatch("snackbar/processMessage", '更新しています...', { root: true })
     this.$axios
       .post(
-        '/api/v1/tasks/create_from_tesk_templates', {},
+        '/api/v1/tasks/create_from_tesk_templates'+ `?copy_all=${copy_all}`, {},
         {
           headers: authTokens
         }
