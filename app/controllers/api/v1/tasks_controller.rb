@@ -25,15 +25,21 @@ module Api
         end
       end
 
-      def create_from_tesk_templates
-        today = %w(日 月 火 水 木 金 土)[Date.today.wday]
-        from = TaskTemplate::BASEWEEK[today].to_date
-        to = TaskTemplate::BASEWEEK["日"].to_date
-        task_templates = current_user.task_templates.where(start_date: from..to)
+      def create_from_templates
+        task_templates = []
+        if task_params[:copy_all] == "true"
+          task_templates = current_user.task_templates
+        else
+          today = %w(日 月 火 水 木 金 土)[Date.today.wday]
+          from = TaskTemplate::BASEWEEK[today].to_date
+          to = TaskTemplate::BASEWEEK["日"].to_date
+          task_templates = current_user.task_templates.where(start_date: from..to)
+        end
+
         if task_templates.empty?
           render json: { message: "テンプレートを作成してください。" }, status: 400
         else
-          tasks = Task.create_this_week_tasks_from_templates(task_templates)
+          tasks = Task.create_tasks_from_templates(templates: task_templates, after_num_weeks: 0)
           render json: tasks, adapter: :json, each_serializer: TaskSerializer  #バリデーションエラー時の処理を追加する
         end
       end
@@ -54,7 +60,7 @@ module Api
       private
 
       def task_params
-        params.permit(:study_material_id, :name, :start_date, :start_time, :end_time, :color)
+        params.permit(:study_material_id, :name, :start_date, :start_time, :end_time, :color, :copy_all)
       end
 
       def correct_user

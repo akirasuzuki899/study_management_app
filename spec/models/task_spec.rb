@@ -82,13 +82,13 @@ RSpec.describe Task, type: :model do
     expect(@task.errors[:end_time]).to  include("can't be blank")
   end
 
-  it '開始日が現在より前でれば無効' do
-    @task.assign_attributes({
-      start_date: "2000-05-17",
-    })
-    @task.valid?
-    expect(@task.errors[:start]).to  include("開始日時は現在の日時以降を選択してください")
-  end
+  # it '開始日が現在より前でれば無効' do
+  #   @task.assign_attributes({
+  #     start_date: "2000-05-17",
+  #   })
+  #   @task.valid?
+  #   expect(@task.errors[:start]).to  include("開始日時は現在の日時以降を選択してください")
+  # end
 
   it '合計時間が15分未満の時に無効(日付をまたぐ時)' do
     @task.assign_attributes({
@@ -223,43 +223,76 @@ RSpec.describe Task, type: :model do
 
   end
 
-  it 'メソッドテスト self.set_next_week_date' do
-    today = Time.parse("2024-02-19 10:00")         #月曜
-    next_week = { 
-      "月" => I18n.l( today.next_week(:monday), format: :date ) , 
-      "火" => I18n.l( today.next_week(:tuesday), format: :date )  , 
-      "水" => I18n.l( today.next_week(:wednesday), format: :date )  , 
-      "木" => I18n.l( today.next_week(:thursday), format: :date )  , 
-      "金" => I18n.l( today.next_week(:friday), format: :date )  , 
-      "土" => I18n.l( today.next_week(:saturday), format: :date )  , 
-      "日" => I18n.l( today.next_week(:sunday), format: :date )  , 
-    }  
-    expect(next_week["月"]).to eq("2024-02-26")
-    expect(next_week["火"]).to eq("2024-02-27")
-    expect(next_week["水"]).to eq("2024-02-28")
-    expect(next_week["木"]).to eq("2024-02-29")
-    expect(next_week["金"]).to eq("2024-03-01")
-    expect(next_week["土"]).to eq("2024-03-02")
-    expect(next_week["日"]).to eq("2024-03-03")
+  context 'メソッドテスト self.week_date(after_num_weeks)' do
+    
+    today = Date.parse("2024-02-26 10:00")         #月曜
 
-    today = Time.parse("2024-02-25 10:00")         #日曜
-    next_week = { 
-      "月" => I18n.l( today.next_week(:monday), format: :date ) , 
-      "火" => I18n.l( today.next_week(:tuesday), format: :date )  , 
-      "水" => I18n.l( today.next_week(:wednesday), format: :date )  , 
-      "木" => I18n.l( today.next_week(:thursday), format: :date )  , 
-      "金" => I18n.l( today.next_week(:friday), format: :date )  , 
-      "土" => I18n.l( today.next_week(:saturday), format: :date )  , 
-      "日" => I18n.l( today.next_week(:sunday), format: :date )  , 
-    }  
-    expect(next_week["月"]).to eq("2024-02-26")
-    expect(next_week["火"]).to eq("2024-02-27")
-    expect(next_week["水"]).to eq("2024-02-28")
-    expect(next_week["木"]).to eq("2024-02-29")
-    expect(next_week["金"]).to eq("2024-03-01")
-    expect(next_week["土"]).to eq("2024-03-02")
-    expect(next_week["日"]).to eq("2024-03-03")
+    it "今週の場合" do
+      after_num_weeks = 0
+      week = {
+        "月" => I18n.l( today.beginning_of_week, format: :date ),
+        "火" => I18n.l( today.beginning_of_week + 1, format: :date ),
+        "水" => I18n.l( today.beginning_of_week + 2, format: :date ),
+        "木" => I18n.l( today.beginning_of_week + 3, format: :date ),
+        "金" => I18n.l( today.beginning_of_week + 4, format: :date ),
+        "土" => I18n.l( today.beginning_of_week + 5, format: :date ),
+        "日" => I18n.l( today.beginning_of_week + 6, format: :date ),
+      }  
+      expect(week["月"]).to eq("2024-02-26")
+      expect(week["火"]).to eq("2024-02-27")
+      expect(week["水"]).to eq("2024-02-28")
+      expect(week["木"]).to eq("2024-02-29")
+      expect(week["金"]).to eq("2024-03-01")
+      expect(week["土"]).to eq("2024-03-02")
+      expect(week["日"]).to eq("2024-03-03")
+  
+    end
+
+    it "一週間後の場合" do
+      after_num_weeks = 1
+      num = after_num_weeks
+      week = {
+        "月" => I18n.l( (today + num.week).beginning_of_week, format: :date ),
+        "火" => I18n.l( (today + num.week).beginning_of_week + 1, format: :date ),
+        "水" => I18n.l( (today + num.week).beginning_of_week + 2, format: :date ),
+        "木" => I18n.l( (today + num.week).beginning_of_week + 3, format: :date ),
+        "金" => I18n.l( (today + num.week).beginning_of_week + 4, format: :date ),
+        "土" => I18n.l( (today + num.week).beginning_of_week + 5, format: :date ),
+        "日" => I18n.l( (today + num.week).beginning_of_week + 6, format: :date ),
+      }  
+      expect(week["月"]).to eq("2024-03-04")
+      expect(week["火"]).to eq("2024-03-05")
+      expect(week["水"]).to eq("2024-03-06")
+      expect(week["木"]).to eq("2024-03-07")
+      expect(week["金"]).to eq("2024-03-08")
+      expect(week["土"]).to eq("2024-03-09")
+      expect(week["日"]).to eq("2024-03-10")
+  
+    end
+
+    it "一週間前の場合" do
+      after_num_weeks = -1
+      num = after_num_weeks
+      week = {
+        "月" => I18n.l( (today + num.week).beginning_of_week, format: :date ),
+        "火" => I18n.l( (today + num.week).beginning_of_week + 1, format: :date ),
+        "水" => I18n.l( (today + num.week).beginning_of_week + 2, format: :date ),
+        "木" => I18n.l( (today + num.week).beginning_of_week + 3, format: :date ),
+        "金" => I18n.l( (today + num.week).beginning_of_week + 4, format: :date ),
+        "土" => I18n.l( (today + num.week).beginning_of_week + 5, format: :date ),
+        "日" => I18n.l( (today + num.week).beginning_of_week + 6, format: :date ),
+      }  
+      expect(week["月"]).to eq("2024-02-19")
+      expect(week["火"]).to eq("2024-02-20")
+      expect(week["水"]).to eq("2024-02-21")
+      expect(week["木"]).to eq("2024-02-22")
+      expect(week["金"]).to eq("2024-02-23")
+      expect(week["土"]).to eq("2024-02-24")
+      expect(week["日"]).to eq("2024-02-25")
+  
+    end
   end
+    
 
   
 

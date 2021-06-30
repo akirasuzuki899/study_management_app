@@ -15,33 +15,25 @@ class Task < ApplicationRecord
   validates :start_date, presence: true
   validates :start_time, presence: true
   validates :end_time, presence: true
-  validate :start_day_should_be_after_today
+  # validate :start_day_should_be_after_today
   validate :time_should_be_more_than_15min
 
 
-  def start_day_should_be_after_today
-    return if start_date.nil?
-    errors.add(:start, "開始日時は現在の日時以降を選択してください") if start_date < Date.today
-  end
+  # def start_day_should_be_after_today
+  #   return if start_date.nil?
+  #   errors.add(:start, "開始日時は現在の日時以降を選択してください") if start_date < Date.today
+  # end
 
-  def self.set_next_week_date
+  def self.week_date(after_num_weeks)
     today = Date.today
-    next_week_monday = (today + 1.week).beginning_of_week
-    next_week = { 
-      "月" => I18n.l( next_week_monday, format: :date ),
-      "火" => I18n.l( next_week_monday + 1, format: :date ),
-      "水" => I18n.l( next_week_monday + 2, format: :date ),
-      "木" => I18n.l( next_week_monday + 3, format: :date ),
-      "金" => I18n.l( next_week_monday + 4, format: :date ),
-      "土" => I18n.l( next_week_monday + 5, format: :date ),
-      "日" => I18n.l( next_week_monday + 6, format: :date ),
-    } 
-  end
+    if after_num_weeks == 0
+      monday = today.beginning_of_week
+    else
+      num = after_num_weeks
+      monday = (today + num.week).beginning_of_week
+    end
 
-  def self.set_this_week_date
-    today = Date.today
-    monday = today.beginning_of_week
-    this_week = {
+    week = {
       "月" => I18n.l( monday, format: :date ),
       "火" => I18n.l( monday + 1, format: :date ),
       "水" => I18n.l( monday + 2, format: :date ),
@@ -49,7 +41,7 @@ class Task < ApplicationRecord
       "金" => I18n.l( monday + 4, format: :date ),
       "土" => I18n.l( monday + 5, format: :date ),
       "日" => I18n.l( monday + 6, format: :date ),
-    } 
+    }
   end
 
   def set_end_date
@@ -60,8 +52,8 @@ class Task < ApplicationRecord
     end
   end
 
-  # def system_create_next_week_tasks_from_task_templates(task_templates)
-  #   next_week = Task.set_next_week_date
+  # def system_create_tasks_from_task_templates(task_templates)
+  #   week = Task.set_next_week_date
   #   users = User.joins(:task_templates).group("users.id")
 
   #   users.each do | user |
@@ -72,19 +64,19 @@ class Task < ApplicationRecord
   # end
 
 
-  def self.create_this_week_tasks_from_templates(task_templates)
-    this_week = Task.set_this_week_date
+  def self.create_tasks_from_templates(templates: task_templates, after_num_weeks: num)
+    week = Task.week_date(after_num_weeks)
     now = Time.current
     tasks = []
-    task_templates.each do | task_template |
+    templates.each do | template |
       task = {
-        user_id: task_template.user_id,
-        study_material_id: task_template.study_material_id,
-        name: task_template.name,
-        start_date: this_week[task_template.day_of_week],
-        start_time: task_template.start_time,
-        end_time: task_template.end_time,
-        color: task_template.color,
+        user_id: template.user_id,
+        study_material_id: template.study_material_id,
+        name: template.name,
+        start_date: week[template.day_of_week],
+        start_time: template.start_time,
+        end_time: template.end_time,
+        color: template.color,
         created_at: now,
         updated_at: now
       }

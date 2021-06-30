@@ -148,7 +148,7 @@ export const actions = {
     dispatch("snackbar/processMessage", '更新しています...', { root: true })
     this.$axios
       .post(
-        '/api/v1/tasks/create_from_tesk_templates'+ `?copy_all=${copy_all}`, {},
+        '/api/v1/tasks/create_from_templates'+ `?copy_all=${copy_all}`, {},
         {
           headers: authTokens
         }

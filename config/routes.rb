@@ -5,7 +5,7 @@ Rails.application.routes.draw do
       mount_devise_token_auth_for 'User', at: 'auth'
       resources :tasks do
         collection do
-          post :create_from_tesk_templates
+          post :create_from_templates
         end
       end
       resources :task_templates
