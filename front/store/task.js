@@ -33,19 +33,19 @@ export const mutations = {
       state.tasks.push(task)
     }
   },
-  updateTask(state, data) {
-    const index = state.tasks.findIndex((v) => v.id === data.task.id);
-    state.tasks.splice(index, 1, data.task)
+  updateTask(state, task) {
+    const index = state.tasks.findIndex((v) => v.id === task.id);
+    state.tasks.splice(index, 1, task)
   },
-  destroyTask(state, data) {
-    const index = state.tasks.findIndex((v) => v.id === data.task.id);
+  destroyTask(state, task) {
+    const index = state.tasks.findIndex((v) => v.id === task.id);
     state.tasks.splice(index, 1)
   },
   setUnfinishedTask(state, unfinished_tasks){
     state.unfinished_tasks = unfinished_tasks;
   },
-  destroyUnfinishedTask(state, data) {
-    const index = state.unfinished_tasks.findIndex((v) => v.id === data.task.id);
+  destroyUnfinishedTask(state, task) {
+    const index = state.unfinished_tasks.findIndex((v) => v.id === task.id);
     state.unfinished_tasks.splice(index, 1)
   },  
   updateStudyRecord(state, data){
@@ -117,7 +117,7 @@ export const actions = {
       .then(( { data } ) => {
         console.log("success")
         console.log(data.task)
-        commit("updateTask", data)
+        commit("updateTask", data.task)
         dispatch("snackbar/successMessage", '更新しました', { root: true })
       })
       .catch(error => {
@@ -136,7 +136,7 @@ export const actions = {
       .then(({ data }) => {
         console.log("success")
         console.log(data.task)
-        commit("destroyTask", data)
+        commit("destroyTask", data.task)
         dispatch("snackbar/successMessage", '削除しました', { root: true })
       })
       .catch( error => {
@@ -190,11 +190,11 @@ export const actions = {
         console.log("success")
         console.log(data.task)
         if(state.tasks.some(task => task.id === data.task.id)){
-          commit("updateTask", data)
+          commit("updateTask", data.task)
         } else {
-          commit("addTask", data)
+          commit("addTask", data.task)
         }
-        commit("destroyUnfinishedTask", data)
+        commit("destroyUnfinishedTask", data.task)
         dispatch("snackbar/successMessage", '更新しました', { root: true })
       })
       .catch(error => {
