@@ -72,9 +72,9 @@ RSpec.describe TaskTemplate, type: :model do
   end
 
   it '終了時間が存在しなければ無効' do
-    @task_template.start_time = nil
+    @task_template.end_time = nil
     @task_template.valid?
-    expect(@task_template.errors[:start_time]).to  include("can't be blank")
+    expect(@task_template.errors[:end_time]).to  include("can't be blank")
   end
 
   it '合計時間が15分未満の時に無効(日付をまたぐ時)' do
@@ -84,19 +84,19 @@ RSpec.describe TaskTemplate, type: :model do
     })
     @task_template.valid?
     expect(@task_template.errors[:total_time]).to  include("合計時間は15分以上にしてください")
+
+    @task_template.assign_attributes({
+      start_time: "23:55",
+      end_time: "00:00",
+    })
+    @task_template.valid?
+    expect(@task_template.errors[:total_time]).to  include("合計時間は15分以上にしてください")
   end
 
   it '合計時間が15分未満の時に無効(日付をまたがない時)' do
     @task_template.assign_attributes({
       start_time: "23:00",
       end_time: "23:05",
-    })
-    @task_template.valid?
-    expect(@task_template.errors[:total_time]).to  include("合計時間は15分以上にしてください")
-
-    @task_template.assign_attributes({
-      start_time: "23:55",
-      end_time: "00:00",
     })
     @task_template.valid?
     expect(@task_template.errors[:total_time]).to  include("合計時間は15分以上にしてください")
@@ -126,13 +126,13 @@ RSpec.describe TaskTemplate, type: :model do
       start_time: "00:00",
       end_time: "00:00",
     })
-    expect(@task_template.until_tomorrow?).to eq(false)
+    expect(@task_template.until_tomorrow?).to eq(true)
 
     @task_template.assign_attributes({
       start_time: "23:00",
       end_time: "00:00",
     })
-    expect(@task_template.until_tomorrow?).to eq(false)
+    expect(@task_template.until_tomorrow?).to eq(true)
 
     @task_template.assign_attributes({
       start_time: "23:00",
@@ -140,32 +140,5 @@ RSpec.describe TaskTemplate, type: :model do
     })
     expect(@task_template.until_tomorrow?).to eq(false)
   end
-
-  it 'メソッドテスト until_midnight?' do
-    @task_template.assign_attributes({
-      start_time: "23:00",
-      end_time: "00:00",
-    })
-    expect(@task_template.until_midnight?).to eq(true)
-
-    @task_template.assign_attributes({
-      start_time: "00:00",
-      end_time: "00:00",
-    })
-    expect(@task_template.until_midnight?).to eq(true)
-
-    @task_template.assign_attributes({
-      start_time: "00:00",
-      end_time: "00:15",
-    })
-    expect(@task_template.until_midnight?).to eq(false)
-
-    @task_template.assign_attributes({
-      start_time: "23:00",
-      end_time: "00:15",
-    })
-    expect(@task_template.until_midnight?).to eq(false)
-  end
-
 
 end
