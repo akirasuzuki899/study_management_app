@@ -17,20 +17,20 @@ RSpec.describe StudyRecord, type: :model do
     expect(@study_record).to  be_valid
   end
 
+  it '有効な新規登録-日付をまたぐ時(0時終了)' do
+    @study_record.assign_attributes({
+      start_date: "2050-05-17",
+      start_time: "23:00:00",
+      end_time: "00:00:00",
+    })
+    expect(@study_record).to  be_valid
+  end
+
   it '有効な新規登録-日付をまたがない時' do
     @study_record.assign_attributes({
       start_date: "2050-05-17",
       start_time: "23:00:00",
       end_time: "23:30:00",
-    })
-    expect(@study_record).to  be_valid
-  end
-
-  it '有効な新規登録-日付をまたがない時(24時終了)' do
-    @study_record.assign_attributes({
-      start_date: "2050-05-17",
-      start_time: "23:00:00",
-      end_time: "24:00:00",
     })
     expect(@study_record).to  be_valid
   end

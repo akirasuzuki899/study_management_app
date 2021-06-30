@@ -156,32 +156,6 @@ RSpec.describe Task, type: :model do
     expect(@task.until_tomorrow?).to eq(false)
   end
 
-  # it 'メソッドテスト until_midnight?' do
-  #   @task.assign_attributes({
-  #     start_time: "23:00",
-  #     end_time: "24:00",
-  #   })
-  #   expect(@task.until_midnight?).to eq(true)
-
-  #   @task.assign_attributes({
-  #     start_time: "00:00",
-  #     end_time: "24:00",
-  #   })
-  #   expect(@task.until_midnight?).to eq(true)
-
-  #   @task.assign_attributes({
-  #     start_time: "00:00",
-  #     end_time: "00:15",
-  #   })
-  #   expect(@task.until_midnight?).to eq(false)
-
-  #   @task.assign_attributes({
-  #     start_time: "23:00",
-  #     end_time: "00:15",
-  #   })
-  #   expect(@task.until_midnight?).to eq(false)
-  # end
-
   it 'メソッドテスト start_at' do
     @task.start_date = nil
     expect(@task.start_at).to  eq(nil)
