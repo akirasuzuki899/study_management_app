@@ -81,12 +81,15 @@ import SelectTime from "../Form/SelectTime";
 import { mapGetters, mapActions } from "vuex";
 import { ValidationObserver } from 'vee-validate';
 
+import mixinMoment from "../../plugins/mixin-moment"
+
 export default {
   components: {
     DatePicker,
     SelectTime,
     ValidationObserver,
   },
+  mixins: [mixinMoment],
   props:{
     selectedStudyRecord: {
       type: Object
@@ -165,9 +168,9 @@ export default {
     setDefaultFormData () {
       this.formData.task_id = this.selectedStudyRecord.task_id
       this.formData.study_material_id = this.selectedStudyRecord.study_material_id
-      this.formData.start_date = this.selectedStudyRecord.start_date || this.$moment().format('YYYY-MM-DD');
-      this.formData.start_time = this.selectedStudyRecord.start_time
-      this.formData.end_time = this.selectedStudyRecord.end_time
+      this.formData.start_date = this.date(this.selectedStudyRecord.start) || this.now
+      this.formData.start_time = this.time(this.selectedStudyRecord.start)
+      this.formData.end_time = this.time(this.selectedStudyRecord.end)
       this.formData.is_finished = true
     },
     initValidation() {

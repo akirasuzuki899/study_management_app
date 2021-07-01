@@ -6,7 +6,7 @@
         <div class="d-flex" v-if="studyRecord.is_finished == true">
           <v-card-text>
             <v-icon>mdi-timer</v-icon>
-            {{ dateTime(studyRecord) }}
+            {{ dateTime(studyRecord.start, studyRecord.end) }}
           </v-card-text>
         </div>
         <v-card-text v-else>
@@ -16,7 +16,8 @@
       </v-expansion-panel-header>
 
       <v-expansion-panel-content :eager="true">
-        <!-- パネルが複数の場合、opendPanelを配列にする必要がある -->
+        <!-- パネルが複数：openedPanelには、1つ目のパネルが開いていれば[0]が、すべて閉じていれば[]が入る -->
+        <!-- パネルが一つ：openedPanelには、開いていれば数字の0が、閉じていればnullが入る。 -->
         <StudyRecordForm
           ref="StudyRecordForm"
           :selectedStudyRecord="studyRecord"
@@ -31,6 +32,9 @@
 
 <script>
 import StudyRecordForm from "../StudyRecords/studyRecordForm.vue";
+
+import mixinMoment from "../../plugins/mixin-moment"
+
 export default {
   props: {
     studyRecord: {
@@ -44,20 +48,10 @@ export default {
   components: {
       StudyRecordForm,
   },
+  mixins: [mixinMoment],
   data() {
     return {
       openedPanel: null
-    }
-  },
-  computed: {
-    dateTime: function() {
-      return function(item){
-        if (item.start_date == item.end_date){
-          return `${this.formatDate(item.start_date)} ${item.start_time} 〜 ${item.end_time}`
-        } else {
-          return `${this.formatDateTime(item.start_date, item.start_time)} 〜 ${this.formatDateTime(item.end_date, item.end_time)}`
-        }
-      }
     }
   },
   watch: {
@@ -71,14 +65,6 @@ export default {
     },
   },
   methods: {
-    formatDateTime(date, time){
-      const d = new Date(date)
-      return `${d.getMonth() + 1}月${d.getDate()}日  ${time}`
-    },
-    formatDate(date){
-      const d = new Date(date)
-      return `${d.getMonth() + 1}月${d.getDate()}日`
-    },
     closePanel () {
       this.openedPanel = null
     },

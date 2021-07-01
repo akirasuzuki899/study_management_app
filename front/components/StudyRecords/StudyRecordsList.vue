@@ -27,7 +27,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                   <v-list-item-title>{{ item.study_material.title }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ dateTime(item) }}</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{ dateTime(item.start, item.end) }}</v-list-item-subtitle>
               </v-list-item-content>
 
               <!-- <v-list-item-action>
@@ -63,10 +63,13 @@
 import { mapGetters } from "vuex";
 import TaskForm from "../Schedule/TaskForm.vue"
 
+import mixinMoment from "../../plugins/mixin-moment"
+
   export default {
     components: {
       TaskForm,
     },
+    mixins: [mixinMoment],
     data() {
       return {
         selectedId: "",
@@ -78,28 +81,11 @@ import TaskForm from "../Schedule/TaskForm.vue"
     },
     computed: {
       ...mapGetters('task', ['unfinished_tasks']),
-      dateTime: function() {
-        return function(item){
-          if (item.start_date == item.end_date){
-            return `${this.formatDate(item.start_date)} ${item.start_time} 〜 ${item.end_time}`
-          } else {
-            return `${this.formatDateTime(item.start_date, item.start_time)} 〜 ${this.formatDateTime(item.end_date, item.end_time)}`
-          }
-        }
-      },
     },
     methods: {
       openScheduleForm(index) {
         this.selectedTask = this.unfinished_tasks[index]
         this.$refs.scheduleForm.open()
-      },
-      formatDateTime(date, time){
-        const d = new Date(date)
-        return `${d.getMonth() + 1}月${d.getDate()}日  ${time}`
-      },
-      formatDate(date){
-        const d = new Date(date)
-        return `${d.getMonth() + 1}月${d.getDate()}日`
       },
       clearID(){
         this.selectedId = ''
