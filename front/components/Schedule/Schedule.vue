@@ -18,7 +18,7 @@
             <template v-slot:event="{ event }">
               <div style="pointer-events:none">
                 <strong>{{ event.name }}</strong><br>
-                {{ event.start.slice( -5 ) }} - {{ event.end.slice( -5 ) }}
+                {{ time(event.start) }} - {{ time(event.end) }}
               </div>
             </template>
             <template v-slot:day-body="{ date }">
@@ -58,12 +58,15 @@ import TaskShow from "./TaskShow";
 import TaskForm from "./TaskForm";
 import StudyRecordList from "../StudyRecords/StudyRecordsList"
 
+import mixinMoment from "../../plugins/mixin-moment"
+
   export default {
     components: {
       TaskShow,
       TaskForm,
       StudyRecordList,
     },
+    mixins: [mixinMoment],
     data() {
       return {
         ready: false,
@@ -123,6 +126,10 @@ import StudyRecordList from "../StudyRecords/StudyRecordsList"
       getEventColor (event) {
         return event.color
       },
+      getType(v) {
+        var toString = Object.prototype.toString
+        return toString.call(v);      
+      }
     },
     mounted () {
       this.ready = true

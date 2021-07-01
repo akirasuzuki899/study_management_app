@@ -30,7 +30,7 @@
         ></ShowStudyMaterial>
         <v-card-text>
           <v-icon>mdi-calendar-month</v-icon>
-          {{ dateTime(selectedTask) }}
+          {{ dateTime(selectedTask.start, selectedTask.end) }}
         </v-card-text>
         <StudyRecordExpansionPanel
           :studyRecord="selectedTask.study_record"
@@ -64,6 +64,9 @@ import TaskForm from "./TaskForm";
 import ButtonDelete from "./TaskButtonDelete";
 import ShowStudyMaterial from "../StudyMaterials/ShowStudyMaterials";
 import StudyRecordExpansionPanel from "../StudyRecords/studyRecordExpansionPanel";
+
+import mixinMoment from "../../plugins/mixin-moment"
+
 export default {
   components: {
       TaskForm,
@@ -71,6 +74,7 @@ export default {
       StudyRecordExpansionPanel,
       ButtonDelete,
     },
+  mixins: [mixinMoment],
   props: {
     selectedTask: {
       type: Object,
@@ -80,11 +84,7 @@ export default {
         name: '',
         color: 'blue',
         start: '',
-        start_date: '',
-        start_time: '',
         end: '',
-        end_date: '',
-        end_time: '',
         study_material: '',
         study_record: '',
       })
@@ -100,18 +100,9 @@ export default {
     return {
       isOpen: false,
     }
-  } ,
+  },
   computed: {
     ...mapGetters(["authTokens"]),
-    dateTime: function() {
-        return function(item){
-          if (item.start_date == item.end_date){
-            return `${this.formatDate(item.start_date)} ${item.start_time} 〜 ${item.end_time}`
-          } else {
-            return `${this.formatDateTime(item.start_date, item.start_time)} 〜 ${this.formatDateTime(item.end_date, item.end_time)}`
-          }
-        }
-      }
   },
   methods: {
     ...mapActions('task', ['deleteTask']),
@@ -124,14 +115,6 @@ export default {
     },
     edit() {
       this.$refs.form.open()
-    },
-    formatDateTime(date, time){
-      const d = new Date(date)
-      return `${d.getMonth() + 1}月${d.getDate()}日  ${time}`
-    },
-    formatDate(date){
-      const d = new Date(date)
-      return `${d.getMonth() + 1}月${d.getDate()}日`
     },
   },
 }

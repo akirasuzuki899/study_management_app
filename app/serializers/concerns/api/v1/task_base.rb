@@ -4,11 +4,11 @@ module Api
       extend ActiveSupport::Concern
 
       def start
-        I18n.l(object.start_at, format: :dateTime)
+        object.start_at ? I18n.l(object.start_at, format: :dateTime) : nil
       end
       
       def end
-        I18n.l(object.end_at, format: :dateTime)
+        object.end_at ? I18n.l(object.end_at, format: :dateTime) : nil
       end
     
     end

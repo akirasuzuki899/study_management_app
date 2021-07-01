@@ -54,7 +54,6 @@
                       name="日付"
                       label="日付"
                       rules="required"
-                      dates="afterToday"
                       :dense="true"
                     ></DatePicker>
                   </v-col>
@@ -132,6 +131,8 @@ import ButtonUpdate from "./TaskButtonUpdate";
 import { mapGetters, mapActions } from "vuex";
 import { ValidationObserver } from 'vee-validate';
 
+import mixinMoment from "../../plugins/mixin-moment"
+
 export default {
   components: {
     TextInput,
@@ -143,6 +144,7 @@ export default {
     ButtonUpdate,
     ValidationObserver,
   },
+  mixins: [mixinMoment],
   props: {
     selectedTask: {
       type: Object,
@@ -152,11 +154,7 @@ export default {
         name: '',
         color: 'blue',
         start: '',
-        start_date: '',
-        start_time: '',
         end: '',
-        end_date: '',
-        end_time: '',
         study_material: '',
         study_record: '',
       })
@@ -198,11 +196,10 @@ export default {
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
       this.formData.color = this.selectedTask.color
-      this.formData.start_date = this.selectedTask.start_date
-      this.formData.start_time = this.selectedTask.start_time
-      this.formData.end_time = this.selectedTask.end_time
+      this.formData.start_date = this.date(this.selectedTask.start)
+      this.formData.start_time = this.time(this.selectedTask.start)
+      this.formData.end_time = this.time(this.selectedTask.end)
     },
-
     open () {
       this.Dialog = true
     },
