@@ -15,14 +15,7 @@ class Task < ApplicationRecord
   validates :start_date, presence: true
   validates :start_time, presence: true
   validates :end_time, presence: true
-  # validate :start_day_should_be_after_today
   validate :time_should_be_more_than_15min
-
-
-  # def start_day_should_be_after_today
-  #   return if start_date.nil?
-  #   errors.add(:start, "開始日時は現在の日時以降を選択してください") if start_date < Date.today
-  # end
 
   def self.week_date(after_num_weeks)
     today = Date.today

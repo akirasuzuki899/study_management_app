@@ -5,7 +5,7 @@
   :name="name"
   :label="label"
   :vid="vid"
-  :items="items"
+  :items="baseAllowedTime"
   prepend-icon="mdi-clock-time-four-outline"
   :dense="dense"
   :rules="rules"
@@ -56,7 +56,7 @@ export default {
   },
   data: () => ({
     baseAllowedTime: [
-       "00:05",        "00:15", "00:30", "00:45", 
+      "00:00", "00:15", "00:30", "00:45", 
       "01:00", "01:15", "01:30", "01:45", 
       "02:00", "02:15", "02:30", "02:45", 
       "03:00", "03:15", "03:30", "03:45", 
@@ -82,17 +82,5 @@ export default {
       "23:00", "23:15", "23:30", "23:45", 
     ],
   }),
-  computed: {
-    items: function() {
-      if (this.time == "start") {
-        return ["00:00", ...this.baseAllowedTime]
-      } else if (this.time == "end") {
-        return [...this.baseAllowedTime, "24:00"]
-      } else {
-        console.log("----------------errors----------------")
-        console.log("items に start か end を渡してください")
-      }
-    },
-  },
 }
 </script>
