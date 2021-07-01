@@ -29,7 +29,7 @@
         ></ShowStudyMaterial>
         <v-card-text>
             <v-icon>mdi-calendar-month</v-icon>
-            {{ `毎週 ${selectedTask.day_of_week} ${selectedTask.start_time} 〜 ${selectedTask.end_time}` }}
+            {{ `毎週 ${selectedTask.day_of_week} ${time(selectedTask.start)} 〜 ${time(selectedTask.end)}` }}
         </v-card-text>
       </v-card-text>
       <v-card-actions>
@@ -59,12 +59,16 @@ import { mapGetters, mapActions } from "vuex";
 import TaskTemplateForm from "./TaskTemplateForm";
 import ShowStudyMaterial from "../StudyMaterials/ShowStudyMaterials";
 import ButtonDelete from "./TaskButtonDelete";
+
+import mixinMoment from "../../plugins/mixin-moment"
+
 export default {
   components: {
       TaskTemplateForm,
       ShowStudyMaterial,
       ButtonDelete,
     },
+  mixins: [mixinMoment],
   props: {
     selectedTask: {
       type: Object,
@@ -74,11 +78,7 @@ export default {
         name: '',
         color: 'blue',
         start: '',
-        start_date: '',
-        start_time: '',
         end: '',
-        end_date: '',
-        end_time: '',
         study_material: '',
         study_record: '',
       })

@@ -82,7 +82,7 @@
               <div class="px-3 text-caption text--disabled">
                 テンプレートを元に一週間の予定を自動で作成します。<br>
                 週間カレンダーに手動で反映させるには、
-                「週間カレンダーに反映」チェックボックスを有効にします。
+                「週間カレンダーに反映」をクリックします。
               </div>
             </v-card-text>
 
@@ -133,6 +133,7 @@ import ButtonUpdate from "./TaskButtonUpdate";
 import { mapGetters, mapActions } from "vuex";
 import { ValidationObserver} from 'vee-validate';
 
+import mixinMoment from "../../plugins/mixin-moment"
 
 export default {
   components: {
@@ -145,6 +146,7 @@ export default {
     ButtonUpdate,
     ValidationObserver,
   },
+  mixins: [mixinMoment],
   props: {
     selectedTask: {
       type: Object,
@@ -155,9 +157,7 @@ export default {
         color: 'blue',
         day_of_week: '',
         start: '',
-        start_time: '',
         end: '',
-        end_time: '',
         study_material: '',
       })
     },
@@ -198,8 +198,8 @@ export default {
       this.formData.study_material_id = this.selectedTask.study_material_id
       this.formData.color = this.selectedTask.color
       this.formData.day_of_week = this.selectedTask.day_of_week
-      this.formData.start_time = this.selectedTask.start_time
-      this.formData.end_time = this.selectedTask.end_time
+      this.formData.start_time = this.time(this.selectedTask.start)
+      this.formData.end_time = this.time(this.selectedTask.end)
     },
     
     open () {

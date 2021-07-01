@@ -29,7 +29,7 @@
             <template v-slot:event="{ event }">
               <div style="pointer-events:none">
                 <strong>{{ event.name }}</strong><br>
-                {{ event.start.slice( -5 ) }} - {{ event.end.slice( -5 ) }}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
+                {{ time(event.start) }} - {{ time(event.end)}}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
               </div>
             </template>
             <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
@@ -85,6 +85,8 @@ import TaskTemplateForm from "./TaskTemplateForm";
 import Alert from "../Alert";
 import RadioButton from "../Form/BaseRadioButton"
 
+import mixinMoment from "../../plugins/mixin-moment"
+
   export default {
     components: {
       TaskTemplateShow,
@@ -92,6 +94,7 @@ import RadioButton from "../Form/BaseRadioButton"
       Alert,
       RadioButton,
     },
+    mixins: [mixinMoment],
     data() {
       return {
         target: "taskTemplate",

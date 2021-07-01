@@ -6,7 +6,6 @@ export const state = () => ({
     "expiry": null,
     "token-type": null,
   },
-  studyMaterials: {},
 })
 
 export const getters = {

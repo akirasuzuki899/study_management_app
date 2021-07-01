@@ -4,8 +4,8 @@ export const state = () => ({
     id: '',
     user_id: '',
     name: '',
-    start_time: '',
-    end_time: '',
+    start: '',
+    end: '',
     day_of_week: '',
     created_at: '',
     updated_at: '',
@@ -62,7 +62,7 @@ export const mutations = {
 };
 
 export const actions = {
-  getTaskTemplates( { commit, dispatch }, authTokens ) {
+  getTaskTemplates( { commit }, authTokens ) {
     this.$axios
       .get('/api/v1/task_templates', {
         headers: authTokens
