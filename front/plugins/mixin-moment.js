@@ -29,5 +29,11 @@ export default {
         }
       }
     },
+    timeToMs: function(){
+      return function(time) {
+        if (!time) return ''
+        return Number(moment(time).format('x'))
+      }
+    }
   }
 }

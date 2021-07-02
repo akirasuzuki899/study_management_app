@@ -33,6 +33,11 @@ export const mutations = {
     const index = state.tasks.findIndex((v) => v.id === task.id);
     state.tasks.splice(index, 1, task)
   },
+  dragUpdate(state, task) {
+    const index = state.tasks.findIndex((v) => v.id === task.id);
+    if (task.start) state.tasks[index].start = task.start
+    if (task.end) state.tasks[index].end = task.end
+  },
   destroyTask(state, task) {
     const index = state.tasks.findIndex((v) => v.id === task.id);
     state.tasks.splice(index, 1)
@@ -120,6 +125,31 @@ export const actions = {
         console.log(error);
       })
   },
+  // dragUpdate( { commit, dispatch }, { authTokens, id, data } ) {
+  //   console.log("aaaaaaaaaa")
+  //   dispatch("snackbar/processMessage", '更新しています...', { root: true })
+  //   this.$axios
+  //     .put(
+  //       '/api/v1/tasks/' + id,
+  //       {
+  //         start_date: data.start_date,
+  //         start_time: data.start_time,
+  //         end_time: data.end_time,
+  //       },
+  //       {
+  //         headers: authTokens
+  //       }
+  //     )
+  //     .then(( { data } ) => {
+  //       console.log("success")
+  //       console.log(data.task)
+  //       commit("updateTask", data.task)
+  //       dispatch("snackbar/successMessage", '更新しました', { root: true })
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     })
+  // },
   deleteTask( { commit, dispatch }, { authTokens, selectedTask } ) {
     dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios

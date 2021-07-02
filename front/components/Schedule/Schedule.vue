@@ -14,13 +14,28 @@
             @click:event="showTask"
             @click:time="createTask"
             :interval-format="intervalFormat"
+
+            @mousedown:event="startDrag"
+            @mousedown:time="startTime"
+            @mousemove:time="mouseMove"
+            @mouseup:time="endDrag"
+            @mouseleave.native="cancelDrag"
           >
-            <template v-slot:event="{ event }">
-              <div style="pointer-events:none">
+            <template v-slot:event="{ event, timed }">
+              <div
+                style="pointer-events:none"
+                class="v-event-draggable"
+              >
                 <strong>{{ event.name }}</strong><br>
                 {{ time(event.start) }} - {{ time(event.end) }}
               </div>
+              <div
+                v-if="timed"
+                class="v-event-drag-bottom"
+                @mousedown.stop="extendBottom(event)"
+              ></div>
             </template>
+
             <template v-slot:day-body="{ date }">
               <div
                 :class="[date === getCurrentDate() ? ['first', 'v-current-time'] : '']"
@@ -53,7 +68,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import TaskShow from "./TaskShow";
 import TaskForm from "./TaskForm";
 import StudyRecordList from "../StudyRecords/StudyRecordsList"
@@ -67,14 +82,23 @@ import mixinMoment from "../../plugins/mixin-moment"
       StudyRecordList,
     },
     mixins: [mixinMoment],
-    data() {
-      return {
-        ready: false,
-        target: "task",
-        selectedTask: {},
-        selectedElement: null,
+    data: () => ({
+      ready: false,
+      target: "task",
+      selectedTask: {},
+      selectedElement: null,
+
+      dragTime: null,
+      dragEvent: null,
+      dragStart: null,
+      createEvent: null,
+      createStart: null,
+      extendOriginal: null,
+      originalEvent: {
+        start: null,
+        end: null,
       }
-    },
+    }),
     computed: {
       ...mapGetters('task', ['tasks', 'unfinished_tasks']),
       ...mapGetters(["authTokens"]),
@@ -86,6 +110,168 @@ import mixinMoment from "../../plugins/mixin-moment"
       },
     },
     methods: {
+      ...mapActions('task', ['createTask', 'updateTask', ]),
+      ...mapMutations('task', ['dragUpdate']),
+
+      startDrag ({ event, timed }) {
+        
+        if (event && timed) {
+          console.log("startDrag")
+          this.dragEvent = event   //参照渡し
+          this.dragTime = null
+          this.extendOriginal = null
+          this.originalEvent.start = this.dragEvent.start
+          this.originalEvent.end = this.dragEvent.end
+        }
+      },
+      startTime (tms) {
+        console.log("startTime")
+        const mouse = this.toTime(tms)
+
+        if (this.dragEvent && this.dragTime === null) {
+          const start = this.timeToMs(this.dragEvent.start)
+
+          this.dragTime = mouse - start
+
+        } else {
+          this.createStart = this.roundTime(mouse)
+          this.createEvent = {
+              name: "タイトルなし",
+            color: "blue",
+            start: this.createStart,
+            end: this.createStart,
+            timed: true,
+          }
+
+          this.events.push(this.createEvent)
+        }
+      },
+      extendBottom (event) {
+        console.log("extendBottom")
+        this.createEvent = event  //参照渡し
+        this.createStart = this.timeToMs(event.start)
+        this.extendOriginal = this.timeToMs(event.end)
+      },
+      mouseMove (tms) {
+        console.log("mouseMove")
+        const mouse = this.toTime(tms)
+
+        if (this.dragEvent && this.dragTime !== null) {
+          const start = this.timeToMs(this.dragEvent.start)
+          const end = this.timeToMs(this.dragEvent.end)
+          const duration = end - start   //イベントの終始をmsで保持
+          const newStartTime = mouse - this.dragTime  //イベントのスタートとクリックした時間との差をmsで保持
+          const newStart = this.roundTime(newStartTime)
+          const newEnd = newStart + duration
+
+          this.dragUpdate(
+            {
+              id: this.dragEvent.id,
+              start: `${this.date(newStart)} ${this.time(newStart)}`,
+              end: `${this.date(newEnd)} ${this.time(newEnd)}`,
+            }
+          )
+        } else if (this.createEvent && this.createStart !== null) {
+          const mouseRounded = this.roundTime(mouse, false)
+          const min = Math.min(mouseRounded, this.createStart)
+          const max = Math.max(mouseRounded, this.createStart)
+
+          this.dragUpdate(
+            {
+              id: this.createEvent.id,
+              start: `${this.date(min)} ${this.time(min)}`,
+              end: `${this.date(max)} ${this.time(max)}`,
+            }
+          )
+        }
+      },
+      endDrag () {
+        if (this.dragEvent && this.dragTime !== null){
+          if (this.dragEvent.start !== this.originalEvent.start || this.dragEvent.end !== this.originalEvent.end ){
+            this.updateTask({
+              authTokens: this.authTokens,
+              selectedTask: this.dragEvent,
+              formData: {
+                start_date: this.date(this.dragEvent.start),
+                start_time: this.time(this.dragEvent.start),
+                end_time: this.time(this.dragEvent.end),
+              }
+            })
+          }
+        } else if (this.createEvent && this.createStart !== null) {
+          if (this.extendOriginal !== this.originalEvent.start || this.dragEvent.end !== this.originalEvent.end ){
+            console.log("this.createEvent")
+            console.log(this.createEvent)
+            this.updateTask({
+              authTokens: this.authTokens,
+              selectedTask: this.createEvent,
+              formData: {
+                start_date: this.date(this.createEvent.start),
+                start_time: this.time(this.createEvent.start),
+                end_time: this.time(this.createEvent.end),
+              }
+            })
+          }
+        }
+        console.log("endDrag")
+        this.dragTime = null
+        this.dragEvent = null
+        this.createEvent = null
+        this.createStart = null
+        this.extendOriginal = null
+      },
+      cancelDrag () {
+        if (this.createEvent) {
+          if (this.extendOriginal) {
+            this.dragUpdate(
+              {
+                id: this.createEvent.id,
+                end: `${this.date(this.extendOriginal)} ${this.time(this.extendOriginal)}`,
+              }
+            )
+          } else {
+            const i = this.events.indexOf(this.createEvent)
+            if (i !== -1) {
+              this.events.splice(i, 1)
+            }
+          }
+        }
+
+        this.createEvent = null
+        this.createStart = null
+        this.dragTime = null
+        this.dragEvent = null
+      },
+
+
+      roundTime (time, down = true) {   //  引数と返す値はms
+        const roundTo = 15 // minutes
+        const roundDownTime = roundTo * 60 * 1000
+
+        return down
+          ? time - time % roundDownTime   // 切り捨て
+          : time + (roundDownTime - (time % roundDownTime))  //切り上げ
+      },
+      toTime (tms) {   //時間をmsで返す
+        return new Date(tms.year, tms.month - 1, tms.day, tms.hour, tms.minute).getTime()
+      },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       createTask() {
         if(this.$refs.taskShow.isOpen === false) this.$refs.form.open();
       },
@@ -185,6 +371,46 @@ import mixinMoment from "../../plugins/mixin-moment"
     border-radius: 50%;
     margin-top: -5px;
     margin-left: -6.5px;
+  }
+}
+</style>
+
+
+
+
+<style scoped lang="scss">
+.v-event-draggable {
+  padding-left: 6px;
+}
+
+.v-event-timed {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.v-event-drag-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 4px;
+  cursor: ns-resize;
+
+  &::after {
+    display: none;
+    position: absolute;
+    left: 50%;
+    height: 4px;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    width: 16px;
+    margin-left: -8px;
+    opacity: 0.8;
+    content: '';
+  }
+
+  &:hover::after {
+    display: block;
   }
 }
 </style>
