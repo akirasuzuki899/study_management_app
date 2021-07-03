@@ -125,31 +125,6 @@ export const actions = {
         console.log(error);
       })
   },
-  // dragUpdate( { commit, dispatch }, { authTokens, id, data } ) {
-  //   console.log("aaaaaaaaaa")
-  //   dispatch("snackbar/processMessage", '更新しています...', { root: true })
-  //   this.$axios
-  //     .put(
-  //       '/api/v1/tasks/' + id,
-  //       {
-  //         start_date: data.start_date,
-  //         start_time: data.start_time,
-  //         end_time: data.end_time,
-  //       },
-  //       {
-  //         headers: authTokens
-  //       }
-  //     )
-  //     .then(( { data } ) => {
-  //       console.log("success")
-  //       console.log(data.task)
-  //       commit("updateTask", data.task)
-  //       dispatch("snackbar/successMessage", '更新しました', { root: true })
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     })
-  // },
   deleteTask( { commit, dispatch }, { authTokens, selectedTask } ) {
     dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios

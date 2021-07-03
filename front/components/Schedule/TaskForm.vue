@@ -159,6 +159,9 @@ export default {
         study_record: '',
       })
     },
+    selecrtedHour: {
+      type: Number,
+    },
     method: {}, 
     target: {},
   },

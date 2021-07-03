@@ -30,7 +30,7 @@
         ></ShowStudyMaterial>
         <v-card-text>
           <v-icon>mdi-calendar-month</v-icon>
-          {{ dateTime(selectedTask.start, selectedTask.end) }}
+          {{ fromToDateTime(selectedTask.start, selectedTask.end) }}
         </v-card-text>
         <StudyRecordExpansionPanel
           :studyRecord="selectedTask.study_record"

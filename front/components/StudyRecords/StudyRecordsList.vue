@@ -27,7 +27,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                   <v-list-item-title>{{ item.study_material.title }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ dateTime(item.start, item.end) }}</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{ fromToDateTime(item.start, item.end) }}</v-list-item-subtitle>
               </v-list-item-content>
 
               <!-- <v-list-item-action>

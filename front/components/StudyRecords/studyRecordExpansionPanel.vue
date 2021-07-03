@@ -6,7 +6,7 @@
         <div class="d-flex" v-if="studyRecord.is_finished == true">
           <v-card-text>
             <v-icon>mdi-timer</v-icon>
-            {{ dateTime(studyRecord.start, studyRecord.end) }}
+            {{ fromToDateTime(studyRecord.start, studyRecord.end) }}
           </v-card-text>
         </div>
         <v-card-text v-else>
