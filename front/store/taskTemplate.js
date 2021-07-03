@@ -53,6 +53,11 @@ export const mutations = {
 
     state.taskTemplates = task_templates
   },
+  dragUpdate(state, taskTemplate) {
+    const index = state.taskTemplates.findIndex((v) => v.id === taskTemplate.id);
+    if (taskTemplate.start) state.taskTemplates[index].start = taskTemplate.start
+    if (taskTemplate.end) state.taskTemplates[index].end = taskTemplate.end
+  },
   destroyTaskTemplate(state, data) {
     const state_tasks = state.taskTemplates.filter( state_task => 
       state_task.id !== data.task_template.id 
@@ -100,22 +105,26 @@ export const actions = {
   },
   updateTaskTemplate( { commit, dispatch }, { authTokens, selectedTask, formData } )  {
     dispatch("snackbar/processMessage", '更新しています...', { root: true })
+    console.log("送信前")
+    console.log(formData)
     this.$axios
-      .put(
-        '/api/v1/task_templates/' + selectedTask.id,
-        {
-          name: formData.name,
-          study_material_id: formData.study_material_id,
-          day_of_week: formData.day_of_week,
-          start_time: formData.start_time,
-          end_time: formData.end_time,
-          color: formData.color,
-        },
-        {
-          headers: authTokens
-        }
+    .put(
+      '/api/v1/task_templates/' + selectedTask.id,
+      {
+        name: formData.name,
+        study_material_id: formData.study_material_id,
+        day_of_week: formData.day_of_week,
+        start_time: formData.start_time,
+        end_time: formData.end_time,
+        color: formData.color,
+      },
+      {
+        headers: authTokens
+      }
       )
       .then(( { data } ) => {
+        console.log("送信後")
+        console.log(data.task_template)
         commit("updateTaskTemplate", data)
         dispatch("snackbar/successMessage", '更新しました', { root: true })
       })

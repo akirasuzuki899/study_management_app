@@ -56,7 +56,7 @@ export default {
     endDrag () {
       if (this.dragEvent && this.dragTime !== null){
         if (this.dragEvent.start !== this.originalEvent.start || this.dragEvent.end !== this.originalEvent.end ){
-          this.updateTask({
+          this.update({
             authTokens: this.authTokens,
             selectedTask: this.dragEvent,
             formData: {
@@ -71,7 +71,6 @@ export default {
       console.log(this.drag)
       this.dragTime = null
       this.dragEvent = null
-      // this.drag = false
     },
     cancelDrag () {
       if (this.dragEvent && this.dragTime !== null){

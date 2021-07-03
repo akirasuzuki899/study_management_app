@@ -25,6 +25,12 @@
             @click:event="showTaskTemplate"
             @click:time="createTaskTemplate"
             :interval-format="intervalFormat"
+
+            @mousedown:event="startDrag"
+            @mousedown:time="startTime"
+            @mousemove:time="mouseMove"
+            @mouseup:time="endDrag"
+            @mouseleave.native="cancelDrag"
           >
             <template v-slot:event="{ event }">
               <div style="pointer-events:none">
@@ -79,13 +85,14 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import TaskTemplateShow from "./TaskTemplateShow";
 import TaskTemplateForm from "./TaskTemplateForm";
 import Alert from "../Alert";
 import RadioButton from "../Form/BaseRadioButton"
 
 import mixinMoment from "../../plugins/mixin-moment"
+import mixinSchedule from "../../plugins/mixin-schedule"
 
   export default {
     components: {
@@ -94,7 +101,7 @@ import mixinMoment from "../../plugins/mixin-moment"
       Alert,
       RadioButton,
     },
-    mixins: [mixinMoment],
+    mixins: [mixinMoment, mixinSchedule],
     data() {
       return {
         target: "taskTemplate",
@@ -110,24 +117,33 @@ import mixinMoment from "../../plugins/mixin-moment"
     },
     methods: {
       ...mapActions('task', ['createTasksFromTemplates']),
+      ...mapActions('taskTemplate', {
+        update: 'updateTaskTemplate',
+      }),
+      ...mapMutations('taskTemplate', ['dragUpdate']),
       createTaskTemplate() {
-        if(this.$refs.taskTemplateShow.isOpen === false) this.$refs.form.open();
+        if(this.$refs.taskTemplateShow.isOpen === false && this.drag === false) {
+          this.$refs.form.open();
+        }
       },
       showTaskTemplate ({ nativeEvent, event }) {
-        const open = () => {
-          this.selectedTask = event
-          this.selectedElement = nativeEvent.target
-          requestAnimationFrame(() => requestAnimationFrame(() => this.$refs.taskTemplateShow.open()))
-        }
+        if (this.drag === false) {
 
-        if (this.$refs.taskTemplateShow.isOpen) {
-          this.$refs.taskTemplateShow.isOpen = false
-          requestAnimationFrame(() => requestAnimationFrame(() => open()))
-        } else {
-          open()
+          const open = () => {
+            this.selectedTask = event
+            this.selectedElement = nativeEvent.target
+            requestAnimationFrame(() => requestAnimationFrame(() => this.$refs.taskTemplateShow.open()))
+          }
+  
+          if (this.$refs.taskTemplateShow.isOpen) {
+            this.$refs.taskTemplateShow.isOpen = false
+            requestAnimationFrame(() => requestAnimationFrame(() => open()))
+          } else {
+            open()
+          }
+  
+          nativeEvent.stopPropagation()
         }
-
-        nativeEvent.stopPropagation()
       },
       openAlert() {
         this.$refs.alert.open();

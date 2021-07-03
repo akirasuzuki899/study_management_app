@@ -96,7 +96,9 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       },
     },
     methods: {
-      ...mapActions('task', ['createTask', 'updateTask', ]),
+      ...mapActions('task', {
+        update: 'updateTask',
+      }),
       ...mapMutations('task', ['dragUpdate']),
 
       createTask(val) {
@@ -148,7 +150,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       },
       getType(v) {
         var toString = Object.prototype.toString
-        return toString.call(v);      
+        return toString.call(v);
       }
     },
     mounted () {
