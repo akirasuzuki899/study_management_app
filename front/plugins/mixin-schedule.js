@@ -14,7 +14,6 @@ export default {
   methods: {
     startDrag ({ event, timed }) {
       if (event && timed) {
-        this.drag = false
         this.dragEvent = event   //参照渡し
         this.dragTime = null
         this.originalEvent.start = this.dragEvent.start
@@ -22,6 +21,7 @@ export default {
       }
     },
     startTime (tms) {
+      this.drag = false
       const mouse = this.toTime(tms)
 
       if (this.dragEvent && this.dragTime === null) {
@@ -41,14 +41,14 @@ export default {
         const newStart = this.roundTime(newStartTime)
         const newEnd = newStart + duration
 
-        if (this.time(newEnd) !== "00:00" && tms.hour !== -1) {
-          this.dragUpdate(
-            {
-              id: this.dragEvent.id,
+        if (this.time(newEnd) !== "00:00" && tms.hour >= 0) {
+          this.dragUpdate({
+            dragEvent: this.dragEvent,
+            data: {
               start: this.dateTime(newStart),
               end: this.dateTime(newEnd),
             }
-          )
+          })
         }
 
       }
@@ -67,20 +67,18 @@ export default {
           })
         }
       }
-      console.log("this.drag")
-      console.log(this.drag)
       this.dragTime = null
       this.dragEvent = null
     },
     cancelDrag () {
       if (this.dragEvent && this.dragTime !== null){
-        this.dragUpdate(
-          {
-            id: this.dragEvent.id,
+        this.dragUpdate({
+          dragEvent: this.dragEvent,
+          data: {
             start: this.dateTime(this.originalEvent.start),
             end: this.dateTime(this.originalEvent.end),
           }
-        )
+        })
       }
       this.dragTime = null
       this.dragEvent = null

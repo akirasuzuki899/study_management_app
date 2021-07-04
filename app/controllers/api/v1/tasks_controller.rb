@@ -34,6 +34,7 @@ module Api
           from = TaskTemplate::BASEWEEK[today].to_date
           to = TaskTemplate::BASEWEEK["日"].to_date
           task_templates = current_user.task_templates.where(start_date: from..to)
+          # debugger
         end
 
         if task_templates.empty?

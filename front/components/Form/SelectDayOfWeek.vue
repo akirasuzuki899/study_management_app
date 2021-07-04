@@ -5,10 +5,10 @@
     name="曜日"
     label="曜日"
     :items="dayOfWeek"
-    item-text="title"
-    item-value="id"
+    item-text="day"
+    item-value="date"
     :dense="dense"
-    rules="required|oneOf:月,火,水,木,金,土,日"
+    rules="required"
   ></BaseSelect>
 </template>
 
@@ -36,7 +36,14 @@ export default {
   },
   data() {
     return {
-      dayOfWeek: ['月', '火', '水', '木', '金', '土', '日'],
+      dayOfWeek: [
+        {day:'月', date: '2000-01-03'}, 
+        {day:'火', date: '2000-01-04'}, 
+        {day:'水', date: '2000-01-05'}, 
+        {day:'木', date: '2000-01-06'}, 
+        {day:'金', date: '2000-01-07'}, 
+        {day:'土', date: '2000-01-08'}, 
+        {day:'日', date: '2000-01-09'}],
     }
   },
 }

@@ -50,7 +50,7 @@
                 <v-row>
                   <v-col cols="12" sm="12" md="12">
                     <SelectDayOfWeek
-                      v-model="formData.day_of_week"
+                      v-model="formData.start_date"
                       :dense="true"
                     ></SelectDayOfWeek>
                   </v-col>
@@ -197,7 +197,7 @@ export default {
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
       this.formData.color = this.selectedTask.color
-      this.formData.day_of_week = this.selectedTask.day_of_week
+      this.formData.start_date = this.date(this.selectedTask.start) == '2000-01-02' ? '2000-01-09' : this.date(this.selectedTask.start) //ダミーtemplateをtemplateに変換
       this.formData.start_time = this.time(this.selectedTask.start)
       this.formData.end_time = this.time(this.selectedTask.end)
     },

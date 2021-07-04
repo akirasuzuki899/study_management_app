@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export const state = () => ({
   taskTemplates: [],
   taskTemplate: {
@@ -53,10 +55,28 @@ export const mutations = {
 
     state.taskTemplates = task_templates
   },
-  dragUpdate(state, taskTemplate) {
-    const index = state.taskTemplates.findIndex((v) => v.id === taskTemplate.id);
-    if (taskTemplate.start) state.taskTemplates[index].start = taskTemplate.start
-    if (taskTemplate.end) state.taskTemplates[index].end = taskTemplate.end
+  dragUpdate(state, {dragEvent, data}) {
+    if (dragEvent.day_of_week == "日"){
+      const index_sundayTask = state.taskTemplates.findIndex((v) => v.id === dragEvent.id && v.dummy === false)
+      const index_dummy = state.taskTemplates.findIndex((v) => v.id === dragEvent.id && v.dummy === true)
+      if(dragEvent.dummy == true){
+          state.taskTemplates[index_sundayTask].start = moment(data.start).add(7, 'days').format('YYYY-MM-DD HH:mm')
+          state.taskTemplates[index_sundayTask].end = moment(data.end).add(7, 'days').format('YYYY-MM-DD HH:mm')
+          state.taskTemplates[index_dummy].start = data.start
+          state.taskTemplates[index_dummy].end = data.end
+
+      } else {
+        state.taskTemplates[index_sundayTask].start = data.start
+        state.taskTemplates[index_sundayTask].end = data.end
+        state.taskTemplates[index_dummy].start = moment(data.start).add(-7, 'days').format('YYYY-MM-DD HH:mm')
+        state.taskTemplates[index_dummy].end = moment(data.end).add(-7, 'days').format('YYYY-MM-DD HH:mm')
+      }
+    } 
+    else {
+      const index = state.taskTemplates.findIndex((v) => v.id === dragEvent.id)
+      state.taskTemplates[index].start = data.start
+      state.taskTemplates[index].end = data.end
+    }
   },
   destroyTaskTemplate(state, data) {
     const state_tasks = state.taskTemplates.filter( state_task => 
@@ -85,7 +105,7 @@ export const actions = {
         {
           name: formData.name,
           study_material_id: formData.study_material_id,
-          day_of_week: formData.day_of_week,
+          start_date: formData.start_date,
           start_time: formData.start_time,
           end_time: formData.end_time,
           color: formData.color
@@ -95,7 +115,8 @@ export const actions = {
         }
       )
       .then(( { data } ) => {
-        // console.log(data)
+        console.log(" res data")
+        console.log(data)
         commit("addTaskTemplate", data)
         dispatch("snackbar/successMessage", '作成しました', { root: true })
       })
@@ -113,7 +134,7 @@ export const actions = {
       {
         name: formData.name,
         study_material_id: formData.study_material_id,
-        day_of_week: formData.day_of_week,
+        start_date: formData.start_date == '2000-01-02' ?  '2000-01-09' : formData.start_date,  //ダミーtemplateをtemplateに変換
         start_time: formData.start_time,
         end_time: formData.end_time,
         color: formData.color,

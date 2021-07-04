@@ -33,10 +33,10 @@ export const mutations = {
     const index = state.tasks.findIndex((v) => v.id === task.id);
     state.tasks.splice(index, 1, task)
   },
-  dragUpdate(state, task) {
-    const index = state.tasks.findIndex((v) => v.id === task.id);
-    if (task.start) state.tasks[index].start = task.start
-    if (task.end) state.tasks[index].end = task.end
+  dragUpdate(state, {dragEvent, data}) {
+    const index = state.tasks.findIndex((v) => v.id === dragEvent.id)
+    state.tasks[index].start = data.start
+    state.tasks[index].end = data.end
   },
   destroyTask(state, task) {
     const index = state.tasks.findIndex((v) => v.id === task.id);
@@ -77,7 +77,6 @@ export const actions = {
           name: formData.name,
           study_material_id: formData.study_material_id,
           start_date: formData.start_date,
-          end_date: formData.end_date,
           start_time: formData.start_time,
           end_time: formData.end_time,
           color: formData.color,
@@ -106,7 +105,6 @@ export const actions = {
           name: formData.name,
           study_material_id: formData.study_material_id,
           start_date: formData.start_date,
-          end_date: formData.end_date,
           start_time: formData.start_time,
           end_time: formData.end_time,
           color: formData.color,
@@ -178,7 +176,6 @@ export const actions = {
           name: formData.name,
           study_material_id: formData.study_material_id,
           start_date: formData.start_date,
-          end_date: formData.end_date,
           start_time: formData.start_time,
           end_time: formData.end_time,
           color: formData.color,
