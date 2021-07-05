@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export const state = () => ({
   tasks: [],
   unfinished_tasks: [],
@@ -45,10 +47,17 @@ export const mutations = {
   setUnfinishedTask(state, unfinished_tasks){
     state.unfinished_tasks = unfinished_tasks;
   },
+  addUnfinishedTask(state, task) {
+    if (Array.isArray(task)) {
+      state.unfinished_tasks.push(...task)
+    } else {
+      state.unfinished_tasks.push(task)
+    }
+  },
   destroyUnfinishedTask(state, task) {
     const index = state.unfinished_tasks.findIndex((v) => v.id === task.id);
     state.unfinished_tasks.splice(index, 1)
-  },  
+  },
   updateStudyRecord(state, data){
     const index = state.tasks.findIndex((v) => v.id === data.study_record.task_id);
     state.tasks[index].study_record = data.study_record
@@ -117,6 +126,9 @@ export const actions = {
         console.log("success")
         console.log(data.task)
         commit("updateTask", data.task)
+        if(moment(selectedTask.start).isBefore(moment(),'day') && selectedTask.study_record.is_finished === false){
+          commit("destroyUnfinishedTask", selectedTask)
+        }
         dispatch("snackbar/successMessage", '更新しました', { root: true })
       })
       .catch(error => {
@@ -135,7 +147,11 @@ export const actions = {
       .then(({ data }) => {
         console.log("success")
         console.log(data.task)
+        console.log(selectedTask)
         commit("destroyTask", data.task)
+        if(moment(selectedTask.start).isBefore(moment(),'day') && selectedTask.study_record.is_finished === false){
+          commit("destroyUnfinishedTask", selectedTask)
+        }
         dispatch("snackbar/successMessage", '削除しました', { root: true })
       })
       .catch( error => {

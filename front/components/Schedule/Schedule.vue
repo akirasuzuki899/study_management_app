@@ -56,6 +56,7 @@
       </v-col>
       <v-col cols="12" sm="4" md="4">
         <StudyRecordList
+          :tasks="tasks"
         ></StudyRecordList>
       </v-col>
     </v-row>
@@ -86,7 +87,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       selecrtedHour: '',
     }),
     computed: {
-      ...mapGetters('task', ['tasks', 'unfinished_tasks']),
+      ...mapGetters('task', ['tasks', 'unfinished_tasks']),      //あああああああああああああああああああああああああああ-unfinished_tasks削除?
       ...mapGetters(["authTokens"]),
       cal () {
         return this.ready ? this.$refs.calendar : null

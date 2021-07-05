@@ -8,7 +8,7 @@ module Api
         today = Date.today
         tasks = current_user.tasks.where(start_date: today.beginning_of_week..today.end_of_week)
         unfinished_tasks = current_user.tasks.left_joins(:study_record)
-          .where('end_date < ? ', today)
+          .where('end_date < ? ', today.beginning_of_week)
           .where(study_record: {is_finished: false})
         render  json: {
           tasks: ActiveModelSerializers::SerializableResource.new(tasks, each_serializer: TaskSerializer).as_json,

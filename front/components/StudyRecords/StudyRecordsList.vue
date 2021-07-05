@@ -7,11 +7,16 @@
       <v-toolbar
         color="pink"
         dark
+        dense
       >
         <v-toolbar-title>再登録</v-toolbar-title>
       </v-toolbar>
 
-      <v-list dense :subheader="true">
+      <v-list
+        dense :subheader="true"
+        v-if="unfinished_tasks.length"
+      >
+
         <v-list-item-group
           active-class="pink--text"
           v-model="selectedId"
@@ -45,6 +50,13 @@
           </template>
         </v-list-item-group>
       </v-list>
+      <v-card-text
+        v-else
+      >
+        <div class="grey--text ms-4">
+          未実施のタスクはありません
+        </div>
+      </v-card-text>
 
     </v-card>
     <TaskForm
@@ -60,7 +72,7 @@
 
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import TaskForm from "../Schedule/TaskForm.vue"
 
 import mixinMoment from "../../plugins/mixin-moment"
@@ -69,7 +81,16 @@ import mixinMoment from "../../plugins/mixin-moment"
     components: {
       TaskForm,
     },
+    watch: {
+
+    },
     mixins: [mixinMoment],
+    props: {
+      tasks: {
+        type: Array,
+        default: [{}]
+      }
+    },
     data() {
       return {
         selectedId: "",
@@ -77,12 +98,19 @@ import mixinMoment from "../../plugins/mixin-moment"
       }
     },
     watch: {
-
+      tasks: function() {
+        const unfinishedTasks = this.tasks.filter(task => this.date(task.start) < this.now && task.study_record.is_finished === false)
+        const newUnfinishedTasks =  unfinishedTasks.filter( i => this.unfinished_tasks.indexOf(i) == -1 )
+        console.log("newUnfinishedTasks")
+        console.log(newUnfinishedTasks)
+        this.addUnfinishedTask(newUnfinishedTasks)
+      }
     },
     computed: {
       ...mapGetters('task', ['unfinished_tasks']),
     },
     methods: {
+      ...mapMutations('task', ['addUnfinishedTask']),
       openScheduleForm(index) {
         this.selectedTask = this.unfinished_tasks[index]
         this.$refs.scheduleForm.open()
