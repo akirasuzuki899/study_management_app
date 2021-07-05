@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       resources :tasks do
         collection do
           post :create_from_templates
+          get :unfinished_tasks
         end
       end
       resources :task_templates
