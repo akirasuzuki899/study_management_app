@@ -22,25 +22,14 @@
           v-model="selectedId"
         >
           <template v-for="(item, index) in unfinished_tasks">
-            <v-list-item :key="item.id" @click="openScheduleForm(index)">
-              <v-list-item-avatar tile size="50">
-                <v-img 
-                  :src="item.study_material.image_url"
-                  contain
-                >
-                </v-img>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                  <v-list-item-title>{{ item.study_material.title }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ fromToDateTime(item.start, item.end) }}</v-list-item-subtitle>
-              </v-list-item-content>
 
-              <!-- <v-list-item-action>
-                <v-btn @click.stop="" outlined text>
-                  <v-icon>mdi-delete-outline</v-icon>
-                </v-btn>
-              </v-list-item-action> -->
-            </v-list-item>
+            <Task 
+              :key="item.id" 
+              :item="item"
+              :index="index"
+              @clicked="openScheduleForm(index)"
+              @finished="destroyUnfinishedTask(unfinished_tasks[index])"
+            ></Task>
 
             <v-divider
               v-if="index < unfinished_tasks.length - 1"
@@ -73,16 +62,15 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import Task from "../Schedule/Task"
 import TaskForm from "../Schedule/TaskForm.vue"
 
 import mixinMoment from "../../plugins/mixin-moment"
 
   export default {
     components: {
+      Task,
       TaskForm,
-    },
-    watch: {
-
     },
     mixins: [mixinMoment],
     props: {
@@ -110,14 +98,14 @@ import mixinMoment from "../../plugins/mixin-moment"
       ...mapGetters('task', ['unfinished_tasks']),
     },
     methods: {
-      ...mapMutations('task', ['addUnfinishedTask']),
+      ...mapMutations('task', ['addUnfinishedTask', 'destroyUnfinishedTask']),
       openScheduleForm(index) {
         this.selectedTask = this.unfinished_tasks[index]
         this.$refs.scheduleForm.open()
       },
       clearID(){
         this.selectedId = ''
-      }
+      },
     }
   }
 </script>
