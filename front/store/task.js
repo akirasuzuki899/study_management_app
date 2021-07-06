@@ -17,7 +17,7 @@ export const state = () => ({
 
 export const getters = {
   tasks: state => state.tasks,
-  unfinished_tasks: state => state.unfinished_tasks
+  unfinished_tasks: state => state.tasks.filter((task) => task.study_record.is_finished === false && moment(task.start).isBefore(moment().day(1), 'day') )
 };
 
 export const mutations = {
@@ -26,6 +26,10 @@ export const mutations = {
   },
   addTask(state, task) {
     if (Array.isArray(task)) {
+      // tmpArray = [...state.tasks, ...task]
+      // uniqueArray = [...new Map(tmpArray.map(o => [o.id, o]))]
+      // console.log("uniqueArray")
+      // console.log(uniqueArray)
       state.tasks.push(...task)
     } else {
       state.tasks.push(task)
@@ -44,20 +48,6 @@ export const mutations = {
     const index = state.tasks.findIndex((v) => v.id === task.id);
     state.tasks.splice(index, 1)
   },
-  setUnfinishedTask(state, unfinished_tasks){
-    state.unfinished_tasks = unfinished_tasks;
-  },
-  addUnfinishedTask(state, task) {
-    if (Array.isArray(task)) {
-      state.unfinished_tasks.push(...task)
-    } else {
-      state.unfinished_tasks.push(task)
-    }
-  },
-  destroyUnfinishedTask(state, task) {
-    const index = state.unfinished_tasks.findIndex((v) => v.id === task.id);
-    state.unfinished_tasks.splice(index, 1)
-  },
   updateStudyRecord(state, data){
     const index = state.tasks.findIndex((v) => v.id === data.study_record.task_id);
     state.tasks[index].study_record = data.study_record
@@ -74,7 +64,6 @@ export const actions = {
         console.log("success")
         console.log(data)
         commit("setTasks", data.tasks)
-        commit("setUnfinishedTask", data.unfinished_tasks)
       });
   },
   createTask( { commit, dispatch } , { authTokens, formData} ) {
@@ -126,9 +115,6 @@ export const actions = {
         console.log("success")
         console.log(data.task)
         commit("updateTask", data.task)
-        if(moment(selectedTask.start).isBefore(moment(),'day') && selectedTask.study_record.is_finished === false){
-          commit("destroyUnfinishedTask", selectedTask)
-        }
         dispatch("snackbar/successMessage", '更新しました', { root: true })
       })
       .catch(error => {
@@ -149,9 +135,6 @@ export const actions = {
         console.log(data.task)
         console.log(selectedTask)
         commit("destroyTask", data.task)
-        if(moment(selectedTask.start).isBefore(moment(),'day') && selectedTask.study_record.is_finished === false){
-          commit("destroyUnfinishedTask", selectedTask)
-        }
         dispatch("snackbar/successMessage", '削除しました', { root: true })
       })
       .catch( error => {
@@ -183,38 +166,19 @@ export const actions = {
             { root: true })
         })
   },
-  updateUnfinishedTask( { commit, dispatch, state }, { authTokens, selectedTask, formData } )  {
-    dispatch("snackbar/processMessage", '更新しています...', { root: true })
-    this.$axios
-      .put(
-        '/api/v1/tasks/' + selectedTask.id,
-        {
-          name: formData.name,
-          study_material_id: formData.study_material_id,
-          start_date: formData.start_date,
-          start_time: formData.start_time,
-          end_time: formData.end_time,
-          color: formData.color,
-        },
-        {
-          headers: authTokens
-        }
-      )
-      .then(( { data } ) => {
+
+  getUnfinishedTask({ commit }, {authTokens, page}){
+    return this.$axios
+      .get('/api/v1/tasks/unfinished_tasks?page=' + `${page}`, {
+        headers: authTokens
+      })
+      .then(({ data }) => {
         console.log("success")
-        console.log(data.task)
-        if(state.tasks.some(task => task.id === data.task.id)){
-          commit("updateTask", data.task)
-        } else {
-          commit("addTask", data.task)
-        }
-        commit("destroyUnfinishedTask", data.task)
-        dispatch("snackbar/successMessage", '更新しました', { root: true })
+        console.log(data)
+        commit("addTask", data.tasks)
+        return data
       })
-      .catch(error => {
-        console.log(error);
-      })
-  },
+  }
 };
 
 export default {

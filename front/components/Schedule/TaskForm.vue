@@ -108,7 +108,6 @@
                 :target="target"
                 :selectedTask="selectedTask"
                 @task="updateTask($event); close(); closeShow()"
-                @unfinished-task="updateUnfinishedTask($event); close(); closeShow()"
               ></ButtonUpdate>
             </v-card-actions>
           </form>
@@ -193,7 +192,7 @@ export default {
     ...mapGetters(['authTokens']),
   },
   methods: {
-    ...mapActions('task', ['createTask', 'updateTask', 'updateUnfinishedTask']),
+    ...mapActions('task', ['createTask', 'updateTask']),
 
     setDefaultFormData () {
       this.formData.name = this.selectedTask.name

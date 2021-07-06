@@ -14,8 +14,10 @@
 
       <v-list
         dense :subheader="true"
-        v-if="unfinished_tasks.length"
+        max-height="400"
+        class="overflow-y-auto"
       >
+        <!-- v-if="unfinished_tasks.length" -->
 
         <v-list-item-group
           active-class="pink--text"
@@ -25,26 +27,25 @@
 
             <Task 
               :key="item.id" 
-              :item="item"
+              :task="item"
               :index="index"
               @clicked="openScheduleForm(index)"
-              @finished="destroyUnfinishedTask(unfinished_tasks[index])"
             ></Task>
 
             <v-divider
               v-if="index < unfinished_tasks.length - 1"
               :key="index"
             ></v-divider>
-
           </template>
+          <infinite-loading @infinite="infiniteHandler"></infinite-loading>
         </v-list-item-group>
       </v-list>
       <v-card-text
-        v-else
       >
-        <div class="grey--text ms-4">
+        <!-- v-else -->
+        <!-- <div class="grey--text ms-4">
           未実施のタスクはありません
-        </div>
+        </div> -->
       </v-card-text>
 
     </v-card>
@@ -61,9 +62,10 @@
 
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import Task from "../Schedule/Task"
 import TaskForm from "../Schedule/TaskForm.vue"
+import InfiniteLoading from 'vue-infinite-loading';
 
 import mixinMoment from "../../plugins/mixin-moment"
 
@@ -71,6 +73,7 @@ import mixinMoment from "../../plugins/mixin-moment"
     components: {
       Task,
       TaskForm,
+      InfiniteLoading,
     },
     mixins: [mixinMoment],
     props: {
@@ -83,22 +86,15 @@ import mixinMoment from "../../plugins/mixin-moment"
       return {
         selectedId: "",
         selectedTask: {},
-      }
-    },
-    watch: {
-      tasks: function() {
-        const unfinishedTasks = this.tasks.filter(task => this.date(task.start) < this.now && task.study_record.is_finished === false)
-        const newUnfinishedTasks =  unfinishedTasks.filter( i => this.unfinished_tasks.indexOf(i) == -1 )
-        console.log("newUnfinishedTasks")
-        console.log(newUnfinishedTasks)
-        this.addUnfinishedTask(newUnfinishedTasks)
+        page: 1,
       }
     },
     computed: {
       ...mapGetters('task', ['unfinished_tasks']),
+      ...mapGetters(["authTokens"]),
     },
     methods: {
-      ...mapMutations('task', ['addUnfinishedTask', 'destroyUnfinishedTask']),
+      ...mapActions('task', ['getUnfinishedTask']),
       openScheduleForm(index) {
         this.selectedTask = this.unfinished_tasks[index]
         this.$refs.scheduleForm.open()
@@ -106,6 +102,26 @@ import mixinMoment from "../../plugins/mixin-moment"
       clearID(){
         this.selectedId = ''
       },
-    }
+      infiniteHandler($state) {
+        console.log("infiniteHandler")
+        this.getUnfinishedTask({
+          authTokens: this.authTokens,
+          page: this.page
+        })
+        .then(( { tasks } ) => {
+          console.log("data.tasks");
+          console.log(tasks);
+          if(tasks.length){
+            this.page += 1;
+            $state.loaded();
+          } else {
+            $state.complete();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      },
+    },
   }
 </script>

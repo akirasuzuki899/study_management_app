@@ -87,7 +87,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       selecrtedHour: '',
     }),
     computed: {
-      ...mapGetters('task', ['tasks', 'unfinished_tasks']),      //あああああああああああああああああああああああああああ-unfinished_tasks削除?
+      ...mapGetters('task', ['tasks']),
       ...mapGetters(["authTokens"]),
       cal () {
         return this.ready ? this.$refs.calendar : null
