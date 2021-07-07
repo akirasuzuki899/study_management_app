@@ -105,23 +105,14 @@ import mixinSchedule from "../../plugins/mixin-schedule"
 
       createTask(tms) {
         if(this.$refs.taskShow.isOpen === false && this.drag === false) {
-          let time = ""
-          // const time = function(){
-            if( tms.hour < 0 ){
-              time = "00:00"
-            } else {
-              time =  this.time(this.roundTime(this.toTime(tms), true, 60))
-            }
-          // }
-          console.log("time")
-          console.log(time)
-          console.log("this.moment(time).add(1, 'h').format('HH:mm')")
-          console.log(this.moment(time).add(1, 'h').format('HH:mm'))
-          this.selecrtedTime.startTime = time
-          this.selecrtedTime.endTime = this.moment(this.roundTime(this.toTime(tms), true, 60)).add(1, 'h').format('HH:mm')
+          const unixTime = this.roundTime(this.toTime(tms), 60)
+          const startTime = tms.hour < 0 ? "00:00" : this.moment(unixTime).format('HH:mm')
+          const endTime = tms.hour < 0 ? "01:00" : this.moment(unixTime).add(1, 'h').format('HH:mm')
+
+          this.selecrtedTime.startTime = startTime
+          this.selecrtedTime.endTime = endTime
           this.selecrtedTime.date = tms.date
-          // console.log("this.selecrtedTime")
-          // console.log(this.selecrtedTime)
+          
           this.$refs.form.open();
         }
       },

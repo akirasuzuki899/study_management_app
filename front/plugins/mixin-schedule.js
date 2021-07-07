@@ -85,14 +85,14 @@ export default {
       this.drag = false
     },
 
-    roundTime (time, down = true, roundTo = 15) {
+    roundTime (time, roundTo = 15, down = true) {
       const roundDownTime = roundTo * 60 * 1000
 
       return down
         ? time - time % roundDownTime   // 切り捨て
         : time + (roundDownTime - (time % roundDownTime))  //切り上げ
     },
-    toTime (tms) {   //時間をmsで返す
+    toTime (tms) {   //時間をms(UNIX時間)で返す
       return new Date(tms.year, tms.month - 1, tms.day, tms.hour, tms.minute).getTime()
     },
   }
