@@ -161,6 +161,9 @@ export default {
         study_material: '',
       })
     },
+    selecrtedTime: {
+      type: Object,
+    },
     method: {}, 
     target: {},
   },
@@ -171,7 +174,7 @@ export default {
         name: '',
         study_material_id: '',
         color: '',
-        day_of_week: '',
+        start_date: '',
         start_time: '',
         end_time: '',
       }
@@ -194,12 +197,19 @@ export default {
     ...mapActions('taskTemplate', ['createTaskTemplate','updateTaskTemplate']),
 
     setDefaultFormData () {
+      const start_date = () => {
+        if (this.selectedTask.start){
+          return this.date(this.selectedTask.start) == '2000-01-02' ? '2000-01-09' : this.date(this.selectedTask.start) //ダミーtemplateをtemplateに変換
+        } else {
+          return  this.selecrtedTime.date
+        }
+      }
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
       this.formData.color = this.selectedTask.color
-      this.formData.start_date = this.date(this.selectedTask.start) == '2000-01-02' ? '2000-01-09' : this.date(this.selectedTask.start) //ダミーtemplateをtemplateに変換
-      this.formData.start_time = this.time(this.selectedTask.start)
-      this.formData.end_time = this.time(this.selectedTask.end)
+      this.formData.start_date = start_date()
+      this.formData.start_time = this.time(this.selectedTask.start) || this.selecrtedTime.startTime
+      this.formData.end_time = this.time(this.selectedTask.end) || this.selecrtedTime.endTime
     },
     
     open () {

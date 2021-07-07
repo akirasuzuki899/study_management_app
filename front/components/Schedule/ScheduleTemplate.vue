@@ -33,7 +33,10 @@
             @mouseleave.native="cancelDrag"
           >
             <template v-slot:event="{ event }">
-              <div style="pointer-events:none">
+              <div 
+                style="pointer-events:none"
+                class="v-event-draggable"
+              >
                 <strong>{{ event.name }}</strong><br>
                 {{ time(event.start) }} - {{ time(event.end)}}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
               </div>
@@ -51,6 +54,7 @@
           <TaskTemplateForm
             ref="form"
             method="create"
+            :selecrtedTime="selecrtedTime"
             :target="target"
           ></TaskTemplateForm>
 
@@ -108,6 +112,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
         baseDate: '2000-01-03',
         selectedTask: {},
         selectedElement: null,
+        selecrtedTime: {},
         copy_all: false,
       }
     },
@@ -121,8 +126,16 @@ import mixinSchedule from "../../plugins/mixin-schedule"
         update: 'updateTaskTemplate',
       }),
       ...mapMutations('taskTemplate', ['dragUpdate']),
-      createTaskTemplate() {
+      createTaskTemplate(tms) {
         if(this.$refs.taskTemplateShow.isOpen === false && this.drag === false) {
+          const unixTime = this.roundTime(this.toTime(tms), 60)
+          const startTime = tms.hour < 0 ? "00:00" : this.moment(unixTime).format('HH:mm')
+          const endTime = tms.hour < 0 ? "01:00" : this.moment(unixTime).add(1, 'h').format('HH:mm')
+
+          this.selecrtedTime.startTime = startTime
+          this.selecrtedTime.endTime = endTime
+          this.selecrtedTime.date = tms.date
+
           this.$refs.form.open();
         }
       },
