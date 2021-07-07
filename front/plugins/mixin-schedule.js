@@ -85,8 +85,7 @@ export default {
       this.drag = false
     },
 
-    roundTime (time, down = true) {   //  引数と戻り値はms
-      const roundTo = 15 // minutes
+    roundTime (time, down = true, roundTo = 15) {
       const roundDownTime = roundTo * 60 * 1000
 
       return down

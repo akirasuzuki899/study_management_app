@@ -17,7 +17,7 @@ export const state = () => ({
 
 export const getters = {
   tasks: state => state.tasks,
-  unfinished_tasks: state => state.tasks.filter((task) => task.study_record.is_finished === false && moment(task.start).isBefore(moment().day(1), 'day') )
+  unfinished_tasks: state => state.tasks.filter((task) => task.study_record.is_finished === false && moment(task.start).isBefore(moment(), 'day') )
 };
 
 export const mutations = {
@@ -25,15 +25,22 @@ export const mutations = {
     state.tasks = tasks;
   },
   addTask(state, task) {
+    const tmpArray = []
     if (Array.isArray(task)) {
-      // tmpArray = [...state.tasks, ...task]
-      // uniqueArray = [...new Map(tmpArray.map(o => [o.id, o]))]
-      // console.log("uniqueArray")
-      // console.log(uniqueArray)
-      state.tasks.push(...task)
+      tmpArray.push(...state.tasks, ...task)
     } else {
-      state.tasks.push(task)
+      tmpArray.push(...state.tasks, task)
     }
+
+    const uniqueArray = tmpArray.reduce((a, v) => {
+      if (!a.some((e) => e.id === v.id)) {
+        a.push(v);
+      }
+      return a;
+    }, []);
+
+    state.tasks = uniqueArray
+
   },
   updateTask(state, task) {
     const index = state.tasks.findIndex((v) => v.id === task.id);
@@ -173,8 +180,6 @@ export const actions = {
         headers: authTokens
       })
       .then(({ data }) => {
-        console.log("success")
-        console.log(data)
         commit("addTask", data.tasks)
         return data
       })

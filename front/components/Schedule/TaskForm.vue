@@ -158,8 +158,8 @@ export default {
         study_record: '',
       })
     },
-    selecrtedHour: {
-      type: Number,
+    selecrtedTime: {
+      type: Object,
     },
     method: {}, 
     target: {},
@@ -198,9 +198,9 @@ export default {
       this.formData.name = this.selectedTask.name
       this.formData.study_material_id = this.selectedTask.study_material_id
       this.formData.color = this.selectedTask.color
-      this.formData.start_date = this.date(this.selectedTask.start)
-      this.formData.start_time = this.time(this.selectedTask.start)
-      this.formData.end_time = this.time(this.selectedTask.end)
+      this.formData.start_date = this.date(this.selectedTask.start) || this.selecrtedTime.date
+      this.formData.start_time = this.time(this.selectedTask.start) || this.selecrtedTime.startTime
+      this.formData.end_time = this.time(this.selectedTask.end) || this.selecrtedTime.endTime
     },
     open () {
       this.Dialog = true

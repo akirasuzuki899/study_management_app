@@ -13,20 +13,19 @@
       </v-toolbar>
 
       <v-list
-        dense :subheader="true"
-        max-height="400"
+        :dense="true"
+        :subheader="true"
+        max-height="300"
         class="overflow-y-auto"
       >
-        <!-- v-if="unfinished_tasks.length" -->
-
         <v-list-item-group
           active-class="pink--text"
           v-model="selectedId"
         >
           <template v-for="(item, index) in unfinished_tasks">
 
-            <Task 
-              :key="item.id" 
+            <Task
+              :key="item.id"
               :task="item"
               :index="index"
               @clicked="openScheduleForm(index)"
@@ -37,22 +36,20 @@
               :key="index"
             ></v-divider>
           </template>
-          <infinite-loading @infinite="infiniteHandler"></infinite-loading>
+          <infinite-loading
+            @infinite="infiniteHandler"
+          >
+            <template slot="no-more">{{LoadingMessage}}</template>
+            <template slot="no-results">{{LoadingMessage}}</template>
+          </infinite-loading>
         </v-list-item-group>
       </v-list>
-      <v-card-text
-      >
-        <!-- v-else -->
-        <!-- <div class="grey--text ms-4">
-          未実施のタスクはありません
-        </div> -->
-      </v-card-text>
 
     </v-card>
     <TaskForm
       ref="scheduleForm"
       method="update"
-      target="unfinishedTask"
+      target="task"
       :selectedTask="selectedTask"
       @formClosed="clearID"
     ></TaskForm>
@@ -92,6 +89,13 @@ import mixinMoment from "../../plugins/mixin-moment"
     computed: {
       ...mapGetters('task', ['unfinished_tasks']),
       ...mapGetters(["authTokens"]),
+      LoadingMessage: function() {
+        if(this.unfinished_tasks.length > 0){
+          return '検索結果は以上です'
+        } else {
+          return '未実施のタスクはありません'
+        }
+      },
     },
     methods: {
       ...mapActions('task', ['getUnfinishedTask']),
@@ -103,14 +107,11 @@ import mixinMoment from "../../plugins/mixin-moment"
         this.selectedId = ''
       },
       infiniteHandler($state) {
-        console.log("infiniteHandler")
         this.getUnfinishedTask({
           authTokens: this.authTokens,
           page: this.page
         })
         .then(( { tasks } ) => {
-          console.log("data.tasks");
-          console.log(tasks);
           if(tasks.length){
             this.page += 1;
             $state.loaded();

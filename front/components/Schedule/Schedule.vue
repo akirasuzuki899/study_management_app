@@ -49,6 +49,7 @@
           <TaskForm
             ref="form"
             method="create"
+            :selecrtedTime="selecrtedTime"
             :target="target"
           ></TaskForm>
 
@@ -84,7 +85,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       target: "task",
       selectedTask: {},
       selectedElement: null,
-      selecrtedHour: '',
+      selecrtedTime: {},
     }),
     computed: {
       ...mapGetters('task', ['tasks']),
@@ -102,11 +103,26 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       }),
       ...mapMutations('task', ['dragUpdate']),
 
-      createTask(val) {
+      createTask(tms) {
         if(this.$refs.taskShow.isOpen === false && this.drag === false) {
+          let time = ""
+          // const time = function(){
+            if( tms.hour < 0 ){
+              time = "00:00"
+            } else {
+              time =  this.time(this.roundTime(this.toTime(tms), true, 60))
+            }
+          // }
+          console.log("time")
+          console.log(time)
+          console.log("this.moment(time).add(1, 'h').format('HH:mm')")
+          console.log(this.moment(time).add(1, 'h').format('HH:mm'))
+          this.selecrtedTime.startTime = time
+          this.selecrtedTime.endTime = this.moment(this.roundTime(this.toTime(tms), true, 60)).add(1, 'h').format('HH:mm')
+          this.selecrtedTime.date = tms.date
+          // console.log("this.selecrtedTime")
+          // console.log(this.selecrtedTime)
           this.$refs.form.open();
-          console.log(val)
-          this.selecrtedHour = val
         }
       },
       showTask ({ nativeEvent, event }) {
