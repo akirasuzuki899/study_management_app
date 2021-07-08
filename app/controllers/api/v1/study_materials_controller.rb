@@ -5,17 +5,17 @@ module Api
       before_action :correct_user, only: [:update, :destroy, :is_complete]
 
       def index
-        @study_materials = current_user.study_materials
-        render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_materials }, methods: [:image_url]
+        study_materials = current_user.study_materials.page(params[:page]).per(5)
+        render json: { status: 'SUCCESS', message: 'Loaded posts', study_materials: study_materials }, methods: [:image_url]
       end
 
       def create
-        @study_material = current_user.study_materials.build(study_material_params)
-        @study_material.attach_rakuten_image(study_material_params[:rakuten_image_url], study_material_params[:title]) if study_material_params[:rakuten_image_url].present?
-        if @study_material.save
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_material }
+        study_material = current_user.study_materials.build(study_material_params)
+        study_material.attach_rakuten_image(study_material_params[:rakuten_image_url], study_material_params[:title]) if study_material_params[:rakuten_image_url].present?
+        if study_material.save
+          render json: study_material, adapter: :json, serializer: StudyMaterialSerializer
         else
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_material.errors }
+          render json: { status: 400, task: study_material.errors }
         end
       end
 
@@ -33,29 +33,35 @@ module Api
       end
 
       def search
-        @study_materials = []
+        study_materials = []
         if params[:keyword].present?
           results = RakutenWebService::Books::Book.search(title: params[:keyword], page: params[:page])
           results.each do |result|
             study_material = StudyMaterial.new(read(result))
-            @study_materials << study_material if new_material?(study_material)
+            study_materials << study_material if new_material?(study_material)
           end
+          if study_materials.empty?
+            render json: { message: '見つかりませんでした', study_materials: [] }, status:  200
+          else
+            render json: study_materials, adapter: :json, each_serializer: StudyMaterialSerializer
+          end
+        else
+          render json: { message: 'キーワードを入力してください' }, status:  400
         end
-        render json: @study_materials, status: :ok, methods: [:rakuten_image_url]
       end
 
       def is_complete
         if @study_material.update(study_material_params)
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_material }
+          render json: { status: 'SUCCESS', message: 'Loaded posts', study_material: @study_material }
         else
-          render json: { status: 'ERROR', message: 'Loaded posts', data: @study_material.errors }
+          render json: { status: 'ERROR', message: 'Loaded posts', study_material: @study_material.errors }
         end
       end
 
       private
 
       def study_material_params
-        params.permit(:title, :image, :rakuten_image_url, :is_completed)
+        params.permit(:title, :image, :rakuten_image_url, :is_completed, :page)
       end
 
       def correct_user

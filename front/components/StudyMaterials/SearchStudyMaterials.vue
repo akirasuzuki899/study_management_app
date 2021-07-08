@@ -1,26 +1,88 @@
 <template>
-  <v-app>
-    <h3>Search StudyMaterials</h3>
-    <p>{{this.message}}</p>
-    <input type="text" v-model="keyword" @focus="initSearchStatus">
-    <button @click="changeSearchStatus">検索</button>
+  <div>
+    <v-card
+      class="mx-auto"
+      max-width="500"
+    >
+      <v-card-title>
+        教材を追加
+      </v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="6" sm="6" md="6">
+            <TextInput
+              v-model="keyword"
+              name="キーワード"
+              label="キーワード"
+              :dense="true"
+              @focus="initSearchStatus"
+            ></TextInput>
+          </v-col>
+          <v-col cols="6" sm="6" md="6">
+            <v-btn
+              text
+              @click="changeSearchStatus"
+            >
+              検索
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-list
+          :dense="true"
+          :subheader="true"
+          max-height="300"
+          class="overflow-y-auto"
+        >
+          <template v-for="(item, index) in serchResults">
 
-    <div v-for="(serchResult, index) in serchResults" :key="serchResult.id" :id="index">
-      <img :src="serchResult.rakuten_image_url"  width="100"/>
-      <div>タイトル：{{serchResult.title}}</div>
-      <button @click="registerStudyMaterial(serchResult, index)">登録</button>
-    </div>
-    <infinite-loading @infinite="infiniteHandler" v-if="SearchStatus"></infinite-loading>
-  </v-app>
+            <StudyMaterial
+              :key="`material-${index}`"
+              :studyMaterial="item"
+              :index="index"
+            >
+              <template v-slot:btn>
+                <v-btn
+                  text
+                  @click="register({
+                    authTokens: authTokens,
+                    serchResult : item,
+                    index: index,
+                  })"
+                >
+                  登録
+                </v-btn>
+              </template>
+            </StudyMaterial>
+
+            <v-divider
+              v-if="index < serchResults.length - 1"
+              :key="`index-${index}`"
+            ></v-divider>
+          </template>
+          <infinite-loading
+            @infinite="infiniteHandler"
+            v-if="SearchStatus"
+          >
+            <template slot="no-more">検索結果は以上です</template>
+            <template slot="no-results">ヒットしませんでした</template>
+          </infinite-loading>
+        </v-list>
+      </v-card-text>
+    </v-card>
+  </div>
 </template>
 
+
 <script>
-import { mapGetters } from "vuex";
-import axios from 'axios';
+import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
+import TextInput from '../Form/BaseTextInput'
+import StudyMaterial from './StudyMaterial'
 
 export default {
   components: {
+    TextInput,
+    StudyMaterial,
     InfiniteLoading,
   },
   data() {
@@ -36,6 +98,7 @@ export default {
     ...mapGetters(["authTokens"])
   },
   methods: {
+    ...mapActions('studyMaterial', ['registerStudyMaterial']),
     changeSearchStatus() {
       if(!this.keyword) {
         this.message = 'キーワードを入力して下さい'
@@ -53,10 +116,9 @@ export default {
             }
         })
         .then(({data}) => {
-          console.log(data);
-          if(data.length){
+          if(data.study_materials.length){
             this.page += 1;
-            this.serchResults.push(...data)
+            this.serchResults.push(...data.study_materials)
             $state.loaded();
           } else {
             $state.complete();
@@ -73,24 +135,15 @@ export default {
       this.serchResults = [];
       this.message = '';
     },
-    registerStudyMaterial(serchResult, index){
-      this.$axios
-       .post('/api/v1/study_materials',
-       {
-         title: serchResult.title,
-         rakuten_image_url: serchResult.rakuten_image_url
-       },
-       {
-         headers: this.authTokens
-       })
-       .then( response => {
-         this.serchResults.splice(index, 1);
-         this.$store.commit('studyMaterial/addStudyMaterials', response)
-       })
-       .catch( error => {
-         console.log(error);
-       })
-    }
+    register(data){
+      this.registerStudyMaterial({
+        authTokens: data.authTokens,
+        serchResult : data.serchResult,
+      })
+      .then(() => {
+        this.serchResults.splice(data.index, 1)
+      })
+    },
   }
 }
 </script>

@@ -181,6 +181,8 @@ export const actions = {
       })
       .then(({ data }) => {
         commit("addTask", data.tasks)
+        console.log("data actions")
+        console.log(data)
         return data
       })
   }

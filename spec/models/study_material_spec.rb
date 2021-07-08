@@ -15,8 +15,8 @@
 #         expect(@study_material).to be_valid
 #       end
 
-#       it 'title が50文字以下であれば登録できる' do
-#         @study_material.title = 'a' * 50
+#       it 'title が100文字以下であれば登録できる' do
+#         @study_material.title = 'a' * 100
 #         expect(@study_material).to be_valid
 #       end
 #     end
@@ -36,10 +36,10 @@
 #         expect(@study_material.errors[:title]).to include("can't be blank")
 #       end
 
-#       it 'title が51文字以上であれば登録できない' do
-#         @study_material.title = 'a' * 51
+#       it 'title が101文字以上であれば登録できない' do
+#         @study_material.title = 'a' * 101
 #         @study_material.valid?
-#         expect(@study_material.errors[:title]).to include('is too long (maximum is 50 characters)')
+#         expect(@study_material.errors[:title]).to include('is too long (maximum is 100 characters)')
 #       end
 #     end
 #   end

@@ -25,7 +25,7 @@
           <template v-for="(item, index) in unfinished_tasks">
 
             <Task
-              :key="item.id"
+              :key="`task-${item.id}`"
               :task="item"
               :index="index"
               @clicked="openScheduleForm(index)"
@@ -33,7 +33,7 @@
 
             <v-divider
               v-if="index < unfinished_tasks.length - 1"
-              :key="index"
+              :key="`index-${index}`"
             ></v-divider>
           </template>
           <infinite-loading
