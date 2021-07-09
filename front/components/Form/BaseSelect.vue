@@ -15,7 +15,12 @@
       :error-messages="errors"
       :prepend-icon="prependIcon"
       :dense="dense"
-    />
+      :no-data-text="noDataText"
+    >
+      <template v-slot:no-data>
+        <slot name="no-data-message"></slot>
+      </template>
+    </v-select>
   </validation-provider>
 </template>
 
@@ -71,6 +76,10 @@ export default {
     dense: {
       type: Boolean,
       default: false
+    },
+    noDataText: {
+      type: String,
+      default: undefined
     }
   },
   data: () => ({

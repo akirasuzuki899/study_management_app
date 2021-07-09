@@ -8,12 +8,13 @@
     item-text="title"
     item-value="id"
     :dense="dense"
+    :no-data-text="noDataText"
     rules="required"
   ></BaseSelect>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import BaseSelect from "./BaseSelect"
 
 export default {
@@ -35,6 +36,9 @@ export default {
       default: false
     }
   },
+  data: () => ({
+    noDataText: '教材を追加して下さい'
+  }),
   computed: {
     ...mapGetters('studyMaterial', ['studyMaterials']),
   },

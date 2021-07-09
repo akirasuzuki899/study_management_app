@@ -5,18 +5,18 @@ module Api
       before_action :correct_user, only: [:update, :destroy, :is_complete]
 
       def index
-        study_materials = current_user.study_materials.page(params[:page]).per(5)
-        render json: { status: 'SUCCESS', message: 'Loaded posts', study_materials: study_materials }, methods: [:image_url]
+        study_materials = current_user.study_materials
+        render json: study_materials, adapter: :json, each_serializer: StudyMaterialSerializer
       end
 
       def create
         study_material = current_user.study_materials.build(study_material_params)
-        study_material.attach_rakuten_image(study_material_params[:rakuten_image_url], study_material_params[:title]) if study_material_params[:rakuten_image_url].present?
-        if study_material.save
-          render json: study_material, adapter: :json, serializer: StudyMaterialSerializer
-        else
-          render json: { status: 400, task: study_material.errors }
+        if study_material_params[:rakuten_image_url].present?
+          study_material.attach_rakuten_image(study_material_params[:rakuten_image_url], study_material_params[:title])
         end
+
+        study_material.save ? ( render json: study_material, adapter: :json, serializer: StudyMaterialSerializer )
+                            : ( render json: { message: study_material.errors }, status: 400 )
       end
 
       def update
@@ -34,28 +34,29 @@ module Api
 
       def search
         study_materials = []
-        if params[:keyword].present?
-          results = RakutenWebService::Books::Book.search(title: params[:keyword], page: params[:page])
-          results.each do |result|
-            study_material = StudyMaterial.new(read(result))
-            study_materials << study_material if new_material?(study_material)
-          end
-          if study_materials.empty?
-            render json: { message: '見つかりませんでした', study_materials: [] }, status:  200
-          else
-            render json: study_materials, adapter: :json, each_serializer: StudyMaterialSerializer
-          end
-        else
+        if params[:keyword].empty? 
           render json: { message: 'キーワードを入力してください' }, status:  400
+          return 
         end
+
+        results = RakutenWebService::Books::Book.search(title: params[:keyword], page: params[:page])
+        results.each do |result|
+          study_material = StudyMaterial.new(read(result))
+          study_materials << study_material if new_material?(study_material)
+        end
+
+        if study_materials.present?
+          render json: study_materials, adapter: :json, each_serializer: StudyMaterialSerializer
+        else
+          !!results ? ( render json: { study_materials: [], next: true }, status:  200 )
+                    : ( render json: { study_materials: [], next: false, message: 'ヒットしませんでした' }, status:  200 )
+        end
+
       end
 
       def is_complete
-        if @study_material.update(study_material_params)
-          render json: { status: 'SUCCESS', message: 'Loaded posts', study_material: @study_material }
-        else
-          render json: { status: 'ERROR', message: 'Loaded posts', study_material: @study_material.errors }
-        end
+        @study_material.update(study_material_params) ? ( render json: @study_material, adapter: :json, serializer: StudyMaterialSerializer )
+                                                      : ( render json: { message: @study_material.errors }, status: 400 )
       end
 
       private
@@ -85,6 +86,7 @@ module Api
         end
         true
       end
+
     end
   end
 end

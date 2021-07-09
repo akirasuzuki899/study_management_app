@@ -15,38 +15,25 @@ export const state = () => ({
 };
 
 export const mutations = {
+  setStudyMaterials(state, study_material) {
+    state.studyMaterials = study_material
+  },
   setCompleteStatus(state, { study_material, index }) {
     state.studyMaterials[index].is_completed = study_material.is_completed
   },
   addStudyMaterials(state, study_material) {
-    const tmpArray = []
-    if (Array.isArray(study_material)) {
-      tmpArray.push(...state.studyMaterials, ...study_material)
-    } else {
-      tmpArray.push(...state.studyMaterials, study_material)
-    }
-
-    const uniqueArray = tmpArray.reduce((a, v) => {
-      if (!a.some((e) => e.id === v.id)) {
-        a.push(v);
-      }
-      return a;
-    }, []);
-
-    state.studyMaterials = uniqueArray
-
+    state.studyMaterials.push(study_material)
   }
 };
 
 export const actions = {
-  getStudyMaterials( { commit }, {authTokens, page} ) {
+  getStudyMaterials( { commit }, authTokens ) {
     return this.$axios
-      .get('/api/v1/study_materials?page=' + `${page}`, {
+      .get('/api/v1/study_materials', {
         headers: authTokens
       })
       .then(({ data }) => {
-        commit("addStudyMaterials", data.study_materials)
-        return data
+        commit("setStudyMaterials", data.study_materials)
       })
   },
   toggleCompleteStatus( { commit }, { authTokens, studyMaterial, index }) {

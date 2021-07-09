@@ -2,7 +2,6 @@
   <div>
     <v-card
       class="mx-auto"
-      max-width="500"
     >
       <v-card-title>
         教材を追加
@@ -17,6 +16,7 @@
               :dense="true"
               @focus="initSearchStatus"
             ></TextInput>
+            {{message}}
           </v-col>
           <v-col cols="6" sm="6" md="6">
             <v-btn
@@ -116,7 +116,8 @@ export default {
             }
         })
         .then(({data}) => {
-          if(data.study_materials.length){
+          console.log(data)
+          if(data.study_materials.length || data.next){
             this.page += 1;
             this.serchResults.push(...data.study_materials)
             $state.loaded();
@@ -129,6 +130,7 @@ export default {
         });
     },
     initSearchStatus() {
+      console.log("initSearchStatus")
       this.keyword = '';
       this.SearchStatus = false,
       this.page = 1;

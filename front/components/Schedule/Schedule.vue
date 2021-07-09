@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-row>
-      <v-col cols="12" sm="8" md="8">
+      <v-col cols="12" sm="12" md="12">
         <v-sheet height="900">
           <v-calendar
             ref="calendar"
@@ -55,11 +55,6 @@
 
         </v-sheet>
       </v-col>
-      <v-col cols="12" sm="4" md="4">
-        <StudyRecordList
-          :tasks="tasks"
-        ></StudyRecordList>
-      </v-col>
     </v-row>
   </v-app>
 </template>
@@ -68,7 +63,6 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import TaskShow from "./TaskShow";
 import TaskForm from "./TaskForm";
-import StudyRecordList from "../StudyRecords/StudyRecordsList"
 
 import mixinMoment from "../../plugins/mixin-moment"
 import mixinSchedule from "../../plugins/mixin-schedule"
@@ -77,7 +71,6 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     components: {
       TaskShow,
       TaskForm,
-      StudyRecordList,
     },
     mixins: [mixinMoment, mixinSchedule],
     data: () => ({
@@ -98,6 +91,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       },
     },
     methods: {
+      ...mapActions('studyMaterial', ['getStudyMaterials']),
       ...mapActions('task', {
         update: 'updateTask',
       }),
@@ -168,6 +162,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     },
     created() {
       this.$store.dispatch('task/getTasks', this.authTokens)
+      this.getStudyMaterials(this.authTokens)
     },
   }
 </script>

@@ -9,6 +9,7 @@
       :value="value"
       :label="label"
       @input="$emit('input', $event)"
+      @focus="$emit('focus', $event)"
       :error-messages="errors"
       :dense="dense"
     ></v-text-field>
