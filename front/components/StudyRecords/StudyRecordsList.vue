@@ -15,7 +15,7 @@
       <v-list
         :dense="true"
         :subheader="true"
-        max-height="300"
+        max-height="100%"
         class="overflow-y-auto"
       >
         <v-list-item-group

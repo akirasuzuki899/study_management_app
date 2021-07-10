@@ -1,91 +1,83 @@
 <template>
-  <v-app>
-    <v-row>
-      <v-col>
-        <v-sheet height="1500">
-          <v-toolbar
-            flat
-          >
-            <v-btn
-              outlined
-              text
-              @click="openAlert"
-            >週間カレンダーに反映
-            </v-btn>
-          </v-toolbar>
-          <v-calendar
-            ref="calendar"
-            :value="baseDate"
-            :events="taskTemplates"
-            locale="ja"
-            color="primary"
-            type="week"
-            :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-            :event-color="getEventColor"
-            @click:event="showTaskTemplate"
-            @click:time="createTaskTemplate"
-            :interval-format="intervalFormat"
+  <v-sheet>
+    <v-toolbar>
+      <v-btn
+        outlined
+        text
+        @click="openAlert"
+      >週間カレンダーに反映
+      </v-btn>
+    </v-toolbar>
+    <v-calendar
+      ref="calendar"
+      :value="baseDate"
+      :events="taskTemplates"
+      locale="ja"
+      color="primary"
+      type="week"
+      :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+      :event-color="getEventColor"
+      @click:event="showTaskTemplate"
+      @click:time="createTaskTemplate"
+      :interval-format="intervalFormat"
 
-            @mousedown:event="startDrag"
-            @mousedown:time="startTime"
-            @mousemove:time="mouseMove"
-            @mouseup:time="endDrag"
-            @mouseleave.native="cancelDrag"
-          >
-            <template v-slot:event="{ event }">
-              <div 
-                style="pointer-events:none"
-                class="v-event-draggable"
-              >
-                <strong>{{ event.name }}</strong><br>
-                {{ time(event.start) }} - {{ time(event.end)}}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
-              </div>
-            </template>
-            <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
-          </v-calendar>
+      @mousedown:event="startDrag"
+      @mousedown:time="startTime"
+      @mousemove:time="mouseMove"
+      @mouseup:time="endDrag"
+      @mouseleave.native="cancelDrag"
+    >
+      <template v-slot:event="{ event }">
+        <div 
+          style="pointer-events:none"
+          class="v-event-draggable"
+        >
+          <strong>{{ event.name }}</strong><br>
+          {{ time(event.start) }} - {{ time(event.end)}}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
+        </div>
+      </template>
+      <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
+    </v-calendar>
 
-          <TaskTemplateShow
-            ref="taskTemplateShow"
-            :selectedTask="selectedTask" 
-            :selectedElement="selectedElement"
-            :target="target"
-          ></TaskTemplateShow>
+    <TaskTemplateShow
+      ref="taskTemplateShow"
+      :selectedTask="selectedTask" 
+      :selectedElement="selectedElement"
+      :target="target"
+    ></TaskTemplateShow>
 
-          <TaskTemplateForm
-            ref="form"
-            method="create"
-            :selecrtedTime="selecrtedTime"
-            :target="target"
-          ></TaskTemplateForm>
+    <TaskTemplateForm
+      ref="form"
+      method="create"
+      :selecrtedTime="selecrtedTime"
+      :target="target"
+    ></TaskTemplateForm>
 
-          <Alert
-            ref="alert"
-            @clicked="createTasksFromTemplates({authTokens: authTokens, copy_all: copy_all})"
-          >
-            <template v-slot:title>
-              テンプレートを反映
-            </template>
-            <template v-slot:content>
-              <RadioButton
-                v-model="copy_all"
-                :items="[
-                  {label: '月曜〜日曜', value: true},
-                  {label: '今日〜日曜', value: false}]"
-                :dense="true"
-              >
-              作成する範囲を選択してください。
-              </RadioButton>
-              ※週間カレンダーの予定はテンプレートを元に毎週日曜日に自動で作成されます。
-            </template>
-            <template v-slot:btnText>
-              作成
-            </template>
-          </Alert>
+    <Alert
+      ref="alert"
+      @clicked="createTasksFromTemplates({authTokens: authTokens, copy_all: copy_all})"
+    >
+      <template v-slot:title>
+        テンプレートを反映
+      </template>
+      <template v-slot:content>
+        <RadioButton
+          v-model="copy_all"
+          :items="[
+            {label: '月曜〜日曜', value: true},
+            {label: '今日〜日曜', value: false}]"
+          :dense="true"
+        >
+        作成する範囲を選択してください。
+        </RadioButton>
+        ※週間カレンダーの予定はテンプレートを元に毎週日曜日に自動で作成されます。
+      </template>
+      <template v-slot:btnText>
+        作成
+      </template>
+    </Alert>
 
-        </v-sheet>
-      </v-col>
-    </v-row>
-  </v-app>
+  </v-sheet>
 </template>
 
 <script>
