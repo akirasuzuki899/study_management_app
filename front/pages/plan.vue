@@ -17,7 +17,7 @@
     </v-tabs-items>
   </v-col>
   <v-col cols="12" sm="6" md="6">
-    <MandalaChartGroup></MandalaChartGroup>
+    <MandalaChart></MandalaChart>
   </v-col>
 
 </v-row>
@@ -30,13 +30,13 @@
 <script>
 import IndexStudyMaterials from "../components/StudyMaterials/IndexStudyMaterials"
 import SearchStudyMaterials from "../components/StudyMaterials/SearchStudyMaterials"
-import MandalaChartGroup from "../components/MandalaChart/MandalaChartGroup"
+import MandalaChart from "../components/MandalaChart/MandalaChart"
 
 export default {
   components: {
     IndexStudyMaterials,
     SearchStudyMaterials,
-    MandalaChartGroup,
+    MandalaChart,
   },
   data: () => ({
     currentItem: "tab-index",

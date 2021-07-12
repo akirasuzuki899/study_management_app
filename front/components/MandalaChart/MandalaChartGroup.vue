@@ -1,9 +1,37 @@
 <template>
-  <v-row>
-    <v-col cols="3">
-      <MandalaChartItem></MandalaChartItem>
-    </v-col>
-  </v-row>
+  <v-card
+    class="d-flex flex-wrap"
+    outlined
+    tile
+  >
+    <MandalaChartItem
+      style="width: calc(100%/3);"
+    ></MandalaChartItem>
+    <MandalaChartItem
+      style="width: calc(100%/3);"
+    ></MandalaChartItem>
+    <MandalaChartItem
+      style="width: calc(100%/3);"
+    ></MandalaChartItem>
+    <MandalaChartItem
+      style="width: calc(100%/3);"
+    ></MandalaChartItem>
+    <MandalaChartItem
+      style="width: calc(100%/3);"
+    ></MandalaChartItem>
+    <MandalaChartItem
+      style="width: calc(100%/3);"
+    ></MandalaChartItem>
+    <MandalaChartItem
+      style="width: calc(100%/3);"
+    ></MandalaChartItem>
+    <MandalaChartItem
+      style="width: calc(100%/3);"
+    ></MandalaChartItem>
+    <MandalaChartItem
+      style="width: calc(100%/3);"
+    ></MandalaChartItem>
+  </v-card>
 </template>
 
 <script>
