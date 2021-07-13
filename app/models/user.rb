@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :task_templates, dependent: :destroy
   has_many :tasks, dependent: :destroy
   has_many :study_records , dependent: :destroy
+  has_many :mandala_charts , dependent: :destroy
   
   validates :name, presence: true
 end
