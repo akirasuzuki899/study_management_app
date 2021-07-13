@@ -9,6 +9,8 @@ class TaskTemplate < ApplicationRecord
   validates :user_id, presence: true
   validates :study_material_id, presence: true
   validates :name, presence: true, length: { maximum: 50 }
+  validates :day_of_week, presence: true, 
+                         inclusion: {in: %w(月 火 水 木 金 土 日)}
   validates :start_date, presence: true,
                          inclusion: {in: ("2000-01-03".to_date.."2000-01-09".to_date)}
   validates :start_time, presence: true
@@ -26,6 +28,7 @@ class TaskTemplate < ApplicationRecord
   }
 
   def set_start_day_of_week
+    return self.day_of_week = nil if !start_date
     self.day_of_week = %w(日 月 火 水 木 金 土)[start_date.wday]
   end
 

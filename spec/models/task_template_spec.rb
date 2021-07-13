@@ -53,16 +53,16 @@ RSpec.describe TaskTemplate, type: :model do
     expect(@task_template).to  be_valid
   end
 
-  it '曜日が存在しなければ無効' do
-    @task_template.day_of_week = nil
+  it '開始日が存在しなければ無効' do
+    @task_template.start_date = nil
     @task_template.valid?
-    expect(@task_template.errors[:day_of_week]).to  include("can't be blank")
+    expect(@task_template.errors[:start_date]).to  include("can't be blank")
   end
 
-  it '曜日が["月","火","水","木","金","土","日"]のどれでもない時に無効' do
-    @task_template.day_of_week = "a"
+  it '開始日が存在しなければ曜日も存在しない' do
+    @task_template.start_date = nil
     @task_template.valid?
-    expect(@task_template.errors[:day_of_week]).to  include("is not included in the list")
+    expect(@task_template.errors[:day_of_week]).to  include("can't be blank")
   end
 
   it '開始時間が存在しなければ無効' do
