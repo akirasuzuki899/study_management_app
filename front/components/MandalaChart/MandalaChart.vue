@@ -5,7 +5,9 @@
   >
     <v-card-actions>
       <v-btn 
-        @click="toggleUnfinishedTaskList"
+        @click="deleteMandalaChart({
+          authTokens: authTokens
+        })"
         outlined
         text
       >
@@ -20,46 +22,61 @@
       outlined
       tile
     >
-      <MandalaChartGroup
-        style="width: calc(100%/3);"
-      ></MandalaChartGroup>
-      <MandalaChartGroup
-        style="width: calc(100%/3);"
-      ></MandalaChartGroup>
-      <MandalaChartGroup
-        style="width: calc(100%/3);"
-      ></MandalaChartGroup>
-      <MandalaChartGroup
-        style="width: calc(100%/3);"
-      ></MandalaChartGroup>
-      <MandalaChartGroup
-        style="width: calc(100%/3);"
-      ></MandalaChartGroup>
-      <MandalaChartGroup
-        style="width: calc(100%/3);"
-      ></MandalaChartGroup>
-      <MandalaChartGroup
-        style="width: calc(100%/3);"
-      ></MandalaChartGroup>
-      <MandalaChartGroup
-        style="width: calc(100%/3);"
-      ></MandalaChartGroup>
-      <MandalaChartGroup
-        style="width: calc(100%/3);"
-      ></MandalaChartGroup>
+      <template v-for="n in 9">
+        <MandalaChartGroup
+          :id="n"
+          :key="n"
+          :MandalaGroup="filterByPlaceNumber( selectedMandalaChart.mandala_groups, n )"
+          style="width: calc(100%/3);"
+          @item-clicked="openForm"
+        ></MandalaChartGroup>
+      </template>
     </v-card>
+    <MandalaForm
+      ref="form"
+      :selectedMandalaItem="selectedMandalaItem"
+    ></MandalaForm>
   </v-sheet>
 </template>
 
 <script>
-import MandalaChartGroup from "./MandalaChartGroup.vue"
+import { mapGetters, mapActions } from "vuex";
+import MandalaChartGroup from "./MandalaChartGroup"
+import MandalaForm from "../MandalaChart/MandalaForm"
 
 export default {
   components: {
     MandalaChartGroup,
+    MandalaForm,
   },
   data: () => ({
-    
+    selectedMandalaChart: {
+      mandala_groups: [],
+    },
+    selectedMandalaItem: {}
   }),
+  watch: {
+    mandala_charts: function(){
+      this.selectedMandalaChart = this.mandala_charts[0]
+    }
+  },
+  computed: {
+      ...mapGetters('mandalaChart', ['mandala_charts']),
+      ...mapGetters(["authTokens"]),
+  },
+  methods: {
+     ...mapActions('mandalaChart', ['getMandalaCharts', 'deleteMandalaChart']),
+     filterByPlaceNumber(array, place_number) {
+       if (!array.length) return undefined
+       return array.find( v => v.place_number == place_number)
+     },
+     openForm(item) {
+       this.selectedMandalaItem = item
+       this.$refs.form.open()
+     }
+  },
+  created() {
+    this.getMandalaCharts(this.authTokens)
+  }
 }
 </script>

@@ -1,12 +1,13 @@
 <template>
   <v-responsive 
-    :aspect-ratio="1/1"
+    :aspect-ratio="1"
   >
     <v-card 
       height="100%"
       outlined
       tile
       class="d-flex align-center"
+      @click="$emit('item-clicked', MandalaItem)"
     >
       <!-- <v-card-text
         class="text-center text-truncate"
@@ -19,6 +20,11 @@
 
 <script>
 export default {
+  props: {
+    MandalaItem: {
+      type: Object
+    }
+  },
   data: () => ({
     text: '',
   }),
