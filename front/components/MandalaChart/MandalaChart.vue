@@ -24,7 +24,7 @@
     >
       <template v-for="n in 9">
         <MandalaChartGroup
-          :id="n"
+          :GroupId="n"
           :key="n"
           :MandalaGroup="filterByPlaceNumber( selectedMandalaChart.mandala_groups, n )"
           style="width: calc(100%/3);"

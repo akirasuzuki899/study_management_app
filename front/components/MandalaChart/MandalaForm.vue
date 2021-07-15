@@ -19,16 +19,16 @@
                       v-model="formData.text"
                       name="タイトル"
                       label="タイトル"
-                      rules="required|max:50"
+                      rules="max:50"
                       :dense="true"
                     ></TextInput>
                   </v-col>
                   <v-col cols="12" sm="12" md="12">
-                    <v-checkbox
+                    <CheckBox
                       v-model="formData.is_finished"
                       :on-icon="'mdi-check'"
                       :off-icon="'mdi-check'"
-                    ></v-checkbox>
+                    ></CheckBox>
                   </v-col>
                 </v-row>
               </v-container>
@@ -36,10 +36,13 @@
             <v-card-actions>
               <v-btn
                 :disabled="invalid"
+                @click="updateMandalaItem({
+                  authTokens: authTokens,
+                  selectedMandalaItem: selectedMandalaItem,
+                  formData: formData,
+                }
+                )"
               >
-                <!-- @click="updateRecord(
-                  formData, authTokens, selectedMandalaItem
-                )" -->
               更新
               </v-btn>
             </v-card-actions>
@@ -52,6 +55,7 @@
 
 <script>
 import TextInput from "../Form/BaseTextInput";
+import CheckBox from "../Form/BaseCheckBox"
 
 import { mapGetters, mapActions } from "vuex";
 import { ValidationObserver } from 'vee-validate';
@@ -59,6 +63,7 @@ import { ValidationObserver } from 'vee-validate';
 export default {
   components: {
     TextInput,
+    CheckBox,
     ValidationObserver,
   },
   props: {
@@ -99,7 +104,7 @@ export default {
     ...mapGetters(['authTokens']),
   },
   methods: {
-    ...mapActions('', ['']),
+    ...mapActions('mandalaChart', ['updateMandalaItem']),
 
     setDefaultFormData () {
       this.formData.mandala_group_id = this.selectedMandalaItem.mandala_group_id

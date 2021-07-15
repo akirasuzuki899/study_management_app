@@ -6,7 +6,8 @@
   >
       <template v-for="n in 9">
         <MandalaChartItem
-          :id="n"
+          :ItemId="n"
+          :GroupId="GroupId"
           :key="n"
           :MandalaItem="filterByPlaceNumber( MandalaGroup.mandala_items, n )"
           style="width: calc(100%/3);"
@@ -28,6 +29,9 @@ export default {
       default:() => ({
         mandala_items: []
       })
+    },
+    GroupId: {
+      type: Number
     }
   },
   data: () => ({
