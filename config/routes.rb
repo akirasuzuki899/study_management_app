@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       end
       resources :task_templates
       resources :mandala_charts
+      resources :mandala_items
       resources :study_records
       resources :study_notes
       resources :study_materials do
