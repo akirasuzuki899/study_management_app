@@ -1,19 +1,19 @@
 <template>
-  <!-- <validation-provider
+  <validation-provider
     :rules="rules"
     :name="name"
     :vid="vid"
     v-slot="{ errors }"
-  > -->
+  >
     <v-checkbox
       :value="value"
       :label="label"
-      :on-icon="'mdi-check'"
-      :off-icon="'mdi-check'"
+      :error-messages="errors"
+      :on-icon="onIcon"
+      :off-icon="offIcon"
       :dense="dense"
     ></v-checkbox>
-      <!-- :error-messages="errors" -->
-  <!-- </validation-provider> -->
+  </validation-provider>
 </template>
 
 <script>

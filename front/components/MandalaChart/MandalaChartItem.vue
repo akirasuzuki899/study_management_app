@@ -11,7 +11,8 @@
       @click="$emit('item-clicked', MandalaItem)"
     >
       <v-card-text
-        class="text-center text-truncate pa-0"
+        class="text-center pa-0"
+        v-resize-text="{minFontSize: '8px'}"
       >
         {{MandalaItem.text}}
       </v-card-text>
@@ -20,7 +21,13 @@
 </template>
 
 <script>
+import ResizeText from 'vue-resize-text'
+
 export default {
+
+  directives: {
+    ResizeText
+ },
   props: {
     MandalaItem: {
       type: Object,
@@ -50,6 +57,10 @@ export default {
       7: 'lime', 
       8: 'amber', 
       9: 'orange'},
+    options: {
+        minSize: 10,
+        maxSize: 16,
+    }
   }),
 
   methods: {

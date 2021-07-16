@@ -26,8 +26,8 @@
                   <v-col cols="12" sm="12" md="12">
                     <CheckBox
                       v-model="formData.is_finished"
-                      :on-icon="'mdi-check'"
-                      :off-icon="'mdi-check'"
+                      :on-icon="'mdi-sticker-check-outline'"
+                      :off-icon="'mdi-sticker-check-outline'"
                     ></CheckBox>
                   </v-col>
                 </v-row>

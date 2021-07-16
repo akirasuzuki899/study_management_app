@@ -18,6 +18,7 @@
     "vee-validate": "^3.4.8",
     "vue-click-outside": "^1.1.0",
     "vue-infinite-loading": "^2.4.5",
+    "vue-resize-text": "^0.1.1",
     "vue-trix": "^1.2.0"
   },
   "devDependencies": {

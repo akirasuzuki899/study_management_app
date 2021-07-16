@@ -29,6 +29,7 @@ export default {
   plugins: [
     { src: '@/plugins/vee-validate'},
     { src: '~/plugins/vue_trix'},
+    // { src: '~/plugins/vue-resize-text'},
     { src: '~/plugins/vue-infinite-loading'},
   ],
 
