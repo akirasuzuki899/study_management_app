@@ -6,8 +6,9 @@
     v-slot="{ errors }"
   >
     <v-checkbox
-      :value="value"
+      :input-value="value"
       :label="label"
+      @change="$emit('change', $event)"
       :error-messages="errors"
       :on-icon="onIcon"
       :off-icon="offIcon"
@@ -23,6 +24,10 @@ export default {
   name: 'CheckBox',
   components: {
     ValidationProvider
+  },
+  model: {
+    prop: 'value',
+    event: 'change',
   },
   props: {
     value: {

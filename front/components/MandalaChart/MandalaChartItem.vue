@@ -9,10 +9,26 @@
       class="d-flex align-center"
       :color="getColor()"
       @click="$emit('item-clicked', MandalaItem)"
-      ref="itemContainer"
     >
+    <!-- font-size: 0; は、アイコンの周りに生じる謎のスペースを消すために使用している -->
+    <div
+      style="position: absolute; top: 0; font-size: 0;"   
+    >
+      <v-icon
+        v-if="MandalaItem.is_finished"
+        size="10"
+      >
+        mdi-sticker-check-outline
+      </v-icon>
+      <v-icon
+        v-if="MandalaItem.is_finished"
+        size="10"
+      >
+        mdi-link-variant
+      </v-icon>
+    </div>
       <v-card-text
-        ref="itemText"
+        
         class="text-center pa-0"
         v-resize-text="{minFontSize: '6px'}"
         style="line-height: 1;"
