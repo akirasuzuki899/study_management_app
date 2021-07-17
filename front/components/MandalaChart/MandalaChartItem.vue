@@ -2,19 +2,24 @@
   <v-responsive 
     :aspect-ratio="1"
   >
-    <v-card 
+    <v-card
       height="100%"
       outlined
       tile
       class="d-flex align-center"
       :color="getColor()"
       @click="$emit('item-clicked', MandalaItem)"
+      ref="itemContainer"
     >
       <v-card-text
+        ref="itemText"
         class="text-center pa-0"
-        v-resize-text="{minFontSize: '8px'}"
+        v-resize-text="{minFontSize: '6px'}"
+        style="line-height: 1;"
       >
+        <VClamp :max-lines="2">
         {{MandalaItem.text}}
+        </VClamp>
       </v-card-text>
     </v-card>
   </v-responsive>
@@ -22,11 +27,14 @@
 
 <script>
 import ResizeText from 'vue-resize-text'
+import VClamp from 'vue-clamp'
 
 export default {
-
+  components: {
+    VClamp
+  },
   directives: {
-    ResizeText
+    ResizeText,
  },
   props: {
     MandalaItem: {
@@ -60,9 +68,8 @@ export default {
     options: {
         minSize: 10,
         maxSize: 16,
-    }
+    },
   }),
-
   methods: {
     getColor(){
       if(this.GroupId == 5){
@@ -70,7 +77,7 @@ export default {
       } else if (this.ItemId == 5) {
         return this.colors[this.GroupId]
       }
-    }
-  }
+    },
+  },
 }
 </script>
