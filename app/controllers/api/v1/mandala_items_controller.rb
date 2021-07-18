@@ -5,7 +5,7 @@ module Api
       before_action :correct_user, only: [:update]
 
       def update
-        if @mandala_item.update(text: mandala_item_params[:text], is_finished: mandala_item_params[:is_finished])
+        if @mandala_item.update(text: mandala_item_params[:text], is_finished: mandala_item_params[:is_finished], url: mandala_item_params[:url])
           if @mandala_item.center_group? && !@mandala_item.center_item? || !@mandala_item.center_group? && @mandala_item.center_item?  
             correspond_item = @mandala_item.get_correspond_item
             correspond_item.update(text: mandala_item_params[:text])
@@ -25,7 +25,7 @@ module Api
       private
 
       def mandala_item_params
-        params.permit(:text, :color, :is_finished, :place_number, :mandala_group_id)
+        params.permit(:text, :is_finished, :place_number, :mandala_group_id, :url)
       end
 
       def correct_user

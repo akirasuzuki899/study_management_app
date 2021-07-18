@@ -43,16 +43,12 @@ export const mutations = {
 
     state_item.text = data.mandala_item.text
     state_item.is_finished = data.mandala_item.is_finished
+    state_item.url = data.mandala_item.url
 
     if(data.correspond_item){
       const correspond_group_index = state.mandala_charts[chart_index].mandala_groups.findIndex((v) => v.id === data.correspond_item.mandala_group_id);
       const correspond_item_index  = state.mandala_charts[chart_index].mandala_groups[correspond_group_index].mandala_items.findIndex((v) => v.id === data.correspond_item.id);
       const correspond_state_item  = state.mandala_charts[chart_index].mandala_groups[correspond_group_index].mandala_items[correspond_item_index]
-
-      console.log("correspond_group_index")
-      console.log(correspond_group_index)
-      console.log("correspond_item_index")
-      console.log(correspond_item_index)
 
       correspond_state_item.text = data.correspond_item.text
     }
@@ -102,6 +98,7 @@ export const actions = {
           is_finished: formData.is_finished,
           mandala_group_id: formData.mandala_group_id,
           place_number: formData.place_number,
+          url: formData.url,
         },
         {
           headers: authTokens

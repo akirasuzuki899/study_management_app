@@ -24,10 +24,21 @@
                     ></TextInput>
                   </v-col>
                   <v-col cols="12" sm="12" md="12">
+                    <TextInput
+                      v-model="formData.url"
+                      name="リンク"
+                      label="URL"
+                      rules="url"
+                      :dense="true"
+                      prependInnerIcon="mdi-link-variant"
+                    ></TextInput>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="12">
                     <CheckBox
                       v-model="formData.is_finished"
                       :on-icon="'mdi-sticker-check-outline'"
                       :off-icon="'mdi-sticker-check-outline'"
+                      :dense="true"
                     ></CheckBox>
                   </v-col>
                 </v-row>
@@ -74,8 +85,8 @@ export default {
         mandala_group_id: '',
         place_number: '',
         text: '',
-        color: '',
         is_finished: '',
+        url: '',
       })
     },
   },
@@ -87,7 +98,8 @@ export default {
       place_number: '',
       text: '',
       is_finished: '',
-    }
+      url: '',
+    },
   }),
   watch: {
     Dialog: function() {
@@ -111,6 +123,7 @@ export default {
       this.formData.place_number = this.selectedMandalaItem.place_number
       this.formData.text = this.selectedMandalaItem.text
       this.formData.is_finished = this.selectedMandalaItem.is_finished
+      this.formData.url = this.selectedMandalaItem.url
     },
     open () {
       this.Dialog = true

@@ -12,6 +12,10 @@
       @focus="$emit('focus', $event)"
       :error-messages="errors"
       :dense="dense"
+      :append-icon="appendIcon"
+      :append-outer-icon="appendOuterIcon"
+      :prepend-icon="prependIcon"
+      :prepend-inner-icon="prependInnerIcon"
     ></v-text-field>
   </validation-provider>
 </template>
@@ -48,7 +52,23 @@ export default {
     dense: {
       type: Boolean,
       default: false
-    }
+    },
+    appendIcon: {
+      type: String,
+      default: undefined
+    },
+    appendOuterIcon: {
+      type: String,
+      default: undefined
+    },
+    prependIcon: {
+      type: String,
+      default: undefined
+    },
+    prependInnerIcon: {
+      type: String,
+      default: undefined
+    },
   },
 };
 </script>

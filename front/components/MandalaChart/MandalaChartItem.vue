@@ -21,7 +21,7 @@
         mdi-sticker-check-outline
       </v-icon>
       <v-icon
-        v-if="MandalaItem.is_finished"
+        v-if="MandalaItem.url"
         size="10"
       >
         mdi-link-variant
@@ -60,6 +60,7 @@ export default {
         is_finished: false,
         place_number: '',
         mandala_group_id: '',
+        url: '',
       })
     },
     ItemId: {

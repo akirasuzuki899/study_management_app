@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_12_094336) do
+ActiveRecord::Schema.define(version: 2021_07_18_055713) do
 
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -70,10 +70,10 @@ ActiveRecord::Schema.define(version: 2021_07_12_094336) do
     t.bigint "mandala_group_id", null: false
     t.integer "place_number", null: false
     t.string "text"
-    t.string "color"
     t.boolean "is_finished", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "url"
     t.index ["mandala_group_id"], name: "index_mandala_items_on_mandala_group_id"
   end
 
