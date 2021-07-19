@@ -10,8 +10,13 @@ module Api
       end
 
       def destroy
-        @mandala_chart.destroy
-        render json: @mandala_chart, adapter: :json, serializer: MandalaChartSerializer
+        # @mandala_chart.destroy
+        if current_user.mandala_charts.length > 1
+          @mandala_chart.destroy
+        else
+          items = @mandala_chart.initItems
+        end
+        render json: @mandala_chart, adapter: :json, serializer: MandalaChartSerializer, include: { mandala_groups: [:mandala_items] }
       end
 
       private

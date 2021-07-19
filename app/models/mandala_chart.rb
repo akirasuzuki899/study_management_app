@@ -1,6 +1,7 @@
 class MandalaChart < ApplicationRecord
   belongs_to :user
   has_many :mandala_groups, dependent: :destroy
+  has_many :mandala_items, through: :mandala_groups
 
   validates :user_id, presence: true
 
@@ -22,5 +23,13 @@ class MandalaChart < ApplicationRecord
       end
     end
     
+  end
+
+  def initItems
+    self.mandala_items.update_all(
+      text: "",
+      is_finished: false,
+      url: "",
+    )
   end
 end
