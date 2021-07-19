@@ -5,9 +5,7 @@
   >
     <v-card-actions>
       <v-btn 
-        @click="deleteMandalaChart({
-          authTokens: authTokens
-        })"
+        @click="openAlert"
         outlined
         text
       >
@@ -36,6 +34,20 @@
       ref="dialog"
       :selectedMandalaItem="selectedMandalaItem"
     ></MandalaDialog>
+    <Alert
+      ref="alert"
+      @clicked="deleteMandalaChart({
+          authTokens: authTokens,
+          selectedMandalaChart: selectedMandalaChart
+        })"
+    >
+      <template v-slot:content>
+        マンダラチャートを削除しますか
+      </template>
+      <template v-slot:btnText>
+        削除
+      </template>
+    </Alert>
   </v-sheet>
 </template>
 
@@ -43,16 +55,20 @@
 import { mapGetters, mapActions } from "vuex";
 import MandalaChartGroup from "./MandalaChartGroup"
 import MandalaDialog from "../MandalaChart/MandalaDialog"
+import Alert from "../Alert"
 
 export default {
   components: {
     MandalaChartGroup,
     MandalaDialog,
+    Alert,
   },
   data: () => ({
     selectedMandalaChart: {
-      mandala_groups: [],
-    },
+    mandala_groups: [
+      { mandala_items: [] },
+    ]
+  },
     selectedMandalaItem: {}
   }),
   watch: {
@@ -73,7 +89,10 @@ export default {
      openForm(item) {
        this.selectedMandalaItem = item
        this.$refs.dialog.open()
-     }
+     },
+     openAlert() {
+       this.$refs.alert.open();
+     },
   },
   created() {
     this.getMandalaCharts(this.authTokens)

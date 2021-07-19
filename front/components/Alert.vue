@@ -12,7 +12,6 @@
         <slot name="content"></slot>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
         <v-btn
           color="secondary"
           text
@@ -20,6 +19,7 @@
         >
           閉じる
         </v-btn>
+        <v-spacer></v-spacer>
         <v-btn
           color="blue darken-1"
           text

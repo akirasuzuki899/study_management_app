@@ -1,5 +1,10 @@
 export const state = () => ({
-  mandala_charts: []
+  mandala_charts: [],
+  mandala_chart: {
+    mandala_groups: [
+      { mandala_items: [] }
+    ]
+  }
 })
 
 export const getters = {
@@ -70,18 +75,22 @@ export const actions = {
       console.log(error);
     })
   },
-  deleteMandalaChart( { commit, dispatch }, { authTokens, selectedMandalaChart } ) {
+  deleteMandalaChart( { commit, dispatch, state }, { authTokens, selectedMandalaChart } ) {
     dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios
       .delete(
-        '/api/v1/mandala_charts/' + 10,
+        '/api/v1/mandala_charts/' + selectedMandalaChart.id,
         {
           headers: authTokens
         }
       )
       .then(({ data }) => {
         console.log("success")
-        commit("destroyMandalaChart", data.mandala_chart)
+        if(state.mandala_charts.length == 1){
+          commit("setMandalaCharts", [data.mandala_chart])
+        } else {
+          commit("destroyMandalaChart", data.mandala_chart)
+        }
         dispatch("snackbar/successMessage", '削除しました', { root: true })
       })
       .catch( error => {
@@ -105,7 +114,7 @@ export const actions = {
         }
       )
       .then(({ data }) => {
-        console.log("success from update item")
+        console.log("success")
         console.log(data)
         commit("updateMandalaItem", data)
         dispatch("snackbar/successMessage", '更新しました', { root: true })
