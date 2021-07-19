@@ -16,10 +16,6 @@ module Api
 
       private
 
-      def study_material_params
-        params.permit(:title)
-      end
-
       def correct_user
         @mandala_chart = current_user.mandala_charts.find(params[:id])
         redirect_to root_url if @mandala_chart.nil?

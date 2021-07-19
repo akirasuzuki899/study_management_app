@@ -3,7 +3,6 @@ class MandalaChart < ApplicationRecord
   has_many :mandala_groups, dependent: :destroy
 
   validates :user_id, presence: true
-  validates :title, length: { maximum: 50 }
 
   def create_mandala_groups
     # mandala_chart = current_user.MandalaChart.create()
