@@ -57,9 +57,10 @@
             </v-alert>
             <v-spacer></v-spacer>
             <v-btn
+              color="blue darken-1"
+              text
               :disabled="invalid || disabled"
               :loading="loading"
-              plain
               @click="updateRecord(
                 formData, authTokens, selectedStudyRecord
               )"

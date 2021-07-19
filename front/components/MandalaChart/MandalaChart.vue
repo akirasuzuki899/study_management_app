@@ -32,22 +32,22 @@
         ></MandalaChartGroup>
       </template>
     </v-card>
-    <MandalaForm
-      ref="form"
+    <MandalaDialog
+      ref="dialog"
       :selectedMandalaItem="selectedMandalaItem"
-    ></MandalaForm>
+    ></MandalaDialog>
   </v-sheet>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 import MandalaChartGroup from "./MandalaChartGroup"
-import MandalaForm from "../MandalaChart/MandalaForm"
+import MandalaDialog from "../MandalaChart/MandalaDialog"
 
 export default {
   components: {
     MandalaChartGroup,
-    MandalaForm,
+    MandalaDialog,
   },
   data: () => ({
     selectedMandalaChart: {
@@ -57,7 +57,7 @@ export default {
   }),
   watch: {
     mandala_charts: function(){
-      this.selectedMandalaChart = this.mandala_charts[0]
+      this.selectedMandalaChart = this.mandala_charts[0]  //復数作成できる場合はコードを改良する
     }
   },
   computed: {
@@ -72,7 +72,7 @@ export default {
      },
      openForm(item) {
        this.selectedMandalaItem = item
-       this.$refs.form.open()
+       this.$refs.dialog.open()
      }
   },
   created() {

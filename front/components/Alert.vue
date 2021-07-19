@@ -14,14 +14,14 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="green darken-1"
+          color="secondary"
           text
           @click="close()"
         >
           閉じる
         </v-btn>
         <v-btn
-          color="green darken-1"
+          color="blue darken-1"
           text
           @click="close(); $emit('clicked')"
         >
