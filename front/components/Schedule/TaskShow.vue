@@ -16,12 +16,9 @@
         <v-btn icon @click.stop="edit()">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <ButtonDelete
-          :authTokens="authTokens"
-          :selectedTask="selectedTask"
-          :target="target"
-          @task="deleteTask($event); close()"
-        ></ButtonDelete>
+        <v-btn icon @click="openAlert">
+          <v-icon>mdi-delete-outline</v-icon>
+        </v-btn>
       </v-toolbar>
 
       <v-card-text v-if="selectedTask.study_material">  <!--参照エラーを防ぐ-->
@@ -48,6 +45,20 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    <Alert
+      ref="alert"
+      @clicked="deleteTask({
+        authTokens: authTokens,
+        selectedTask: selectedTask,
+      }); close()"
+    >
+      <template v-slot:content>
+        予定を削除しますか
+      </template>
+      <template v-slot:btnText>
+        削除
+      </template>
+    </Alert>
     <TaskForm
       ref="form"
       method="update"
@@ -61,9 +72,9 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import TaskForm from "./TaskForm";
-import ButtonDelete from "./TaskButtonDelete";
 import ShowStudyMaterial from "../StudyMaterials/ShowStudyMaterials";
 import StudyRecordExpansionPanel from "../StudyRecords/studyRecordExpansionPanel";
+import Alert from "../Alert"
 
 import mixinMoment from "../../plugins/mixin-moment"
 
@@ -72,7 +83,7 @@ export default {
       TaskForm,
       ShowStudyMaterial,
       StudyRecordExpansionPanel,
-      ButtonDelete,
+      Alert,
     },
   mixins: [mixinMoment],
   props: {
@@ -115,6 +126,9 @@ export default {
     },
     edit() {
       this.$refs.form.open()
+    },
+    openAlert() {
+       this.$refs.alert.open();
     },
   },
 }
