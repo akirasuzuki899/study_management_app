@@ -15,12 +15,9 @@
         <v-btn icon @click.stop="edit()">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <ButtonDelete
-          :authTokens="authTokens"
-          :selectedTask="selectedTask"
-          :target="target"
-          @task-template="deleteTaskTemplate($event); close()"
-        ></ButtonDelete>
+        <v-btn icon @click="openAlert">
+          <v-icon>mdi-delete-outline</v-icon>
+        </v-btn>
       </v-toolbar>
 
       <v-card-text v-if="selectedTask.study_material">
@@ -42,7 +39,20 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-
+    <Alert
+      ref="alert"
+      @clicked="deleteTaskTemplate({
+        authTokens: authTokens,
+        selectedTask: selectedTask,
+      }); close()"
+    >
+      <template v-slot:content>
+        予定を削除しますか
+      </template>
+      <template v-slot:btnText>
+        削除
+      </template>
+    </Alert>
     <TaskTemplateForm
       ref="form"
       method="update"
@@ -58,7 +68,7 @@
 import { mapGetters, mapActions } from "vuex";
 import TaskTemplateForm from "./TaskTemplateForm";
 import ShowStudyMaterial from "../StudyMaterials/ShowStudyMaterials";
-import ButtonDelete from "./TaskButtonDelete";
+import Alert from "../Alert"
 
 import mixinMoment from "../../plugins/mixin-moment"
 
@@ -66,7 +76,7 @@ export default {
   components: {
       TaskTemplateForm,
       ShowStudyMaterial,
-      ButtonDelete,
+      Alert,
     },
   mixins: [mixinMoment],
   props: {
@@ -109,6 +119,9 @@ export default {
     },
     edit() {
       this.$refs.form.open()
+    },
+    openAlert() {
+      this.$refs.alert.open();
     },
   },
 }
