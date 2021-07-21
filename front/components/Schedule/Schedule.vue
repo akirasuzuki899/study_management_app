@@ -126,38 +126,6 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       }),
       ...mapMutations('task', ['dragUpdate']),
 
-      createTask(tms) {
-        if(this.$refs.taskShow.isOpen === false && this.drag === false) {
-          const unixTime = this.roundTime(this.toTime(tms), 60)
-          const startTime = tms.hour < 0 ? "00:00" : this.moment(unixTime).format('HH:mm')
-          const endTime = tms.hour < 0 ? "01:00" : this.moment(unixTime).add(1, 'h').format('HH:mm')
-
-          this.selecrtedTime.startTime = startTime
-          this.selecrtedTime.endTime = endTime
-          this.selecrtedTime.date = tms.date
-          
-          this.$refs.form.open();
-        }
-      },
-      showTask ({ nativeEvent, event }) {
-        if (this.drag === false) {
-
-          const open = () => {
-            this.selectedTask = event
-            this.selectedElement = nativeEvent.target
-            requestAnimationFrame(() => requestAnimationFrame(() => this.$refs.taskShow.open()))
-          }
-  
-          if (this.$refs.taskShow.isOpen) {
-            this.$refs.taskShow.isOpen = false
-            requestAnimationFrame(() => requestAnimationFrame(() => open()))
-          } else {
-            open()
-          }
-  
-          nativeEvent.stopPropagation()
-        }
-      },
       getCurrentTime () {
         return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
       },
@@ -173,19 +141,10 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       updateTime () {
         setInterval(() => this.cal.updateTimes(), 60 * 1000)
       },
-      intervalFormat(interval) {  //縦軸の時間フォーマットを hh:mm に変更
-        return interval.time
-      },
-      getEventColor (event) {
-        return event.color
-      },
+
       toggleUnfinishedTaskList(){
         this.listOpen = !this.listOpen
       },
-      getType(v) {
-        var toString = Object.prototype.toString
-        return toString.call(v);
-      }
     },
     mounted () {
       this.ready = true

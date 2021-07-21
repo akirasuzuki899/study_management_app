@@ -17,8 +17,8 @@
       type="week"
       :weekdays="[1, 2, 3, 4, 5, 6, 0]"
       :event-color="getEventColor"
-      @click:event="showTaskTemplate"
-      @click:time="createTaskTemplate"
+      @click:event="showTask"
+      @click:time="createTask"
       :interval-format="intervalFormat"
 
       @mousedown:event="startDrag"
@@ -40,7 +40,7 @@
     </v-calendar>
 
     <TaskTemplateShow
-      ref="taskTemplateShow"
+      ref="taskShow"
       :selectedTask="selectedTask" 
       :selectedElement="selectedElement"
       :target="target"
@@ -118,46 +118,9 @@ import mixinSchedule from "../../plugins/mixin-schedule"
         update: 'updateTaskTemplate',
       }),
       ...mapMutations('taskTemplate', ['dragUpdate']),
-      createTaskTemplate(tms) {
-        if(this.$refs.taskTemplateShow.isOpen === false && this.drag === false) {
-          const unixTime = this.roundTime(this.toTime(tms), 60)
-          const startTime = tms.hour < 0 ? "00:00" : this.moment(unixTime).format('HH:mm')
-          const endTime = tms.hour < 0 ? "01:00" : this.moment(unixTime).add(1, 'h').format('HH:mm')
 
-          this.selecrtedTime.startTime = startTime
-          this.selecrtedTime.endTime = endTime
-          this.selecrtedTime.date = tms.date
-
-          this.$refs.form.open();
-        }
-      },
-      showTaskTemplate ({ nativeEvent, event }) {
-        if (this.drag === false) {
-
-          const open = () => {
-            this.selectedTask = event
-            this.selectedElement = nativeEvent.target
-            requestAnimationFrame(() => requestAnimationFrame(() => this.$refs.taskTemplateShow.open()))
-          }
-  
-          if (this.$refs.taskTemplateShow.isOpen) {
-            this.$refs.taskTemplateShow.isOpen = false
-            requestAnimationFrame(() => requestAnimationFrame(() => open()))
-          } else {
-            open()
-          }
-  
-          nativeEvent.stopPropagation()
-        }
-      },
       openAlert() {
         this.$refs.alert.open();
-      },
-      intervalFormat(interval) {  //縦軸の時間フォーマットを hh:mm に変更
-        return interval.time
-      },
-       getEventColor (event) {
-        return event.color
       },
     },
     mounted () {
