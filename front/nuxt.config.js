@@ -31,6 +31,7 @@ export default {
     { src: '~/plugins/vue_trix'},
     // { src: '~/plugins/vue-resize-text'},
     { src: '~/plugins/vue-infinite-loading'},
+    { src: '~/plugins/axios.js'}
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -50,8 +51,13 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {
-    baseURL: 'http://localhost:3000/',
+  // axios: {
+  //   baseURL: 'http://localhost:3000/',
+  // },
+  publicRuntimeConfig: {
+    axios: {
+      baseURL: process.env.BASE_URL || 'http://localhost:3000/'
+    }
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
