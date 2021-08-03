@@ -3,14 +3,14 @@ RUN apt-get update -qq && \
     apt-get install -y nodejs \
                        cron
 
-WORKDIR /study_management_app
+WORKDIR /back
 
-COPY Gemfile /study_management_app/Gemfile
-COPY Gemfile.lock /study_management_app/Gemfile.lock
+COPY Gemfile /back/Gemfile
+COPY Gemfile.lock /back/Gemfile.lock
 RUN bundle install
-COPY . /study_management_app
+COPY . /back
 RUN bundle exec whenever --update-crontab 
-RUN mkdir -p /study_management_app/tmp/sockets
+RUN mkdir -p /back/tmp/sockets
 
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
