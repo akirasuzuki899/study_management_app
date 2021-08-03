@@ -22,6 +22,7 @@ Rails.application.routes.draw do
           patch :is_complete
         end
       end
+      get 'health_check', to: 'health_check#index'
       root 'static_pages#home'
     end
   end
