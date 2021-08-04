@@ -13,8 +13,9 @@ module TaskBase
   end
 
   def start_at
-    start_at = start_date.present? && start_time.present? ? [start_date, I18n.l(start_time)].join(" ") : nil
-    start_at ? Time.parse(start_at) : nil
+    return unless start_date.present? && start_time.present? 
+    start_at = [start_date, start_time].join(" ")
+    return Time.parse(start_at)
   end
   
   def end_at
