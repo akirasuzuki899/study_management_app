@@ -16,19 +16,16 @@ class MandalaItem < ApplicationRecord
     place_number  == 5 ? true : false
   end
 
-  def get_correspond_item
-    if self.center_group? 
+  def get_correspond_item 
+    if self.center_group? && !self.center_item?
       MandalaItem.left_joins(:mandala_group, :mandala_chart)
         .find_by(place_number: 5, mandala_group: {place_number: self.place_number}, mandala_chart: {id: self.mandala_chart.id})
-    elsif self.center_item?
+        
+    elsif !self.center_group? &&  self.center_item?
       group_place_number = MandalaGroup.find(self.mandala_group_id).place_number
       MandalaItem.left_joins(:mandala_group, :mandala_chart)
         .find_by(place_number: group_place_number, mandala_group: {place_number: 5}, mandala_chart: {id: self.mandala_chart.id})
     end
-  end
-
-  def update_correspond_item(params)
-    self.update(params)
   end
 
 end
