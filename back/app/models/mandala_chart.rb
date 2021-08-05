@@ -5,9 +5,9 @@ class MandalaChart < ApplicationRecord
 
   validates :user_id, presence: true
 
-  def create_mandala_groups
+  def self.create_mandala_chart(user_id)
     # mandala_chart = current_user.MandalaChart.create()
-    user = User.find(1)
+    user = User.find(user_id)
     mandala_chart = user.mandala_charts.create()
     mandala_groups = (1..9).map do |i|
       mandala_chart.mandala_groups.create(

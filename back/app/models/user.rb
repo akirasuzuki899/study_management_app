@@ -14,6 +14,12 @@ class User < ApplicationRecord
   has_many :tasks, dependent: :destroy
   has_many :study_records , dependent: :destroy
   has_many :mandala_charts , dependent: :destroy
+
+  after_create :create_mandala_chart
   
   validates :name, presence: true
+
+  def create_mandala_chart
+    MandalaChart.create_mandala_chart(self.id)
+  end
 end
