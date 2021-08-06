@@ -24,17 +24,6 @@ export const mutations = {
   }
 }
 export const actions = {
-  autoLogin({ commit }) {
-    const authTokens = {
-      'access-token': localStorage.getItem('access-token'),
-      "client": localStorage.getItem('client'),
-      "uid": localStorage.getItem('uid'),
-      "expiry": localStorage.getItem('expiry'),
-      "token-type": localStorage.getItem('token-type'),
-    };
-    // if (!authTokens) return;
-    commit('updateAuthTokens', authTokens);
-  },
   login({ commit }, authData) {
     this.$axios
       .post(
