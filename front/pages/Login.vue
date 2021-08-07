@@ -58,9 +58,11 @@ export default {
   },
   methods: {
     login() {
-      this.$store.dispatch('login', {
-        email: this.email,
-        password: this.password
+      this.$auth.loginWith('local', {
+        data: {
+          email: this.email,
+          password: this.password,
+        },
       })
     }
   }
