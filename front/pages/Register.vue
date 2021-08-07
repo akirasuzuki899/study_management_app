@@ -54,6 +54,8 @@ import TextInput from "../components/Form/BaseTextInput";
 
 import { ValidationObserver } from 'vee-validate';
 export default {
+  auth: false,
+
   components: {
     TextInput,
     ValidationObserver,
@@ -67,11 +69,22 @@ export default {
   },
   methods: {
     register() {
-      this.$store.dispatch('register', {
-        name: this.name,
-        email: this.email,
-        password: this.password,
-      })
+      this.$axios
+        .post(
+          '/api/v1/auth',
+          {
+            name: this.name,
+            email: this.email,
+            password: this.password,
+          }
+        )
+        .then((response) => {
+          this.$auth.setUserToken(response.headers["access-token"])
+          this.$router.push("/");
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 }
