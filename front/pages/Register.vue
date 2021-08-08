@@ -40,7 +40,11 @@
       <v-btn
         color="primary"
         text
-        @click="register"
+        @click="register({
+          name: name,
+          email: email,
+          password: password,
+        })"
         :disabled="invalid"
       >
       送信
@@ -51,6 +55,8 @@
 
 <script>
 import TextInput from "../components/Form/BaseTextInput";
+
+import { mapActions } from "vuex";
 
 import { ValidationObserver } from 'vee-validate';
 export default {
@@ -68,23 +74,7 @@ export default {
     };
   },
   methods: {
-    register() {
-      this.$axios
-        .post(
-          '/api/v1/auth',
-          {
-            name: this.name,
-            email: this.email,
-            password: this.password,
-          }
-        )
-        .then((response) => {
-          
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
+    ...mapActions('auth', ['register']),
   }
 }
 </script>
