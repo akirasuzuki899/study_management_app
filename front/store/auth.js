@@ -48,22 +48,29 @@ export const actions = {
       });
   },
   logout({ commit }) {
-    commit(
-      'updateAuthTokens', 
-      {
-        'access-token': null,
-        "client": null,
-        "uid": null,
-        "expiry": null,
-        "token-type": null,
-      }
-    );
-    localStorage.removeItem("access-token");
-    localStorage.removeItem("client");
-    localStorage.removeItem("uid");
-    localStorage.removeItem("expiry");
-    localStorage.removeItem("token-type");
-    router.replace('/login');
+    this.$axios
+    .delete('/api/v1/auth/sign_out')
+    .then(response => {
+      commit(
+        'updateAuthTokens', 
+        {
+          'access-token': null,
+          "client": null,
+          "uid": null,
+          "expiry": null,
+          "token-type": null,
+        }
+      );
+      localStorage.removeItem("access-token");
+      localStorage.removeItem("client");
+      localStorage.removeItem("uid");
+      localStorage.removeItem("expiry");
+      localStorage.removeItem("token-type");
+      this.$router.push('/');
+      })
+      .catch(error => {
+        console.log(error);
+      });
   },
   register({ commit }, authData) {
     this.$axios

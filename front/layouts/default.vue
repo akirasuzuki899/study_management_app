@@ -66,6 +66,8 @@
 <script>
 import Snackbar from "../components/Snackbar.vue"
 
+import { mapActions } from "vuex";
+
 export default {
   name: "default",
   components: {
@@ -96,9 +98,7 @@ export default {
     }
   },
   methods: {
-    logout() {
-      console.log("aa")
-    }
+    ...mapActions('auth', ['logout']),
   }
 }
 </script>
