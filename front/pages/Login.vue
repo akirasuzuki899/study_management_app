@@ -29,7 +29,10 @@
       <v-btn
         color="primary"
         text
-        @click="login()"
+        @click="login({
+          email: email,
+          password: password
+        })"
         :disabled="invalid"
       >
       送信
@@ -42,6 +45,7 @@
 
 <script>
 import TextInput from "../components/Form/BaseTextInput";
+import { mapActions } from "vuex";
 
 import { ValidationObserver } from 'vee-validate';
 
@@ -57,8 +61,7 @@ export default {
     };
   },
   methods: {
-    login() {
-    }
+    ...mapActions('auth', ['login']),
   }
 }
 </script>
