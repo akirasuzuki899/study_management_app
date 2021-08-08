@@ -82,9 +82,6 @@ export default {
             page_number: this.page_number,
             study_material_id: this.study_material_id,
             content: this.content
-          },
-          {
-            headers: this.authTokens
           }
         )
         .then(response => {
@@ -95,16 +92,9 @@ export default {
         });
     }
   },
-  computed: {
-    authTokens() {
-      return this.$store.getters.authTokens;
-    }
-  },
   created() {
     axios
-      .get('/api/v1/study_materials', {
-        headers: this.authTokens
-      })
+      .get('/api/v1/study_materials')
       .then(response => {
         console.log(response);
         this.studymaterials = response.data.data;

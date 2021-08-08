@@ -62,7 +62,7 @@
               :disabled="invalid || disabled"
               :loading="loading"
               @click="updateRecord(
-                formData, authTokens, selectedStudyRecord
+                formData, selectedStudyRecord
               )"
             >
             更新
@@ -79,7 +79,7 @@
 import DatePicker from "../Form/DatePicker";
 import SelectTime from "../Form/SelectTime";
 
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import { ValidationObserver } from 'vee-validate';
 
 import mixinMoment from "../../plugins/mixin-moment"
@@ -120,7 +120,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['authTokens']),
 
     alertable: function() {
         return this.underUpgrteIDs[this.selectedStudyRecord.id] == true && this.alertIDs[this.selectedStudyRecord.id] == true
@@ -137,13 +136,12 @@ export default {
     ...mapActions('studyRecord', ['updateStudyRecord']),
     ...mapActions('snackbar', ['successMessage']),
 
-    updateRecord(formData, authTokens, selectedStudyRecord){
+    updateRecord(formData, selectedStudyRecord){
       this.$set(this.underUpgrteIDs, selectedStudyRecord.id, true)
       this.$set(this.loadIDs, selectedStudyRecord.id, true)
 
       this.updateStudyRecord({
         formData: formData,
-        authTokens: authTokens,
         id: selectedStudyRecord.id
       }).then (() => {
         if ( this.isOpen ){

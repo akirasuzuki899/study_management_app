@@ -88,7 +88,6 @@ import mixinMoment from "../../plugins/mixin-moment"
     },
     computed: {
       ...mapGetters('task', ['unfinished_tasks']),
-      ...mapGetters(["authTokens"]),
       LoadingMessage: function() {
         if(this.unfinished_tasks.length > 0){
           return '検索結果は以上です'
@@ -108,7 +107,6 @@ import mixinMoment from "../../plugins/mixin-moment"
       },
       infiniteHandler($state) {
         this.getUnfinishedTask({
-          authTokens: this.authTokens,
           page: this.page
         })
         .then(( { tasks } ) => {

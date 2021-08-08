@@ -97,7 +97,7 @@ export default {
   },
   methods: {
     logout() {
-      
+      console.log("aa")
     }
   }
 }

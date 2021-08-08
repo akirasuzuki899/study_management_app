@@ -55,7 +55,6 @@
             :disabled="invalid"
             @click="
               updateMandalaItem({
-              authTokens: authTokens,
               selectedMandalaItem: selectedMandalaItem,
               formData: formData,
               });
@@ -124,7 +123,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['authTokens']),
   },
   methods: {
     ...mapActions('mandalaChart', ['updateMandalaItem']),

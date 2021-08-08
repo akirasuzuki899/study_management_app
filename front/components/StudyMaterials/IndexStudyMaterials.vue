@@ -23,7 +23,6 @@
               <v-btn
                 text
                 @click="toggleCompleteStatus({
-                  authTokens: authTokens,
                   studyMaterial: studyMaterial,
                   index: index,
                 })"
@@ -53,13 +52,12 @@ export default {
   },
   computed: {
     ...mapGetters('studyMaterial',['studyMaterials']),
-    ...mapGetters(['authTokens']),
   },
   methods: {
     ...mapActions('studyMaterial',['toggleCompleteStatus', 'getStudyMaterials']),
   },
   created() {
-    this.getStudyMaterials(this.authTokens)
+    this.getStudyMaterials()
   }
 }
 </script>

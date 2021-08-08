@@ -27,25 +27,19 @@ export const mutations = {
 };
 
 export const actions = {
-  getStudyMaterials( { commit }, authTokens ) {
+  getStudyMaterials( { commit } ) {
     return this.$axios
-      .get('/api/v1/study_materials', {
-        headers: authTokens
-      })
+      .get('/api/v1/study_materials')
       .then(({ data }) => {
         commit("setStudyMaterials", data.study_materials)
       })
   },
-  toggleCompleteStatus( { commit }, { authTokens, studyMaterial, index }) {
+  toggleCompleteStatus( { commit }, { studyMaterial, index }) {
     this.$axios
       .patch('/api/v1/study_materials/' + studyMaterial.id + '/is_complete',
         {
           is_completed: !studyMaterial.is_completed
-        },
-        {
-          headers: authTokens
-        }
-      )
+        })
       .then(({ data }) => {
         commit("setCompleteStatus", { study_material: data.study_material, index: index })
       })
@@ -53,15 +47,12 @@ export const actions = {
         console.log(error);
       });
   },
-  registerStudyMaterial( { commit },  { authTokens, serchResult }){
+  registerStudyMaterial( { commit },  { serchResult }){
     return this.$axios
       .post('/api/v1/study_materials',
       {
         title: serchResult.title,
         rakuten_image_url: serchResult.image_url,
-      },
-      {
-        headers: authTokens
       })
       .then( ({ data }) => {
         commit('addStudyMaterials', data.study_material)

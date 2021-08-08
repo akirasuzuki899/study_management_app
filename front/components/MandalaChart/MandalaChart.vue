@@ -37,7 +37,6 @@
     <Alert
       ref="alert"
       @clicked="deleteMandalaChart({
-          authTokens: authTokens,
           selectedMandalaChart: selectedMandalaChart
         })"
     >
@@ -78,7 +77,6 @@ export default {
   },
   computed: {
       ...mapGetters('mandalaChart', ['mandala_charts']),
-      ...mapGetters(["authTokens"]),
   },
   methods: {
      ...mapActions('mandalaChart', ['getMandalaCharts', 'deleteMandalaChart']),
@@ -95,7 +93,7 @@ export default {
      },
   },
   created() {
-    this.getMandalaCharts(this.authTokens)
+    this.getMandalaCharts()
   }
 }
 </script>

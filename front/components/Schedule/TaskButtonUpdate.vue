@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  props: ["target", "authTokens", "formData", "selectedTask", "disabled"],
+  props: ["target", "formData", "selectedTask", "disabled"],
   methods: {
     updateTarget(){
       if (this.target === "taskTemplate"){
@@ -26,7 +26,6 @@ export default {
     taskTemplate(){
       console.log(this.target)
       this.$emit('task-template', {
-        authTokens: this.authTokens,
         formData: this.formData,
         selectedTask: this.selectedTask
       })
@@ -34,7 +33,6 @@ export default {
     task(){
       console.log("task")
       this.$emit("task", {
-        authTokens: this.authTokens,
         formData: this.formData,
         selectedTask: this.selectedTask
       })
