@@ -29,7 +29,7 @@
       <v-btn
         color="primary"
         text
-        @click="login"
+        @click="login()"
         :disabled="invalid"
       >
       送信
@@ -58,12 +58,6 @@ export default {
   },
   methods: {
     login() {
-      this.$auth.loginWith('local', {
-        data: {
-          email: this.email,
-          password: this.password,
-        },
-      })
     }
   }
 }

@@ -54,7 +54,7 @@ import TextInput from "../components/Form/BaseTextInput";
 
 import { ValidationObserver } from 'vee-validate';
 export default {
-  auth: false,
+  auth: 'guest',
 
   components: {
     TextInput,
@@ -79,8 +79,7 @@ export default {
           }
         )
         .then((response) => {
-          this.$auth.setUserToken(response.headers["access-token"])
-          this.$router.push("/");
+          
         })
         .catch(error => {
           console.log(error);

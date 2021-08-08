@@ -48,7 +48,6 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/auth',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -58,24 +57,6 @@ export default {
   publicRuntimeConfig: {
     axios: {
       baseURL: process.env.BASE_URL || 'http://localhost:3000/'
-    }
-  },
-
-  auth: {
-    redirect: {
-      login: '/login', 
-      logout: '/login',
-      callback: false,
-      home: '/'
-    },
-    strategies: {
-      local: {
-        endpoints: {
-          login: { url: '/api/v1/auth/sign_in', method: 'post', propertyName: false },
-          logout: { url: '/api/v1/auth/sign_out', method: 'delete', propertyName: false },
-          user: false
-        }
-      }
     }
   },
 
@@ -105,7 +86,4 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   },
-  router: {
-    middleware: ['auth']
-  }
 }
