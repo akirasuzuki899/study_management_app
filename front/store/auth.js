@@ -6,10 +6,12 @@ export const state = () => ({
     "expiry": null,
     "token-type": null,
   },
+  authenticated: false,
 })
 
 export const getters = {
-  authTokens: state => state.authTokens
+  authTokens: state => state.authTokens,
+  authenticated: state => state.authenticated,
 }
 
 export const mutations = {
@@ -21,10 +23,46 @@ export const mutations = {
       "expiry": authTokens['expiry'],
       "token-type": authTokens['token-type'],
     };
-  }
+  },
+  userLogin(state){
+    state.authenticated = true
+  },
+  userLogout(state){
+    state.authenticated = false
+  },
 }
 export const actions = {
-  login({ commit }, authData) {
+  autoLogin({ commit }){  //初回読み込み時に実行する(リロード含む)
+    const token  = localStorage.getItem('access-token')
+    const expiry = localStorage.getItem('expiry')
+    const now = new Date().getTime();
+    const isExpired = now >= expiry * 1000
+
+    if (!token) return;
+    if (isExpired) {
+      localStorage.removeItem("access-token");
+      localStorage.removeItem("client");
+      localStorage.removeItem("uid");
+      localStorage.removeItem("expiry");
+      localStorage.removeItem("token-type");
+      return
+    } else {
+      commit('userLogin')
+      const expiredIn = expiry * 1000 - now
+      setTimeout(() => {
+        localStorage.removeItem("access-token");
+        localStorage.removeItem("client");
+        localStorage.removeItem("uid");
+        localStorage.removeItem("expiry");
+        localStorage.removeItem("token-type");
+        commit('userLogout')
+        console.log("token expired")
+      }, expiredIn)
+    }
+
+    commit('userLogin')
+  },
+  login({ commit , state}, authData) {
     this.$axios
       .post(
         '/api/v1/auth/sign_in',
@@ -35,12 +73,12 @@ export const actions = {
       )
       .then(response => {
         commit('updateAuthTokens', response.headers);
+        commit('userLogin');
         localStorage.setItem( "access-token", response.headers['access-token']);
         localStorage.setItem( "client", response.headers['client']);
         localStorage.setItem( "uid", response.headers['uid']);
         localStorage.setItem( "expiry", response.headers['expiry']);
         localStorage.setItem( "token-type", response.headers['token-type']);
-        console.log(response);
         this.$router.push("/");
       })
       .catch(error => {
@@ -61,12 +99,13 @@ export const actions = {
           "token-type": null,
         }
       );
+      commit('userLogout');
       localStorage.removeItem("access-token");
       localStorage.removeItem("client");
       localStorage.removeItem("uid");
       localStorage.removeItem("expiry");
       localStorage.removeItem("token-type");
-      this.$router.push('/');
+      this.$router.push('/login');
       })
       .catch(error => {
         console.log(error);
@@ -84,12 +123,12 @@ export const actions = {
       )
       .then(response => {
         commit('updateAuthTokens', response.headers);
+        commit('userLogin');
         localStorage.setItem( "access-token", response.headers['access-token']);
         localStorage.setItem( "client", response.headers['client']);
         localStorage.setItem( "uid", response.headers['uid']);
         localStorage.setItem( "expiry", response.headers['expiry']);
         localStorage.setItem( "token-type", response.headers['token-type']);
-        console.log(response);
         this.$router.push('/');
       })
       .catch(error => {
