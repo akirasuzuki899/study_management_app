@@ -70,6 +70,11 @@ import { mapActions } from "vuex";
 
 export default {
   name: "default",
+  middleware({ store, redirect }) {
+    if (!store.state.auth.authenticated) {
+      return redirect('/login')
+    }
+  },
   components: {
     Snackbar,
   },

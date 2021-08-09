@@ -50,6 +50,7 @@ import { mapActions } from "vuex";
 import { ValidationObserver } from 'vee-validate';
 
 export default {
+  layout: 'auth',
   components: {
     TextInput,
     ValidationObserver,

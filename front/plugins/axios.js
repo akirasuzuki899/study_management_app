@@ -1,4 +1,4 @@
-export default function({ $axios }) {
+export default function({ $axios, store }) {
   
   $axios.onRequest(config => {
     config.headers.client = window.localStorage.getItem("client")
@@ -10,4 +10,6 @@ export default function({ $axios }) {
   $axios.onResponse(response => {
     $axios.setHeader('Access-Control-Allow-Origin', '*')
   })
+
+  store.dispatch('auth/autoLogin');
 }
