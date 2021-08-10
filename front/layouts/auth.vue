@@ -1,8 +1,20 @@
 <template>
   <v-app dark>
-    <v-container fluid>
-      <nuxt />
-    </v-container>
+    <v-main
+      class="d-flex align-center"
+    >
+      <v-container
+        style="max-width:500px" 
+        class="mx-auto"
+      >
+        <nuxt />
+      </v-container>
+    </v-main>
+    <v-footer
+      app
+    >
+      <span>&copy; {{ new Date().getFullYear() }}</span>
+    </v-footer>
   </v-app>
 </template>
 
