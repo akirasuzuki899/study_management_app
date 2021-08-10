@@ -8,6 +8,7 @@
     <v-text-field
       :value="value"
       :label="label"
+      :type="type"
       @input="$emit('input', $event)"
       @focus="$emit('focus', $event)"
       :error-messages="errors"
@@ -48,6 +49,10 @@ export default {
     label: {
       type: String,
       default: ''
+    },
+    type: {
+      type: String,
+      default: undefined
     },
     dense: {
       type: Boolean,

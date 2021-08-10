@@ -43,6 +43,7 @@
                     v-model="password"
                     name="パスワード"
                     label="パスワード"
+                    type="password"
                     rules="required|max:50"
                     :dense="true"
                     prependInnerIcon="mdi-lock"
