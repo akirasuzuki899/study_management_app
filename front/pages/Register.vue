@@ -30,7 +30,8 @@
                     v-model="email"
                     name="メールアドレス"
                     label="メールアドレス"
-                    rules="required|max:50"
+                    type="email"
+                    rules="required|email|max:50"
                     :dense="true"
                     prependInnerIcon="mdi-email"
                   ></TextInput>
@@ -44,7 +45,7 @@
                     name="パスワード"
                     label="パスワード"
                     type="password"
-                    rules="required|max:50"
+                    rules="required|max:50|min:6"
                     :dense="true"
                     prependInnerIcon="mdi-lock"
                   ></TextInput>

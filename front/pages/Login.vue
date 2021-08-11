@@ -17,7 +17,8 @@
                     v-model="email"
                     name="メールアドレス"
                     label="メールアドレス"
-                    rules="required"
+                    type="email"
+                    rules="required|email|max:50"
                     :dense="true"
                     prependInnerIcon="mdi-email"
                   ></TextInput>
@@ -31,7 +32,7 @@
                     name="パスワード"
                     label="パスワード"
                     type="password"
-                    rules="required"
+                    rules="required|max:50|min:6"
                     :dense="true"
                     prependInnerIcon="mdi-lock"
                   ></TextInput>
@@ -57,7 +58,7 @@
     </v-card>
     <v-container>
       <v-row class="align-center mt-2">
-        <v-col cols="12" sm="12" md="6" class="text-caption text-center ">
+        <v-col cols="12" sm="12" md="6" class="text-caption text-center">
           アカウントをお持ちでないですか？
         </v-col>
         <v-col cols="12" sm="12" md="3">

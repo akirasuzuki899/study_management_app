@@ -32,7 +32,7 @@ export const mutations = {
   },
 }
 export const actions = {
-  autoLogin({ commit }){  //初回読み込み時に実行する(リロード含む)
+  autoLogin({ commit, dispatch }){  //初回読み込み時に実行する(リロード含む)
     const token  = localStorage.getItem('access-token')
     const expiry = localStorage.getItem('expiry')
     const now = new Date().getTime();
@@ -57,12 +57,15 @@ export const actions = {
         localStorage.removeItem("token-type");
         commit('userLogout')
         console.log("token expired")
+        this.$router.push('/login');
+        dispatch("snackbar/successMessage", 'トークンの有効期限が切れました', { root: true })
       }, expiredIn)
     }
 
     commit('userLogin')
   },
-  login({ commit , state}, authData) {
+  login({ commit, dispatch}, authData) {
+    dispatch("snackbar/processMessage", '通信中...', { root: true })
     this.$axios
       .post(
         '/api/v1/auth/sign_in',
@@ -80,12 +83,15 @@ export const actions = {
         localStorage.setItem( "expiry", response.headers['expiry']);
         localStorage.setItem( "token-type", response.headers['token-type']);
         this.$router.push("/");
+        dispatch("snackbar/successMessage", 'ログインしました', { root: true })
       })
       .catch(error => {
-        console.log(error);
+        console.log(error.response);
+        dispatch("snackbar/errorMessage", 'ログインに失敗しました', { root: true })
       });
   },
-  logout({ commit }) {
+  logout({ commit, dispatch }) {
+    dispatch("snackbar/processMessage", '通信中...', { root: true })
     this.$axios
     .delete('/api/v1/auth/sign_out')
     .then(response => {
@@ -106,12 +112,15 @@ export const actions = {
       localStorage.removeItem("expiry");
       localStorage.removeItem("token-type");
       this.$router.push('/login');
+      dispatch("snackbar/successMessage", 'ログアウトしました', { root: true })
       })
       .catch(error => {
         console.log(error);
+        dispatch("snackbar/errorMessage", 'ログアウトに失敗しました', { root: true })
       });
   },
-  register({ commit }, authData) {
+  register({ commit, dispatch }, authData) {
+    dispatch("snackbar/processMessage", '通信中...', { root: true })
     this.$axios
       .post(
         '/api/v1/auth',
@@ -130,9 +139,11 @@ export const actions = {
         localStorage.setItem( "expiry", response.headers['expiry']);
         localStorage.setItem( "token-type", response.headers['token-type']);
         this.$router.push('/');
+        dispatch("snackbar/successMessage", 'ログインしました', { root: true })
       })
       .catch(error => {
-        console.log(error);
+        console.log(error.response);
+        dispatch("snackbar/errorMessage", 'ユーザー作成に失敗しました', { root: true })
       });
   }
 }

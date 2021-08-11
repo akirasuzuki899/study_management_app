@@ -8,6 +8,8 @@
         class="mx-auto"
       >
         <nuxt />
+        <Snackbar
+        ></Snackbar>
       </v-container>
     </v-main>
     <v-footer
