@@ -62,18 +62,16 @@ export const mutations = {
 };
 
 export const actions = {
-  getTasks( { commit }, authTokens ) {
+  getTasks( { commit } ) {
     this.$axios
-      .get('/api/v1/tasks', {
-        headers: authTokens
-      })
+      .get('/api/v1/tasks')
       .then(({ data }) => {
         console.log("success")
         console.log(data)
         commit("setTasks", data.tasks)
       });
   },
-  createTask( { commit, dispatch } , { authTokens, formData} ) {
+  createTask( { commit, dispatch } , { formData } ) {
     dispatch("snackbar/processMessage", '作成しています...', { root: true })
     this.$axios
       .post(
@@ -85,11 +83,7 @@ export const actions = {
           start_time: formData.start_time,
           end_time: formData.end_time,
           color: formData.color,
-        },
-        {
-          headers: authTokens
-        }
-      )
+        })
       .then(( { data } ) => {
         console.log("success")
         console.log(data.task)
@@ -101,7 +95,7 @@ export const actions = {
         console.log(error);
       })
   },
-  updateTask( { commit, dispatch }, { authTokens, selectedTask, formData } )  {
+  updateTask( { commit, dispatch }, { selectedTask, formData } )  {
     dispatch("snackbar/processMessage", '更新しています...', { root: true })
     this.$axios
       .put(
@@ -113,11 +107,7 @@ export const actions = {
           start_time: formData.start_time,
           end_time: formData.end_time,
           color: formData.color,
-        },
-        {
-          headers: authTokens
-        }
-      )
+        })
       .then(( { data } ) => {
         console.log("success")
         console.log(data.task)
@@ -128,15 +118,10 @@ export const actions = {
         console.log(error);
       })
   },
-  deleteTask( { commit, dispatch }, { authTokens, selectedTask } ) {
+  deleteTask( { commit, dispatch }, { selectedTask } ) {
     dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios
-      .delete(
-        '/api/v1/tasks/' + selectedTask.id,
-        {
-          headers: authTokens
-        }
-      )
+      .delete('/api/v1/tasks/' + selectedTask.id)
       .then(({ data }) => {
         console.log("success")
         console.log(data.task)
@@ -149,36 +134,29 @@ export const actions = {
       })
   },
 
-  createTasksFromTemplates( { commit, dispatch }, { authTokens, copy_all }){
+  createTasksFromTemplates( { commit, dispatch }, { copy_all }){
     dispatch("snackbar/processMessage", '更新しています...', { root: true })
     this.$axios
-      .post(
-        '/api/v1/tasks/create_from_templates'+ `?copy_all=${copy_all}`, {},
-        {
-          headers: authTokens
-        }
-        )
-        .then(( { data } ) => {
-          console.log("success")
-          console.log(data)
-          commit("addTask", data.tasks)
-          dispatch("snackbar/successMessage", '更新しました', { root: true })
-        })
-        .catch(error => {
-          console.log("error");
-          console.log(error.response.data);
-          dispatch(
-            "snackbar/errorMessage", 
-            `更新に失敗しました。${error.response.data.message}`, 
-            { root: true })
-        })
+      .post('/api/v1/tasks/create_from_templates'+ `?copy_all=${copy_all}`, {})
+      .then(( { data } ) => {
+        console.log("success")
+        console.log(data)
+        commit("addTask", data.tasks)
+        dispatch("snackbar/successMessage", '更新しました', { root: true })
+      })
+      .catch(error => {
+        console.log("error");
+        console.log(error.response.data);
+        dispatch(
+          "snackbar/errorMessage", 
+          `更新に失敗しました。${error.response.data.message}`, 
+          { root: true })
+      })
   },
 
-  getUnfinishedTask({ commit }, {authTokens, page}){
+  getUnfinishedTask({ commit }, { page }){
     return this.$axios
-      .get('/api/v1/tasks/unfinished_tasks?page=' + `${page}`, {
-        headers: authTokens
-      })
+      .get('/api/v1/tasks/unfinished_tasks?page=' + `${page}`)
       .then(({ data }) => {
         commit("addTask", data.tasks)
         return data

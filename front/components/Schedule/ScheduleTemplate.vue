@@ -55,7 +55,7 @@
 
     <Alert
       ref="alert"
-      @clicked="createTasksFromTemplates({authTokens: authTokens, copy_all: copy_all})"
+      @clicked="createTasksFromTemplates({copy_all: copy_all})"
     >
       <template v-slot:title>
         テンプレートを反映
@@ -110,7 +110,6 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     },
     computed: {
       ...mapGetters('taskTemplate', ['taskTemplates']),
-      ...mapGetters(['authTokens']),
     },
     methods: {
       ...mapActions('task', ['createTasksFromTemplates']),
@@ -127,7 +126,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       this.$refs.calendar.scrollToTime('08:00')
     },
     created() {
-      this.$store.dispatch('taskTemplate/getTaskTemplates', this.authTokens)
+      this.$store.dispatch('taskTemplate/getTaskTemplates')
     },
   }
 </script>

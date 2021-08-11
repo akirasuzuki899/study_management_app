@@ -95,7 +95,6 @@
               <ButtonCreate
                 :disabled="invalid"
                 v-if="method=='create'"
-                :authTokens="authTokens"
                 :formData="formData"
                 :target="target"
                 @task="createTask($event); close()"
@@ -103,7 +102,6 @@
               <ButtonUpdate
                 v-if="method=='update'"
                 :disabled="invalid"
-                :authTokens="authTokens"
                 :formData="formData"
                 :target="target"
                 :selectedTask="selectedTask"
@@ -189,7 +187,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['authTokens']),
   },
   methods: {
     ...mapActions('task', ['createTask', 'updateTask']),

@@ -1,7 +1,15 @@
-export default function ({ $axios, redirect }) {
-  $axios.onResponse((response) => {
-    $axios.setHeader('Access-Control-Allow-Origin', '*')
-    console.log("response")
-    console.log(response)
+export default function({ $axios, store }) {
+  
+  $axios.onRequest(config => {
+    config.headers.client = window.localStorage.getItem("client")
+    config.headers["access-token"] = window.localStorage.getItem("access-token")
+    config.headers.uid = window.localStorage.getItem("uid")
+    config.headers["token-type"] = window.localStorage.getItem("token-type")
   })
+  
+  $axios.onResponse(response => {
+    $axios.setHeader('Access-Control-Allow-Origin', '*')
+  })
+
+  store.dispatch('auth/autoLogin');
 }

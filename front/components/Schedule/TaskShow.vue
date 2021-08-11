@@ -48,7 +48,6 @@
     <Alert
       ref="alert"
       @clicked="deleteTask({
-        authTokens: authTokens,
         selectedTask: selectedTask,
       }); close()"
     >
@@ -113,7 +112,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["authTokens"]),
   },
   methods: {
     ...mapActions('task', ['deleteTask']),

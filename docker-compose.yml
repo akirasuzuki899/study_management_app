@@ -20,7 +20,7 @@ services:
     container_name: nuxt
     command: npm run dev
     volumes:
-      - ./front:/app/
+      - ./front:/front/
     ports:
       - '8080:8080'
     stdin_open: true

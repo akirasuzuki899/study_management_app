@@ -87,17 +87,15 @@ export const mutations = {
 };
 
 export const actions = {
-  getTaskTemplates( { commit }, authTokens ) {
+  getTaskTemplates( { commit } ) {
     this.$axios
-      .get('/api/v1/task_templates', {
-        headers: authTokens
-      })
+      .get('/api/v1/task_templates')
       .then(({ data }) => {
         console.log(data)
         commit("setTaskTemplates", data)
       });
   },
-  createTaskTemplate( { commit, dispatch } , { authTokens, formData} ) {
+  createTaskTemplate( { commit, dispatch } , { formData } ) {
     dispatch("snackbar/processMessage", '作成しています...', { root: true })
     this.$axios
       .post(
@@ -109,11 +107,7 @@ export const actions = {
           start_time: formData.start_time,
           end_time: formData.end_time,
           color: formData.color
-        },
-        {
-          headers: authTokens
-        }
-      )
+        })
       .then(( { data } ) => {
         console.log(" res data")
         console.log(data)
@@ -124,7 +118,7 @@ export const actions = {
         console.log(error);
       })
   },
-  updateTaskTemplate( { commit, dispatch }, { authTokens, selectedTask, formData } )  {
+  updateTaskTemplate( { commit, dispatch }, { selectedTask, formData } )  {
     dispatch("snackbar/processMessage", '更新しています...', { root: true })
     console.log("送信前")
     console.log(formData)
@@ -138,11 +132,7 @@ export const actions = {
         start_time: formData.start_time,
         end_time: formData.end_time,
         color: formData.color,
-      },
-      {
-        headers: authTokens
-      }
-      )
+      })
       .then(( { data } ) => {
         console.log("送信後")
         console.log(data.task_template)
@@ -153,15 +143,10 @@ export const actions = {
         console.log(error);
       })
   },
-  deleteTaskTemplate( { commit, dispatch }, { authTokens, selectedTask } ) {
+  deleteTaskTemplate( { commit, dispatch }, { selectedTask } ) {
     dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios
-      .delete(
-        '/api/v1/task_templates/' + selectedTask.id,
-        {
-          headers: authTokens
-        }
-      )
+      .delete('/api/v1/task_templates/' + selectedTask.id)
       .then(({ data }) => {
         commit("destroyTaskTemplate", data)
         dispatch("snackbar/successMessage", '削除しました', { root: true })

@@ -19,16 +19,9 @@ export default {
       content: ""
     }
   },
-  computed: {
-    authTokens() {
-      return this.$store.getters.authTokens;
-    }
-  },
   created() {
     axios
-      .get('/api/v1/study_notes/' + this.id , {
-        headers: this.authTokens
-      })
+      .get('/api/v1/study_notes/' + this.id)
       .then(response => {
         console.log(response);
         this.studynote = response.data.data;

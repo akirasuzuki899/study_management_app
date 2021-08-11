@@ -83,9 +83,6 @@ export default {
             page_number: this.page_number,
             study_material_id: this.study_material_id,
             content: this.content
-          },
-          {
-            headers: this.authTokens
           }
         )
         .then(response => {
@@ -96,16 +93,9 @@ export default {
         });
     }
   },
-  computed: {
-    authTokens() {
-      return this.$store.getters.authTokens;
-    }
-  },
   created() {
     axios
-      .get('/api/v1/study_notes/' + this.id, {
-        headers: this.authTokens
-      })
+      .get('/api/v1/study_notes/' + this.id)
       .then(response => {
         this.title = response.data.data.title;
         this.page_number = response.data.data.page_number;
@@ -113,9 +103,7 @@ export default {
         this.content = response.data.data.get_trix_content;
       });
     axios
-      .get('/api/v1/study_materials', {
-        headers: this.authTokens
-      })
+      .get('/api/v1/study_materials')
       .then(response => {
         this.studymaterials = response.data.data;
       });

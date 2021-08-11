@@ -61,11 +61,9 @@ export const mutations = {
   }
 }
 export const actions = {
-  getMandalaCharts( { commit }, authTokens ){
+  getMandalaCharts( { commit } ){
     this.$axios
-    .get('/api/v1/mandala_charts', {
-      headers: authTokens
-    })
+    .get('/api/v1/mandala_charts')
     .then(({ data }) => {
       console.log("success")
       console.log(data)
@@ -75,15 +73,10 @@ export const actions = {
       console.log(error);
     })
   },
-  deleteMandalaChart( { commit, dispatch, state }, { authTokens, selectedMandalaChart } ) {
+  deleteMandalaChart( { commit, dispatch, state }, { selectedMandalaChart } ) {
     dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios
-      .delete(
-        '/api/v1/mandala_charts/' + selectedMandalaChart.id,
-        {
-          headers: authTokens
-        }
-      )
+      .delete('/api/v1/mandala_charts/' + selectedMandalaChart.id)
       .then(({ data }) => {
         console.log("success")
         if(state.mandala_charts.length == 1){
@@ -97,7 +90,7 @@ export const actions = {
         console.log(error);
       })
   },
-  updateMandalaItem({ commit, dispatch }, { authTokens, selectedMandalaItem, formData }){
+  updateMandalaItem({ commit, dispatch }, { selectedMandalaItem, formData }){
     dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios
       .put(
@@ -108,11 +101,7 @@ export const actions = {
           mandala_group_id: formData.mandala_group_id,
           place_number: formData.place_number,
           url: formData.url,
-        },
-        {
-          headers: authTokens
-        }
-      )
+        })
       .then(({ data }) => {
         console.log("success")
         console.log(data)

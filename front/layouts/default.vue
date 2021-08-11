@@ -21,6 +21,17 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-item>
+          <v-list-item-action @click="logout()">
+            <v-icon>mdi-logout-variant</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>
+              Logout
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
@@ -55,8 +66,15 @@
 <script>
 import Snackbar from "../components/Snackbar.vue"
 
+import { mapActions } from "vuex";
+
 export default {
   name: "default",
+  middleware({ store, redirect }) {
+    if (!store.state.auth.authenticated) {
+      return redirect('/login')
+    }
+  },
   components: {
     Snackbar,
   },
@@ -83,6 +101,9 @@ export default {
       miniVariant: false,
       title: 'Vuetify.js'
     }
+  },
+  methods: {
+    ...mapActions('auth', ['logout']),
   }
 }
 </script>

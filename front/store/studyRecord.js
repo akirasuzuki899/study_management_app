@@ -34,17 +34,15 @@ export const mutations = {
 };
 
 export const actions = {
-  getStudyRecords( { commit }, authTokens ){
+  getStudyRecords( { commit } ){
     this.$axios
-      .get('/api/v1/study_records', {
-        headers: authTokens
-      })
+      .get('/api/v1/study_records')
       .then(({ data }) => {
         console.log(data)
         commit("setStudyRecords", data)
       });
   },
-  createStudyRecords( { commit }, { authTokens, formData }){
+  createStudyRecords( { commit }, { formData }){
     this.$axios
       .post(
         '/api/v1/study_records',
@@ -55,11 +53,7 @@ export const actions = {
           start_time: formData.start_time,
           end_time: formData.end_time,
           is_finished: formData.is_finished,
-        },
-        {
-          headers: authTokens
-        }
-      )
+        })
       .then(( { data } ) => {
         console.log("success")
         console.log(data)
@@ -70,7 +64,7 @@ export const actions = {
         console.log(error);
       })
   },
-  updateStudyRecord( { commit }, { authTokens, formData, id } ){
+  updateStudyRecord( { commit }, { formData, id } ){
     return this.$axios
       .put(
         '/api/v1/study_records/' + id,
@@ -81,11 +75,7 @@ export const actions = {
           start_time: formData.start_time,
           end_time: formData.end_time,
           is_finished: formData.is_finished,
-        },
-        {
-          headers: authTokens
-        }
-      )
+        })
       .then(( { data } ) => {
         if (data.study_record.task_id){
           commit("task/updateStudyRecord", data, { root: true })

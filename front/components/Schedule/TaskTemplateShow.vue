@@ -42,7 +42,6 @@
     <Alert
       ref="alert"
       @clicked="deleteTaskTemplate({
-        authTokens: authTokens,
         selectedTask: selectedTask,
       }); close()"
     >
@@ -65,7 +64,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import TaskTemplateForm from "./TaskTemplateForm";
 import ShowStudyMaterial from "../StudyMaterials/ShowStudyMaterials";
 import Alert from "../Alert"
@@ -105,9 +104,6 @@ export default {
       isOpen: false,
     }
   } ,
-  computed: {
-    ...mapGetters(['authTokens'])
-  },
   methods: {
     ...mapActions('taskTemplate', ['deleteTaskTemplate']),
 

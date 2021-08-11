@@ -44,7 +44,6 @@
                 <v-btn
                   text
                   @click="register({
-                    authTokens: authTokens,
                     serchResult : item,
                     index: index,
                   })"
@@ -74,7 +73,7 @@
 
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 import TextInput from '../Form/BaseTextInput'
 import StudyMaterial from './StudyMaterial'
@@ -94,9 +93,6 @@ export default {
       serchResults: []
     }
   },
-  computed: {
-    ...mapGetters(["authTokens"])
-  },
   methods: {
     ...mapActions('studyMaterial', ['registerStudyMaterial']),
     changeSearchStatus() {
@@ -109,7 +105,6 @@ export default {
     infiniteHandler($state) {
       this.$axios
         .get('/api/v1/study_materials/search',{
-            headers: this.authTokens,
             params: {
               keyword: this.keyword,
               page: this.page
@@ -139,7 +134,6 @@ export default {
     },
     register(data){
       this.registerStudyMaterial({
-        authTokens: data.authTokens,
         serchResult : data.serchResult,
       })
       .then(() => {

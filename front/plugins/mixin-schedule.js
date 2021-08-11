@@ -57,7 +57,6 @@ export default {
       if (this.dragEvent && this.dragTime !== null){
         if (this.dragEvent.start !== this.originalEvent.start || this.dragEvent.end !== this.originalEvent.end ){
           this.update({
-            authTokens: this.authTokens,
             selectedTask: this.dragEvent,
             formData: {
               start_date: this.date(this.dragEvent.start),

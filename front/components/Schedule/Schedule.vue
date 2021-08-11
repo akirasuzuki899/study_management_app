@@ -111,7 +111,6 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     }),
     computed: {
       ...mapGetters('task', ['tasks']),
-      ...mapGetters(["authTokens"]),
       cal () {
         return this.ready ? this.$refs.calendar : null
       },
@@ -152,8 +151,8 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       this.updateTime()
     },
     created() {
-      this.$store.dispatch('task/getTasks', this.authTokens)
-      this.getStudyMaterials(this.authTokens)
+      this.$store.dispatch('task/getTasks')
+      this.getStudyMaterials()
     },
   }
 </script>
