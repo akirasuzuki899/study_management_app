@@ -4,8 +4,8 @@ version: 2.1
 
 jobs:
   build:
-    docker:
-      - image: 'cimg/base:stable'
+    machine:
+      image: 'circleci/classic:edge'
     steps:
       - checkout
       - run:
@@ -13,8 +13,8 @@ jobs:
           command: docker-compose build
 
   test:
-    docker:
-      - image: 'cimg/base:stable'
+    machine:
+      image: 'circleci/classic:edge'
     steps:
       - checkout
       - run:
