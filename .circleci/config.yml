@@ -6,12 +6,7 @@ jobs:
   build:
     docker:
       - image: 'cimg/ruby:2.7.2'
-        environment:
-          RAILS_ENV: test
-          DATABASE_HOST: '127.0.0.1'
-      - image: circleci/mysql:8.0.21
     working_directory: ~/study_management_app/back
-
     steps:
       - checkout:
           path: ~/study_management_app
@@ -22,11 +17,15 @@ jobs:
   test:
     docker:
       - image: 'cimg/ruby:2.7.2'
-        environment:
-          RAILS_ENV: test
-          DATABASE_HOST: '127.0.0.1'
       - image: circleci/mysql:8.0.21
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: study_management_app_test
+          MYSQL_USER: root
         command: [--default-authentication-plugin=mysql_native_password]
+    environment:
+      RAILS_ENV: test
+      DATABASE_HOST: '127.0.0.1'
     working_directory: ~/study_management_app/back
     steps:
       - checkout:
