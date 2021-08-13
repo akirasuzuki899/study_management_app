@@ -1,35 +1,39 @@
 version: 2.1
-# orbs:
-  # aws-ecr: circleci/aws-ecr@7.0.0
+orbs:
+  ruby: circleci/ruby@1.1.4
 
 jobs:
   build:
-    machine:
-      image: 'circleci/classic:edge'
+    docker:
+      - image: 'cimg/ruby:2.7.2'
+        environment:
+          RAILS_ENV: test
+          DATABASE_HOST: '127.0.0.1'
+      - image: circleci/mysql:8.0.21
+    working_directory: ~/study_management_app/back
+
     steps:
-      - checkout
-      - run:
-          name: docker-compose build
-          command: docker-compose build
+      - checkout:
+          path: ~/study_management_app
+      - ruby/install-deps
 
   test:
-    machine:
-      image: 'circleci/classic:edge'
+    docker:
+      - image: 'cimg/ruby:2.7.2'
+        environment:
+          RAILS_ENV: test
+          DATABASE_HOST: '127.0.0.1'
+      - image: circleci/mysql:8.0.21
     steps:
       - checkout
+      - ruby/install-deps
       - run:
-          name: docker-compose up -d
-          command: docker-compose up -d
-      - run: sleep 10
+          command: bundle exec rails db:create
       - run:
-          name: docker-compose run app rails db:create RAILS_ENV=test
-          command: docker-compose run app rails db:create RAILS_ENV=test
-      - run:
-          name: docker-compose run app rails db:migrate RAILS_ENV=test
-          command: docker-compose run app rails db:migrate RAILS_ENV=test
-      - run:
-          name: docker-compose run app bundle exec rspec spec
-          command: docker-compose run app bundle exec rspec spec
+          command: bundle exec rails db:migrate
+      - ruby/rspec-test
+
+
 
 workflows:
   build_and_test:
