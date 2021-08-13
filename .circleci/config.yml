@@ -1,0 +1,40 @@
+version: 2.1
+# orbs:
+  # aws-ecr: circleci/aws-ecr@7.0.0
+
+jobs:
+  build:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - checkout
+      - run:
+          name: docker-compose build
+          command: docker-compose build
+
+  test:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - checkout
+      - run:
+          name: docker-compose up -d
+          command: docker-compose up -d
+      - run: sleep 10
+      - run:
+          name: docker-compose run back rails db:create RAILS_ENV=test
+          command: docker-compose run back rails db:create RAILS_ENV=test
+      - run:
+          name: docker-compose run back rails db:migrate RAILS_ENV=test
+          command: docker-compose run back rails db:migrate RAILS_ENV=test
+      - run:
+          name: docker-compose run back bundle exec rspec spec
+          command: docker-compose run back bundle exec rspec spec
+
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
