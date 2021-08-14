@@ -101,7 +101,7 @@ workflows:
           tag: ${CIRCLE_SHA1}
           requires:
             - test_front
-          filters:
-            branches:
-              only:
-                - main
+          # filters:
+          #   branches:
+          #     only:
+          #       - main
