@@ -78,7 +78,6 @@ workflows:
           account-url: AWS_ECR_ACCOUNT_URL
           aws-access-key-id: ACCESS_KEY_ID
           aws-secret-access-key: SECRET_ACCESS_KEY
-          RAILS_MASTER_KEY: RAILS_MASTER_KEY
           dockerfile: Dockerfile.prd
           path: ./back/
           region: AWS_REGION
