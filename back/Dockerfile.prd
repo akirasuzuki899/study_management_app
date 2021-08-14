@@ -12,7 +12,7 @@ COPY Gemfile /back/Gemfile
 COPY Gemfile.lock /back/Gemfile.lock
 RUN bundle install
 COPY . /back
-RUN bundle exec whenever --update-crontab
+# RUN bundle exec whenever --update-crontab
 RUN mkdir -p /back/tmp/sockets
 
 COPY entrypoint.sh /usr/bin/
