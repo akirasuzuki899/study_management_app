@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   ruby: circleci/ruby@1.1.4
+  aws-ecr: circleci/aws-ecr@7.0.0
 
 jobs:
   build:
@@ -39,12 +40,42 @@ jobs:
           command: bundle exec rails db:migrate
       - ruby/rspec-test
 
-
-
 workflows:
-  build_and_test:
+  build_and_push_image:
     jobs:
       - build
       - test:
           requires:
             - build
+      - aws-ecr/build-and-push-image:
+          name: build-and-push-image-back
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: ACCESS_KEY_ID
+          aws-secret-access-key: SECRET_ACCESS_KEY
+          dockerfile: Dockerfile.prd
+          path: ./back
+          region: AWS_REGION
+          repo: REPO_NAME_BACK
+          tag: "${CIRCLE_SHA1}"
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - main
+      - aws-ecr/build-and-push-image:
+          name: build-and-push-image-front
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: ACCESS_KEY_ID
+          aws-secret-access-key: SECRET_ACCESS_KEY
+          dockerfile: Dockerfile.prd
+          path: ./front
+          region: AWS_REGION
+          repo: REPO_NAME_FRONT
+          tag: "${CIRCLE_SHA1}"
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - main
