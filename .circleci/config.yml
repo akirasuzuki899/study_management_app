@@ -4,7 +4,7 @@ orbs:
   aws-ecr: circleci/aws-ecr@7.0.0
 
 jobs:
-  build:
+  build_back:
     docker:
       - image: 'cimg/ruby:2.7.2'
     working_directory: ~/study_management_app/back
@@ -15,7 +15,17 @@ jobs:
       - run: sudo apt-get install imagemagick libmagickcore-dev libmagickwand-dev
       - ruby/install-deps
 
-  test:
+  build_front:
+    docker:
+      - image: 'cimg/node:14.16.0'
+    working_directory: ~/study_management_app/front
+    steps:
+      - checkout:
+          path: ~/study_management_app
+      - run: npm install
+      - run: npm run build
+
+  test_back:
     docker:
       - image: 'cimg/ruby:2.7.2'
       - image: circleci/mysql:8.0.21
@@ -39,26 +49,43 @@ jobs:
       - run:
           command: bundle exec rails db:migrate
       - ruby/rspec-test
+  
+  test_front:
+    docker:
+      - image: 'cimg/node:14.16.0'
+    working_directory: ~/study_management_app/front
+    steps:
+      - checkout:
+          path: ~/study_management_app
+      - run: npm install
+      - run: npm run build
+      - run: npm run test
+      
 
 workflows:
   build_and_push_image:
     jobs:
-      - build
-      - test:
+      - build_back
+      - build_front
+      - test_back:
           requires:
-            - build
+            - build_back
+      - test_front:
+          requires:
+            - build_front
       - aws-ecr/build-and-push-image:
           name: build-and-push-image-back
           account-url: AWS_ECR_ACCOUNT_URL
           aws-access-key-id: ACCESS_KEY_ID
           aws-secret-access-key: SECRET_ACCESS_KEY
+          RAILS_MASTER_KEY: RAILS_MASTER_KEY
           dockerfile: Dockerfile.prd
-          path: ./back
+          path: ./back/
           region: AWS_REGION
           repo: ${REPO_NAME_BACK}
           tag: ${CIRCLE_SHA1}
           requires:
-            - test
+            - test_back
           filters:
             branches:
               only:
@@ -69,12 +96,12 @@ workflows:
           aws-access-key-id: ACCESS_KEY_ID
           aws-secret-access-key: SECRET_ACCESS_KEY
           dockerfile: Dockerfile.prd
-          path: ./front
+          path: ./front/
           region: AWS_REGION
           repo: ${REPO_NAME_FRONT}
           tag: ${CIRCLE_SHA1}
           requires:
-            - test
+            - test_front
           filters:
             branches:
               only:
