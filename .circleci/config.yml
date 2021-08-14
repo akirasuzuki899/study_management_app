@@ -49,12 +49,12 @@ workflows:
             - build
       - aws-ecr/build-and-push-image:
           name: build-and-push-image-back
-          account-url: ${AWS_ECR_ACCOUNT_URL}
-          aws-access-key-id: ${ACCESS_KEY_ID}
-          aws-secret-access-key: ${SECRET_ACCESS_KEY}
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: ACCESS_KEY_ID
+          aws-secret-access-key: SECRET_ACCESS_KEY
           dockerfile: Dockerfile.prd
           path: ./back
-          region: ${AWS_REGION}
+          region: AWS_REGION
           repo: ${REPO_NAME_BACK}
           tag: ${CIRCLE_SHA1}
           requires:
@@ -65,12 +65,12 @@ workflows:
                 - main
       - aws-ecr/build-and-push-image:
           name: build-and-push-image-front
-          account-url: ${AWS_ECR_ACCOUNT_URL}
-          aws-access-key-id: ${ACCESS_KEY_ID}
-          aws-secret-access-key: ${SECRET_ACCESS_KEY}
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: ACCESS_KEY_ID
+          aws-secret-access-key: SECRET_ACCESS_KEY
           dockerfile: Dockerfile.prd
           path: ./front
-          region: ${AWS_REGION}
+          region: AWS_REGION
           repo: ${REPO_NAME_FRONT}
           tag: ${CIRCLE_SHA1}
           requires:
