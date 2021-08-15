@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   ruby: circleci/ruby@1.1.4
   aws-ecr: circleci/aws-ecr@7.0.0
+  aws-ecs: circleci/aws-ecs@2.2.1
 
 jobs:
   build_back:
@@ -63,7 +64,7 @@ jobs:
       
 
 workflows:
-  build_and_push_image:
+  test_build_and_deploy:
     jobs:
       - build_back
       - build_front
@@ -85,10 +86,10 @@ workflows:
           tag: ${CIRCLE_SHA1}
           requires:
             - test_back
-          filters:
-            branches:
-              only:
-                - main
+          # filters:
+          #   branches:
+          #     only:
+          #       - main
       - aws-ecr/build-and-push-image:
           name: build-and-push-image-front
           account-url: AWS_ECR_ACCOUNT_URL
@@ -101,6 +102,26 @@ workflows:
           tag: ${CIRCLE_SHA1}
           requires:
             - test_front
+          # filters:
+          #   branches:
+          #     only:
+          #       - main
+      - aws-ecs/deploy-service-update:
+          cluster-name: '${CLUSTER_NAME}'
+          container-image-name-updates: 'container=${CONTAINER_NAME_BACK},tag=${CIRCLE_SHA1}'
+          family: '${FAMILY_NAME_BACK}'
+          requires:
+            - build-and-push-image-back
+          # filters:
+          #   branches:
+          #     only:
+          #       - main
+      - aws-ecs/deploy-service-update:
+          cluster-name: '${CLUSTER_NAME}'
+          container-image-name-updates: 'container=${CONTAINER_NAME_FRONT},tag=${CIRCLE_SHA1}'
+          family: '${FAMILY_NAME_FRONT}'
+          requires:
+            - build-and-push-image-front
           # filters:
           #   branches:
           #     only:
