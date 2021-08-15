@@ -6,4 +6,9 @@ describe('Logo', () => {
     const wrapper = mount(Logo)
     expect(wrapper.vm).toBeTruthy()
   })
+}),
+describe('circle ci による slack への通知テスト', () => {
+  test('test', () => {
+    expect(true).toBe(false);
+  })
 })

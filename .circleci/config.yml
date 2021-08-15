@@ -3,6 +3,7 @@ orbs:
   ruby: circleci/ruby@1.1.4
   aws-ecr: circleci/aws-ecr@7.0.0
   aws-ecs: circleci/aws-ecs@2.2.1
+  slack: circleci/slack@4.4.2
 
 jobs:
   test_back:
@@ -29,6 +30,9 @@ jobs:
       - run:
           command: bundle exec rails db:migrate
       - ruby/rspec-test
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
   
   test_front:
     docker:
@@ -47,6 +51,9 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm run build
       - run: npm run test
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
       
 
 workflows:
