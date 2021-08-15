@@ -80,6 +80,7 @@ workflows:
           #     only:
           #       - main
       - aws-ecs/deploy-service-update:
+          name: deploy-service-update-back
           aws-access-key-id: ACCESS_KEY_ID
           aws-secret-access-key: SECRET_ACCESS_KEY
           aws-region: AWS_REGION
@@ -93,6 +94,7 @@ workflows:
           #     only:
           #       - main
       - aws-ecs/deploy-service-update:
+          name: deploy-service-update-front
           aws-access-key-id: ACCESS_KEY_ID
           aws-secret-access-key: SECRET_ACCESS_KEY
           aws-region: AWS_REGION
