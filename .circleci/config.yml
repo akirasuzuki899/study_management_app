@@ -37,7 +37,14 @@ jobs:
     steps:
       - checkout:
           path: ~/study_management_app
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
       - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm run build
       - run: npm run test
       
