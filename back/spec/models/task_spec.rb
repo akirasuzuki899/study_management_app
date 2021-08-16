@@ -266,11 +266,6 @@ RSpec.describe Task, type: :model do
   
     end
   end
-    
-
-  it 'circle ci による slack への通知テスト' do
-    assert false
-  end
 
 
   it 'メソッドテスト self.create_next_week_tasks_by_tasks'
