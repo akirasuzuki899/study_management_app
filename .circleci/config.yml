@@ -54,6 +54,27 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
+
+  notify_workflow_end:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - slack/notify:
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "デプロイが完了しました！！",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
       
 
 workflows:
@@ -138,8 +159,7 @@ workflows:
           #   branches:
           #     only:
           #       - main
-      - slack/status:
-          success_message: ':tada: デプロイが完了しました'
+      - notify_workflow_end:
           requires:
-             - deploy-service-update-back
-             - deploy-service-update-front
+            - deploy-service-update-back
+            - deploy-service-update-front
