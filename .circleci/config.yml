@@ -96,8 +96,8 @@ workflows:
             - slack/notify:
                 event: fail
                 template: basic_fail_1
-          requires:
-            - test_back
+          # requires:
+          #   - test_back
           # filters:
           #   branches:
           #     only:
@@ -116,8 +116,8 @@ workflows:
             - slack/notify:
                 event: fail
                 template: basic_fail_1
-          requires:
-            - test_front
+          # requires:
+          #   - test_front
           # filters:
           #   branches:
           #     only:
