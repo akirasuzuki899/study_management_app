@@ -63,8 +63,7 @@ workflows:
       - test_front
       - aws-ecr/build-and-push-image:
           name: build-and-push-image-back
-          # account-url: AWS_ECR_ACCOUNT_URL
-          account-url: AWS_ECR_ACCOUNT_URLD
+          account-url: AWS_ECR_ACCOUNT_URL
           aws-access-key-id: ACCESS_KEY_ID
           aws-secret-access-key: SECRET_ACCESS_KEY
           dockerfile: Dockerfile.prd
@@ -139,3 +138,8 @@ workflows:
           #   branches:
           #     only:
           #       - main
+      - slack/status:
+          success_message: ':tada: デプロイが完了しました'
+          requires:
+             - deploy-service-update-back
+             - deploy-service-update-front
