@@ -80,8 +80,8 @@ jobs:
 workflows:
   test_build_and_deploy:
     jobs:
-      # - test_back
-      # - test_front
+      - test_back
+      - test_front
       - aws-ecr/build-and-push-image:
           name: build-and-push-image-back
           account-url: AWS_ECR_ACCOUNT_URL
@@ -96,12 +96,12 @@ workflows:
             - slack/notify:
                 event: fail
                 template: basic_fail_1
-          # requires:
-          #   - test_back
-          # filters:
-          #   branches:
-          #     only:
-          #       - main
+          requires:
+            - test_back
+          filters:
+            branches:
+              only:
+                - main
       - aws-ecr/build-and-push-image:
           name: build-and-push-image-front
           account-url: AWS_ECR_ACCOUNT_URL
@@ -116,12 +116,12 @@ workflows:
             - slack/notify:
                 event: fail
                 template: basic_fail_1
-          # requires:
-          #   - test_front
-          # filters:
-          #   branches:
-          #     only:
-          #       - main
+          requires:
+            - test_front
+          filters:
+            branches:
+              only:
+                - main
       - aws-ecs/deploy-service-update:
           name: deploy-service-update-back
           aws-access-key-id: ACCESS_KEY_ID
@@ -136,10 +136,10 @@ workflows:
                 template: basic_fail_1
           requires:
             - build-and-push-image-back
-          # filters:
-          #   branches:
-          #     only:
-          #       - main
+          filters:
+            branches:
+              only:
+                - main
       - aws-ecs/deploy-service-update:
           name: deploy-service-update-front
           aws-access-key-id: ACCESS_KEY_ID
@@ -154,10 +154,10 @@ workflows:
                 template: basic_fail_1
           requires:
             - build-and-push-image-front
-          # filters:
-          #   branches:
-          #     only:
-          #       - main
+          filters:
+            branches:
+              only:
+                - main
       - notify_workflow_end:
           requires:
             - deploy-service-update-back
