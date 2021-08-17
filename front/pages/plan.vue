@@ -35,7 +35,7 @@
 import IndexStudyMaterials from "../components/StudyMaterials/IndexStudyMaterials"
 import SearchStudyMaterials from "../components/StudyMaterials/SearchStudyMaterials"
 import MandalaChart from "../components/MandalaChart/MandalaChart"
-import Note from "../components/StudyNotes/newStudyNotes.vue"
+import Note from "../components/StudyNotes/Editor-js.vue"
 
 export default {
   components: {
