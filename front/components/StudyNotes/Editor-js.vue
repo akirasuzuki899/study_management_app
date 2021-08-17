@@ -10,7 +10,7 @@
       <form>
         <v-card-text>
           <v-container>
-            <!-- <v-row>
+            <v-row>
               <v-col cols="12" sm="12" md="12">
                 <TextInput
                   v-model="formData.title"
@@ -39,7 +39,7 @@
                   :dense="true"
                 ></TextInput>
               </v-col>
-            </v-row> -->
+            </v-row>
             <v-row>
               <v-col cols="12" sm="12" md="12">
                 <div>
@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 import TextInput from "../Form/BaseTextInput";
 import SelectStudyMaterial from "../Form/SelectStudyMaterial";
 import EditorJS from "@editorjs/editorjs";
@@ -82,7 +83,7 @@ export default {
         title: '',
         page_number: '',
         study_material_id: '',
-        content: '',
+        rich_text: '',
       }
     }
   },
@@ -93,10 +94,15 @@ export default {
     ValidationObserver,
   },
   methods: {
+    ...mapActions('studyNote', ['createStudyNote']),
     save() {
       this.editor.save().then(savedData => {
+        console.log("savedData");
         console.log(savedData);
-        this.content = savedData;
+        this.formData.rich_text = JSON.stringify(savedData);
+        this.createStudyNote({
+          formData: this.formData
+        })
       });
     },
     init() {
