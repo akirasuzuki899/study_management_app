@@ -13,6 +13,7 @@
     "@editorjs/editorjs": "^2.22.2",
     "@editorjs/header": "^2.6.1",
     "@editorjs/list": "^1.6.2",
+    "@editorjs/paragraph": "^2.8.0",
     "@nuxtjs/axios": "^5.13.1",
     "@rails/activestorage": "^6.0.3-7",
     "core-js": "^3.9.1",
