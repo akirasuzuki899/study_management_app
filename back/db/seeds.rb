@@ -29,7 +29,6 @@ users.each do |user|
   5.times do |n|
     study_note = user.study_notes.create!(
       study_material_id: study_materials[n].id.to_s,
-      page_number: (n + 1).to_s,
       title: "タイトル#{n + 1}",
       content: "<p>テキスト#{n + 1}</p>"
     )

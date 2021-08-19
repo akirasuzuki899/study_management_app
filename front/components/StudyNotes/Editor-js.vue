@@ -31,17 +31,6 @@
             </v-row>
             <v-row>
               <v-col cols="12" sm="12" md="12">
-                <TextInput
-                  v-model="formData.page_number"
-                  name="ページ数"
-                  label="ページ数"
-                  rules="required|max:6"
-                  :dense="true"
-                ></TextInput>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="12" md="12">
                 <div>
                   <div id="editorjs"></div>
                 </div>
@@ -112,7 +101,6 @@ export default {
       
       formData: {
         title: '',
-        page_number: '',
         study_material_id: '',
         rich_text: '',
       }

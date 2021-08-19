@@ -4,7 +4,6 @@ export const state = () => ({
     id: '',
     user_id: '',
     title: '',
-    page_number: '',
     study_material_id: '',
     rich_text: '',
     created_at: '',
@@ -49,7 +48,6 @@ export const actions = {
         '/api/v1/study_notes',
         {
           title: formData.title,
-          page_number: formData.page_number,
           study_material_id: formData.study_material_id,
           rich_text: formData.rich_text
         })
@@ -73,7 +71,6 @@ export const actions = {
         '/api/v1/study_notes/' + selectedNote.id,
         {
           title: formData.title,
-          page_number: formData.page_number,
           study_material_id: formData.study_material_id,
           rich_text: formData.rich_text
         })

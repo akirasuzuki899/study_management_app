@@ -35,7 +35,7 @@ module Api
       private
 
       def study_note_params
-        params.require(:study_note).permit(:page_number, :study_material_id, :title, :rich_text)
+        params.require(:study_note).permit(:study_material_id, :title, :rich_text)
       end
 
       def correct_user
