@@ -5,39 +5,31 @@ module Api
       before_action :correct_user, only: [:update, :destroy]
 
       def index
-        @study_notes = StudyNote.includes(:study_material).where(user_id: current_user.id).page(params[:page]).per(10)
-        render json: @study_notes
+        # @study_notes = current_user.study_notes.page(params[:page]).per(10)
+        @study_notes = current_user.study_notes
+        render json: { study_notes: @study_notes }
       end
       
       def create
         @study_note = current_user.study_notes.build(study_note_params)
         if @study_note.save
-          render json: @study_note 
+          render json: { study_note: @study_note }
         else
           render json: { status: 'ERROR', study_note: @study_note.errors }
         end
       end
 
-      def show
-        @study_note = StudyNote.find(params[:id])
-        if @study_note.present?
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_note }
-        else
-          render json: { status: 'ERROR', message: 'Loaded posts', data: @study_note.errors }
-        end
-      end
-
       def update
         if @study_note.update(study_note_params)
-          render json: { status: 'SUCCESS', message: 'Loaded posts', data: @study_note }
+          render json: { study_note: @study_note }
         else
-          render json: { status: 'ERROR', message: 'Loaded posts', data: @study_note.errors }
+          render json: { status: 'ERROR', message: 'Loaded posts', study_note: @study_note.errors }
         end
       end
 
       def destroy
         @study_note.destroy
-        redirect_to study_notes_path
+        render json: { study_note: @study_note }
       end
 
       private

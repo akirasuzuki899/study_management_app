@@ -13,23 +13,23 @@ export const state = () => ({
 })
 
 export const getters = {
-  studyNote: state => state.studyNotes
+  studyNotes: state => state.studyNotes
 };
 
 export const mutations = {
   setStudyNotes(state, study_note) {
-    state.studyMaterials = study_note
+    state.studyNotes = study_note
   },
   addStudyNote(state, study_note) {
-    state.studyMaterials.push(study_note)
+    state.studyNotes.push(study_note)
   },
   updateStudyNote(state, study_note) {
     const index = state.studyNotes.findIndex((v) => v.id === study_note.id);
     state.studyNotes.splice(index, 1, study_note)
   },
-  destroyStudyNote(state, task) {
-    const index = state.tasks.findIndex((v) => v.id === task.id);
-    state.tasks.splice(index, 1)
+  destroyStudyNote(state, study_note) {
+    const index = state.studyNotes.findIndex((v) => v.id === study_note.id);
+    state.studyNotes.splice(index, 1)
   },
 };
 export const actions = {
@@ -53,11 +53,11 @@ export const actions = {
           study_material_id: formData.study_material_id,
           rich_text: formData.rich_text
         })
-      .then(( response ) => {
+      .then(({ data }) => {
         console.log("success")
         console.log("createStudyNote")
-        console.log(response)
-        // commit("addStudyNote", data.study_note)
+        console.log(data)
+        commit("addStudyNote", data.study_note)
         dispatch("snackbar/successMessage", '作成しました', { root: true })
       })
       .catch(error => {

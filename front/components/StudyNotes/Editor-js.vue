@@ -43,43 +43,47 @@
             <v-row>
               <v-col cols="12" sm="12" md="12">
                 <div>
-                  <div class="edit" id="editorjs"></div>
+                  <div id="editorjs"></div>
                 </div>
               </v-col>
             </v-row>
           </v-container>
         </v-card-text>
         <v-card-actions>
-          <!-- <v-btn
-            v-if="editor.readOnly"
+          <v-btn
+            v-if="readOnlyIndicator"
             text
-            color="secondary"
-            @click="editor.readOnly.toggle()"
+            color="primary"
+            @click="toggle()"
           >
             編集
-          </v-btn> -->
-          <v-btn
-            text
-            color="secondary"
-            :disabled="invalid"
-            @click="save()"
-          >
-            更新
           </v-btn>
-          <v-btn
-            text
-            color="secondary"
-            @click="editor.readOnly.toggle()"
+          <template
+              v-else
           >
-           toggle
-          </v-btn>
-          <v-btn
+            <v-btn
+              text
+              color="primary"
+              :disabled="invalid"
+              @click="save(); toggle()"
+            >
+              更新
+            </v-btn>
+            <v-btn
+              text
+              color="secondary"
+              @click="toggle()"
+            >
+              取消
+            </v-btn>
+          </template>
+          <!-- <v-btn
             text
             color="secondary"
             @click="set()"
           >
             test
-          </v-btn>
+          </v-btn> -->
         </v-card-actions>
       </form>
     </validation-observer>
@@ -103,7 +107,9 @@ import { ValidationObserver } from 'vee-validate';
 export default {
   data() {
     return {
+      readOnlyIndicator: true,
       editor: undefined,
+      
       formData: {
         title: '',
         page_number: '',
@@ -115,15 +121,15 @@ export default {
   components: {
     TextInput,
     SelectStudyMaterial,
-    EditorJS,
     ValidationObserver,
   },
+  computed:{
+    ...mapGetters('studyNote', ['studyNotes']),
+  },
   methods: {
-    ...mapActions('studyNote', ['createStudyNote']),
+    ...mapActions('studyNote', ['getStudyNotes','createStudyNote']),
     save() {
       this.editor.save().then(savedData => {
-        console.log("savedData");
-        console.log(savedData);
         this.formData.rich_text = JSON.stringify(savedData);
         this.createStudyNote({
           formData: this.formData
@@ -132,7 +138,7 @@ export default {
     },
     set() {
       this.editor.render(
-        JSON.parse('{"time":1629208496936,"blocks":[{"id":"9sPirmmGKl","type":"paragraph","data":{"text":"test"}},{"id":"XYlvmZsAO7","type":"paragraph","data":{"text":""}},{"id":"_ttoq2nNB2","type":"paragraph","data":{"text":"test"}},{"id":"vuJ_OUxEwr","type":"paragraph","data":{"text":""}}],"version":"2.22.2"}')
+        JSON.parse(this.studyNotes[0]["rich_text"])
       )
     },
     init() {
@@ -166,18 +172,24 @@ export default {
               placeholder: 'Checklist'
             },
           },
-          Marker: {
+          marker: {
             class: Marker,
           }
         },
-        readOnly: false,
+        readOnly: true,
         defaultBlock: "paragraph",
-        data: JSON.parse('{"time":1629208496936,"blocks":[{"id":"9sPirmmGKl","type":"paragraph","data":{"text":"test"}},{"id":"XYlvmZsAO7","type":"paragraph","data":{"text":""}},{"id":"_ttoq2nNB2","type":"paragraph","data":{"text":"test"}},{"id":"vuJ_OUxEwr","type":"paragraph","data":{"text":""}}],"version":"2.22.2"}')
+        onChange: () => {console.log(this.editor)}
       });
     },
+    async toggle(){
+        this.readOnlyIndicator = await this.editor.readOnly.toggle();
+    }
   },
   mounted() {
     this.init();
-  },
+    },
+  created() {
+    this.getStudyNotes()
+  }
 }
 </script>
