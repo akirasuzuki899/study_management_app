@@ -40,7 +40,9 @@ services:
     
 
   db:
-    image: mysql:8.0.21
+    build: 
+      context: ./back
+      dockerfile: Dockerfile.mysql
     container_name: mysql
     command: mysqld --skip-character-set-client-handshake --default-authentication-plugin=mysql_native_password
     volumes:
