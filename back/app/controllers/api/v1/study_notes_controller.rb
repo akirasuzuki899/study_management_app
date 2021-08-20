@@ -5,9 +5,12 @@ module Api
       before_action :correct_user, only: [:update, :destroy]
 
       def index
-        # @study_notes = current_user.study_notes.page(params[:page]).per(10)
-        @study_notes = current_user.study_notes
-        render json: { study_notes: @study_notes }
+        study_notes = current_user.study_notes
+        study_materials = current_user.study_materials
+        render json: { 
+          study_notes: study_notes,
+          tree_view: ActiveModelSerializers::SerializableResource.new(study_materials, each_serializer: TreeViewSerializer).as_json
+        }
       end
       
       def create
