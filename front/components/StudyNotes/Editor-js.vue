@@ -1,34 +1,60 @@
 <template>
   <v-card>
+
+    <v-toolbar dense>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+    </v-toolbar>
+    <v-navigation-drawer
+      v-model="drawer"
+      temporary
+      absolute
+    >
+        <v-treeview
+          hoverable
+          :items="treeView"
+        >
+          <template v-slot:label="props">
+            <div v-if="props.item.children">
+              {{props.item.title}}
+            </div>
+            <v-btn v-else>
+              {{props.item.title}}
+            </v-btn>
+          </template>
+        </v-treeview>
+    </v-navigation-drawer>
+
     <validation-observer
       ref="observer"
       v-slot="{ invalid }"
     >
       <form>
-        <v-card-text
-          class="d-flex justify-center"
-        >
-          <v-row 
-            style="max-width:650px"
+        <v-card-text>
+          <v-container
+            class="d-flex justify-center"
           >
-            <v-col cols="12" sm="12" md="12">
-              <TextInput
-                v-model="formData.title"
-                name="タイトル"
-                label="タイトル"
-                rules="max:50"
-                :dense="true"
-                :disabled="readOnlyIndicator"
-              ></TextInput>
-            </v-col>
-            <v-col cols="12" sm="12" md="12">
-              <SelectStudyMaterial
-                v-model="formData.study_material_id"
-                :dense="true"
-                :disabled="readOnlyIndicator"
-              ></SelectStudyMaterial>
-            </v-col>
-          </v-row>
+            <v-row 
+              style="max-width:650px"
+            >
+              <v-col cols="12" sm="12" md="12">
+                <TextInput
+                  v-model="formData.title"
+                  name="タイトル"
+                  label="タイトル"
+                  rules="max:50"
+                  :dense="true"
+                  :disabled="readOnlyIndicator"
+                ></TextInput>
+              </v-col>
+              <v-col cols="12" sm="12" md="12">
+                <SelectStudyMaterial
+                  v-model="formData.study_material_id"
+                  :dense="true"
+                  :disabled="readOnlyIndicator"
+                ></SelectStudyMaterial>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-card-text>
         <v-card-text>
           <v-container>
@@ -103,6 +129,7 @@ export default {
     return {
       readOnlyIndicator: true,
       selectedNote: {},
+      drawer: false,
       editor: undefined,
       item: this.treeview,
       formData: {
