@@ -8,11 +8,13 @@ export const state = () => ({
     rich_text: '',
     created_at: '',
     updated_at: '',
-  }
+  },
+  treeView: []
 })
 
 export const getters = {
-  studyNotes: state => state.studyNotes
+  studyNotes: state => state.studyNotes,
+  treeView: state => state.treeView,
 };
 
 export const mutations = {
@@ -30,6 +32,9 @@ export const mutations = {
     const index = state.studyNotes.findIndex((v) => v.id === study_note.id);
     state.studyNotes.splice(index, 1)
   },
+  setTreeView(state, tree_view) {
+    state.treeView = tree_view
+  }
 };
 export const actions = {
   getStudyNotes( { commit } ) {
@@ -39,6 +44,7 @@ export const actions = {
         console.log("success")
         console.log(data)
         commit("setStudyNotes", data.study_notes)
+        commit("setTreeView", data.tree_view)
       });
   },
   createStudyNote( { commit, dispatch } , { formData } ) {
