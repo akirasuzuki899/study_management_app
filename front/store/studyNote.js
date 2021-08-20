@@ -70,11 +70,11 @@ export const actions = {
         console.log(error.response);
       })
   },
-  updateStudyNote( { commit, dispatch }, { selectedNote, formData } )  {
+  updateStudyNote( { commit, dispatch }, { selectedNoteID, formData } )  {
     dispatch("snackbar/processMessage", '更新しています...', { root: true })
     this.$axios
       .put(
-        '/api/v1/study_notes/' + selectedNote.id,
+        '/api/v1/study_notes/' + selectedNoteID,
         {
           title: formData.title,
           study_material_id: formData.study_material_id,
@@ -90,14 +90,14 @@ export const actions = {
         console.log(error);
       })
   },
-  deleteStudyNote( { commit, dispatch }, { selectedNote } ) {
+  deleteStudyNote( { commit, dispatch }, { selectedNoteID } ) {
     dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios
-      .delete('/api/v1/study_notes/' + selectedNote.id)
+      .delete('/api/v1/study_notes/' + selectedNoteID)
       .then(({ data }) => {
         console.log("success")
         console.log(data.study_note)
-        console.log(selectedNote)
+        console.log(selectedNoteID)
         commit("destroyStudyNote", data.study_note)
         dispatch("snackbar/successMessage", '削除しました', { root: true })
       })

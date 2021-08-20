@@ -13,13 +13,38 @@
           hoverable
           :items="treeView"
         >
-          <template v-slot:label="props">
-            <div v-if="props.item.children">
-              {{props.item.title}}
+          <template v-slot:prepend="{ item }">
+            <v-img
+              aspect-ratio="1"
+              :src="item.image_url"
+            ></v-img>
+          </template>
+          
+          <template v-slot:label="{ item }">
+            <div 
+              v-if="item.children"
+              class="text-truncate"
+            >
+              {{item.title}}
             </div>
-            <v-btn v-else>
-              {{props.item.title}}
+            <v-btn 
+              v-else
+              block
+              text
+              class="text-truncate"
+              @click="setNote(item)"
+            >
+              {{item.title}}
             </v-btn>
+          </template>
+
+          <template v-slot:append="{ item }">
+            <v-icon
+              v-if="item.children"
+              @click="newNote(item.id)"
+            >
+              mdi-plus
+            </v-icon>
           </template>
         </v-treeview>
     </v-navigation-drawer>
@@ -85,7 +110,7 @@
               text
               color="primary"
               :disabled="invalid"
-              @click="save(); toggle()"
+              @click="saveNote(); toggle()"
             >
               更新
             </v-btn>
@@ -97,13 +122,6 @@
               取消
             </v-btn>
           </template>
-          <!-- <v-btn
-            text
-            color="secondary"
-            @click="set()"
-          >
-            test
-          </v-btn> -->
         </v-card-actions>
       </form>
     </validation-observer>
@@ -128,10 +146,9 @@ export default {
   data() {
     return {
       readOnlyIndicator: true,
-      selectedNote: {},
+      selectedNoteID: '',
       drawer: false,
       editor: undefined,
-      item: this.treeview,
       formData: {
         title: 'untitled',
         study_material_id: '',
@@ -148,40 +165,41 @@ export default {
     ...mapGetters('studyNote', ['studyNotes', 'treeView']),
     ...mapGetters('studyMaterial', ['studyMaterials']),
   },
-  // watch: {
-  //   studyMaterials: {
-  //     deep: true,
-  //     handler: 'treeview',
-  //   }
-  // },
   methods: {
     ...mapActions('studyNote', ['getStudyNotes','createStudyNote','updateStudyNote']),
     ...mapActions('studyMaterial', ['getStudyMaterials']),
-    save() {
+    saveNote() {
       this.editor.save().then(savedData => {
         this.formData.rich_text = JSON.stringify(savedData);
 
-        this.selectedNote.id
-         ? this.updateStudyNote({formData: this.formData})
-         : this.createStudyNote({formData: this.formData})
+        this.selectedNoteID
+         ? this.updateStudyNote({formData: this.formData, selectedNoteID: this.selectedNoteID})
+         : this.createStudyNote({formData: this.formData, selectedNoteID: this.selectedNoteID})
+        
+        this.toggle
       });
     },
-    set() {
+    setNote(note){
+      console.log(note)
+      this.selectedNoteID = note.id
+      this.formData.title = note.title
+      this.formData.study_material_id = note.study_material_id
       this.editor.render(
-        JSON.parse(this.studyNotes[0]["rich_text"])
+        JSON.parse(note.rich_text)
       )
+      this.drawer = false
     },
-    // treeview(){
-    //   if(this.studyMaterials.length){
-    //     console.log("testttttttt")
-    //     console.log(this.studyMaterials)
-    //     console.log(this.studyMaterials.length)
-    //   }else{
-    //     console.log("aaaaaaaaaa")
-    //     console.log(this.studyMaterials)
-    //   }
-    // },
-    init() {
+    newNote(study_material_id){
+      console.log('newNote')
+      this.formData.study_material_id = study_material_id
+      this.formData.rich_text = {}
+      this.formData.title = "untitled"
+      this.selectedNoteID = ''
+      this.editor.clear();
+      if(this.readOnlyIndicator)this.toggle()
+      this.drawer = false
+    },
+    initEditor() {
       this.editor = new EditorJS({
         holder: "editorjs",
         theme: 'dark',
@@ -218,16 +236,15 @@ export default {
         },
         readOnly: true,
         defaultBlock: "paragraph",
-        onChange: () => {console.log(this.editor)}
       });
     },
     async toggle(){
         this.readOnlyIndicator = await this.editor.readOnly.toggle();
+        if(!this.readOnlyIndicator) this.editor.caret.setToLastBlock('start', 0)
     }
   },
   mounted() {
-    this.init();
-    this.treeview
+    this.initEditor();
     },
   created() {
     this.getStudyNotes()
