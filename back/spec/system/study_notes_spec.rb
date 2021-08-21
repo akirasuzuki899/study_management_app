@@ -18,7 +18,6 @@
 #     FactoryBot.create(
 #       :study_note,
 #       title: '最初の教材メモ',
-#       page_number: '1',
 #       content: 'rich_text',
 #       user: user_a,
 #       study_material: study_material_a

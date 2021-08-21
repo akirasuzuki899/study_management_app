@@ -1,54 +1,100 @@
 <template>
-  <v-app>
-    <h1>フォーム</h1>
-    <form @submit.prevent="createNotes">
-      <div>
-        <label id="title">タイトル</label>
-        <input v-model="title" type="text">
-      </div>
-      <div>
-        <label>ページ数</label>
-        <input v-model="page_number" type="number" min="0">
-      </div>
-      <div>
-        <label>教材</label>
-        <v-select 
-          :items="studymaterials"
-          item-text="title"
-          item-value="id"
-          v-model="study_material_id" 
-        />
-      </div>
-      <div>
-        <label>コンテンツ</label>
-        <VueTrix inputId="editor1" @trix-attachment-add="handleAttachmentChanges" v-model="content" placeholder="Enter content"/>    
-      </div>
-      <button type="submit">Commit</button>
-    </form>
-  </v-app>
+  <v-card>
+    <v-card-title>
+      <span class="headline">新規作成</span>
+    </v-card-title>
+    <validation-observer
+          ref="observer"
+          v-slot="{ invalid }"
+    >
+      <form>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12" sm="12" md="12">
+                <TextInput
+                  v-model="formData.title"
+                  name="タイトル"
+                  label="タイトル"
+                  rules="required|max:50"
+                  :dense="true"
+                ></TextInput>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="12" md="12">
+                <SelectStudyMaterial
+                  v-model="formData.study_material_id"
+                  :dense="true"
+                ></SelectStudyMaterial>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="12" md="12">
+                <TextInput
+                  v-model="formData.page_number"
+                  name="ページ数"
+                  label="ページ数"
+                  rules="required|max:6"
+                  :dense="true"
+                ></TextInput>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="12" md="12">
+                <VueTrix 
+                  inputId="editor1" 
+                  @trix-attachment-add="handleAttachmentChanges" 
+                  v-model="formData.content" 
+                  placeholder="Enter content"
+                ></VueTrix>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            text
+            color="secondary"
+            :disabled="invalid"
+            @click="createNotes()"
+          >
+            更新
+          </v-btn>
+        </v-card-actions>
+      </form>
+    </validation-observer>
+  </v-card>
 </template>
 
 
 <script>
-import axios from "axios";
+import axios from "@nuxtjs/axios"
+import TextInput from "../Form/BaseTextInput";
+import SelectStudyMaterial from "../Form/SelectStudyMaterial";
 import VueTrix from "vue-trix";
 import { DirectUpload } from "@rails/activestorage";
-const Host = 'http://localhost:3000/';
+
+import { ValidationObserver } from 'vee-validate';
+
+const Host = axios.baseURL
 
 export default {
   data() {
     return {
-      title: '',
-      page_number: '',
-      study_material_id: '',
-      content: '',
-      sgid: '',
-      studynotes: [],
-      studymaterials: [],
+      formData: {
+        title: '',
+        page_number: '',
+        study_material_id: '',
+        content: '',
+      }
     }
   },
   components: {
-    VueTrix
+    TextInput,
+    SelectStudyMaterial,
+    VueTrix,
+    ValidationObserver,
   },
   methods: {
     handleAttachmentChanges(event) {
@@ -56,7 +102,7 @@ export default {
       let file = event.attachment.file;
   
       // 2. upload file to remote server with FormData
-        const upload = new DirectUpload(file, "http://localhost:3000/rails/active_storage/direct_uploads");
+        const upload = new DirectUpload(file, Host + "rails/active_storage/direct_uploads");
         console.log(upload);
         upload.create((error, blob) => {
           if(error){
@@ -91,14 +137,6 @@ export default {
           console.log(error);
         });
     }
-  },
-  created() {
-    axios
-      .get('/api/v1/study_materials')
-      .then(response => {
-        console.log(response);
-        this.studymaterials = response.data.data;
-      });
   },
 }
 </script>>

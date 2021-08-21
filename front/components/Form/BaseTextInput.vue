@@ -13,6 +13,7 @@
       @focus="$emit('focus', $event)"
       :error-messages="errors"
       :dense="dense"
+      :disabled="disabled"
       :append-icon="appendIcon"
       :append-outer-icon="appendOuterIcon"
       :prepend-icon="prependIcon"
@@ -55,6 +56,10 @@ export default {
       default: undefined
     },
     dense: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     },

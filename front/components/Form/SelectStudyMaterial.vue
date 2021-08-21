@@ -8,6 +8,7 @@
     item-text="title"
     item-value="id"
     :dense="dense"
+    :disabled="disabled"
     :no-data-text="noDataText"
     rules="required"
   ></BaseSelect>
@@ -34,7 +35,11 @@ export default {
     dense: {
       type: Boolean,
       default: false
-    }
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
   },
   data: () => ({
     noDataText: '教材を追加して下さい'

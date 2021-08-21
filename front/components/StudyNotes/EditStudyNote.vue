@@ -1,6 +1,5 @@
 <template>
-  <v-app>
-    <h1>フォーム</h1>
+  <div>
     <form @submit.prevent="updateNote">
       <div>
         <label id="title">タイトル</label>
@@ -25,15 +24,14 @@
       </div>
       <button type="submit">Commit</button>
     </form>
-  </v-app>
+  </div>
 </template>
 
 
 <script>
-import axios from "axios";
 import VueTrix from "vue-trix";
 import { DirectUpload } from "@rails/activestorage";
-const Host = 'http://localhost:3000/';
+const Host = this.$axios.defaults.baseURL
 
 export default {
   props: ["id"],
@@ -59,7 +57,7 @@ export default {
       let file = event.attachment.file;
   
       // 2. upload file to remote server with FormData
-      const upload = new DirectUpload(file, "http://localhost:3000/rails/active_storage/direct_uploads");
+      const upload = new DirectUpload(file, Host + "rails/active_storage/direct_uploads");
       upload.create((error, blob) => {
         if(error){
           console.log(error);

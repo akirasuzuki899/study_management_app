@@ -15,6 +15,7 @@
       :error-messages="errors"
       :prepend-icon="prependIcon"
       :dense="dense"
+      :disabled="disabled"
       :no-data-text="noDataText"
     >
       <template v-slot:no-data>
@@ -74,6 +75,10 @@ export default {
       default: undefined
     },
     dense: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     },

@@ -25,7 +25,7 @@ export default {
       .then(response => {
         console.log(response);
         this.studynote = response.data.data;
-        this.content = response.data.data.get_content;
+        this.content = response.data.data.rich_text;
       });
   },
 }
