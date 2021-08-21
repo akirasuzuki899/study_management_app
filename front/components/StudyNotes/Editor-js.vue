@@ -273,7 +273,7 @@ export default {
                */
               uploader: {
                 uploadByFile(file){
-                  const Host = 'http://localhost:3000/'
+                  const Host = this.$axios.defaults.baseURL
                   const upload = new DirectUpload(file, Host + "rails/active_storage/direct_uploads")
 
                   return new Promise((resolve, reject) => {
