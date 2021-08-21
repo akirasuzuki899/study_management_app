@@ -163,7 +163,9 @@ import List from "@editorjs/list";
 import Paragraph from "@editorjs/paragraph";
 import Checklist from "@editorjs/checklist";
 import Marker from "@editorjs/marker";
+import ImageTool from '@editorjs/image';
 
+import { DirectUpload } from "@rails/activestorage";
 import { ValidationObserver } from 'vee-validate';
 
 export default {
@@ -262,6 +264,50 @@ export default {
           },
           marker: {
             class: Marker,
+          },
+          image: {
+            class: ImageTool,
+            config: {
+              /**
+               * Custom uploader
+               */
+              uploader: {
+                uploadByFile(file){
+                  const Host = 'http://localhost:3000/'
+                  const upload = new DirectUpload(file, Host + "rails/active_storage/direct_uploads")
+
+                  return new Promise((resolve, reject) => {
+                    upload.create((error, blob) => {
+                      if(error){
+                        reject(error)
+                      } else {
+                        resolve(blob)
+                      }
+                    })
+                  }).then((blob) => {
+                    return {
+                      success: 1,
+                      file: {
+                        url: Host + "rails/active_storage/blobs/" + blob.signed_id + "/" + blob.filename,
+                      }
+                    };
+                  })
+                },
+                uploadByUrl(url){
+                  // your ajax request for uploading
+                  return MyAjax.upload(file).then(() => {
+                    return {
+                      success: 1,
+                      file: {
+                        url: 'https://codex.so/upload/redactor_images/o_e48549d1855c7fc1807308dd14990126.jpg',
+                        // any other image data you want to store, such as width, height, color, extension, etc
+                        height: 80
+                      }
+                    }
+                  })
+                }
+              }
+            }
           }
         },
         readOnly: true,
@@ -278,6 +324,8 @@ export default {
   },
   mounted() {
     this.initEditor();
+    console.log("this.Host")
+    console.log(this.Host)
   },
   created() {
     this.getStudyNotes()
