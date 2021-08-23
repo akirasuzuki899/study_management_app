@@ -56,7 +56,7 @@ export default {
   // },
   publicRuntimeConfig: {
     axios: {
-      baseURL: process.env.BASE_URL || 'http://localhost:3000/'
+      baseURL: process.env.BASE_URL || 'http://localhost:3000'
     }
   },
 
