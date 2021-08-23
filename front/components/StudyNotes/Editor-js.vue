@@ -232,6 +232,8 @@ export default {
       this.selectedNoteID = ''
     },
     initEditor() {
+      const Host = this.$axios.defaults.baseURL
+      
       this.editor = new EditorJS({
         holder: "editorjs",
         theme: 'dark',
@@ -268,12 +270,9 @@ export default {
           image: {
             class: ImageTool,
             config: {
-              /**
-               * Custom uploader
-               */
+
               uploader: {
                 uploadByFile(file){
-                  const Host = this.$axios.defaults.baseURL
                   const upload = new DirectUpload(file, Host + "rails/active_storage/direct_uploads")
 
                   return new Promise((resolve, reject) => {
@@ -324,8 +323,6 @@ export default {
   },
   mounted() {
     this.initEditor();
-    console.log("this.Host")
-    console.log(this.Host)
   },
   created() {
     this.getStudyNotes()
