@@ -273,7 +273,7 @@ export default {
 
               uploader: {
                 uploadByFile(file){
-                  const upload = new DirectUpload(file, Host + "rails/active_storage/direct_uploads")
+                  const upload = new DirectUpload(file, Host + "/rails/active_storage/direct_uploads")
 
                   return new Promise((resolve, reject) => {
                     upload.create((error, blob) => {
@@ -287,7 +287,7 @@ export default {
                     return {
                       success: 1,
                       file: {
-                        url: Host + "rails/active_storage/blobs/" + blob.signed_id + "/" + blob.filename,
+                        url: Host + "/rails/active_storage/blobs/" + blob.signed_id + "/" + blob.filename,
                       }
                     };
                   })
