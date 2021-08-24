@@ -6,4 +6,11 @@ class StudyNote < ApplicationRecord
   validates :study_material_id, presence: true
   validates :title, presence: true, length: { maximum: 50 }
   validates :rich_text, presence: true
+
+  def rich_text_changed?(params)
+    old_rich_text = JSON.parse(self.rich_text)["blocks"]
+    new_rich_text = JSON.parse(params[:rich_text])["blocks"]
+
+    return old_rich_text != new_rich_text ? true : false
+  end
 end

@@ -23,6 +23,8 @@ module Api
       end
 
       def update
+        @study_note.rich_text_changed?(params)
+        debugger
         if @study_note.update(study_note_params)
           render json: { study_note: @study_note }
         else
