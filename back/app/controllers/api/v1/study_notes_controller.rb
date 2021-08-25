@@ -23,8 +23,8 @@ module Api
       end
 
       def update
-        @study_note.rich_text_changed?(params)
-        debugger
+        if sgids = @study_note.files_deleted?(params[:rich_text]) then @study_note.delete_files(sgids) end
+        
         if @study_note.update(study_note_params)
           render json: { study_note: @study_note }
         else
@@ -47,6 +47,7 @@ module Api
         @study_note = current_user.study_notes.find(params[:id])
         redirect_to root_url if @study_note.nil?
       end
+
     end
   end
 end
