@@ -14,7 +14,12 @@ module Api
       end
       
       def create
+        new_rich_text = study_note_params[:rich_text]
+        old_rich_text = nil
         @study_note = current_user.study_notes.build(study_note_params)
+        
+        if sgids = @study_note.files_added?(new_rich_text, old_rich_text) then @study_note.attach_files(sgids) end
+
         if @study_note.save
           render json: { study_note: @study_note }
         else
@@ -23,8 +28,12 @@ module Api
       end
 
       def update
-        if sgids = @study_note.files_deleted?(params[:rich_text]) then @study_note.delete_files(sgids) end
-        
+        new_rich_text = study_note_params[:rich_text]
+        old_rich_text = @study_note.rich_text
+
+        if sgids = @study_note.files_deleted?(new_rich_text, old_rich_text) then @study_note.delete_files(sgids) end
+        if sgids = @study_note.files_added?(new_rich_text, old_rich_text)   then @study_note.attach_files(sgids) end
+
         if @study_note.update(study_note_params)
           render json: { study_note: @study_note }
         else
