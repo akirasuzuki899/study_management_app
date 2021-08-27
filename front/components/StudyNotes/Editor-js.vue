@@ -167,6 +167,7 @@ import ImageTool from '@editorjs/image';
 
 import { DirectUpload } from "@rails/activestorage";
 import { ValidationObserver } from 'vee-validate';
+import axios from '@nuxtjs/axios'
 
 export default {
   data() {
@@ -233,6 +234,7 @@ export default {
     },
     initEditor() {
       const Host = this.$axios.defaults.baseURL
+      const axios = this.$axios
       let previousCount = 0
       
       this.editor = new EditorJS({
@@ -295,16 +297,20 @@ export default {
                   })
                 },
                 uploadByUrl(url){
-                  // your ajax request for uploading
-                  return MyAjax.upload(file).then(() => {
-                    return {
-                      success: 1,
-                      file: {
-                        url: 'https://codex.so/upload/redactor_images/o_e48549d1855c7fc1807308dd14990126.jpg',
-                        height: '80',
+                  return axios
+                    .post(Host + "/api/v1/study_notes/download", {
+                      url: url,
+                      title: "test"
+                    })
+                    .then(({ data }) => {
+                      return {
+                        success: 1,
+                        file: {
+                          url: Host + "/rails/active_storage/blobs/" + data.signed_id + "/" + data.filename,
+                          sgid: data.signed_id,
+                        }
                       }
-                    }
-                  })
+                    })
                 }
               }
             }

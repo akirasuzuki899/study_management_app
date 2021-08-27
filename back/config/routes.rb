@@ -13,7 +13,11 @@ Rails.application.routes.draw do
       resources :mandala_charts
       resources :mandala_items
       resources :study_records
-      resources :study_notes
+      resources :study_notes do
+        collection do
+          post :download
+        end
+      end
       resources :study_materials do
         collection do
           get :search
