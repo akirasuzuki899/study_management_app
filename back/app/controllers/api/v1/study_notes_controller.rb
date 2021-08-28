@@ -4,6 +4,8 @@ module Api
       before_action :authenticate_user!
       before_action :correct_user, only: [:update, :destroy]
 
+      require 'open-uri'
+
       def index
         study_notes = current_user.study_notes
         study_materials = current_user.study_materials
@@ -59,14 +61,18 @@ module Api
 
           new_file = ActiveStorage::Blob.create_and_upload!(
             io: StringIO.new(original_file.download),
-            filename: original_file.filename.to_s,
-            content_type: original_file.content_type,
+            filename: original_file.filename.to_s
           )
 
           render json: { signed_id: new_file.signed_id(), filename: new_file.filename }
 
         else
+          new_file = ActiveStorage::Blob.create_and_upload!(
+            io: open(url),
+            filename:  File.basename(url.path)
+          )
 
+          render json: { signed_id: new_file.signed_id(), filename: new_file.filename }
         end
         
       end

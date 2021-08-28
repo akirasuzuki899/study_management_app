@@ -297,6 +297,7 @@ export default {
                   })
                 },
                 uploadByUrl(url){
+                  console.log("uploadByUrl")
                   return axios
                     .post(Host + "/api/v1/study_notes/download", {
                       url: url,
@@ -322,10 +323,10 @@ export default {
           // if(ev.blocks.getBlocksCount() < previousCount)
           // {
             // console.log(document.querySelectorAll('.image-tool__image-picture'))
-            document.querySelectorAll('.image-tool__image-picture').forEach((img) => {
-              console.log("img.src")
-              console.log(img.src)
-            })
+            // document.querySelectorAll('.image-tool__image-picture').forEach((img) => {
+            //   console.log("img.src")
+            //   console.log(img.src)
+            // })
           // }
           // {
           //   let noMatch = [...that.imagesUploaded]
@@ -340,8 +341,8 @@ export default {
           //   }
           // }
           // else{
-            previousCount = ev.blocks.getBlocksCount()
-            console.log(previousCount)
+            // previousCount = ev.blocks.getBlocksCount()
+            // console.log(previousCount)
           // }
         },
 
