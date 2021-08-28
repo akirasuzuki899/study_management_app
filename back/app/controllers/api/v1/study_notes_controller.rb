@@ -54,9 +54,8 @@ module Api
         host = request.domain
 
         if host == download_host
-          
-          path = url.path
-          signed_id = get_signed_id(path)
+
+          signed_id = get_signed_id(url.path)
           original_file = ActiveStorage::Blob.find_signed(signed_id)
 
           new_file = ActiveStorage::Blob.create_and_upload!(
@@ -64,18 +63,22 @@ module Api
             filename: original_file.filename.to_s
           )
 
-          render json: { signed_id: new_file.signed_id(), filename: new_file.filename }
+          new_file ? ( render json: { signed_id: new_file.signed_id(), filename: new_file.filename } )
+                   : ( render json: { message: 'ERROR' }, status: 400 )
 
         else
+
           new_file = ActiveStorage::Blob.create_and_upload!(
             io: open(url),
             filename:  File.basename(url.path)
           )
 
-          render json: { signed_id: new_file.signed_id(), filename: new_file.filename }
+          new_file ? ( render json: { signed_id: new_file.signed_id(), filename: new_file.filename } )
+                   : ( render json: { message: 'ERROR' }, status: 400 )
+
         end
-        
       end
+      
       
       private
 
