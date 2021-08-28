@@ -4,6 +4,8 @@ module Api
       before_action :authenticate_user!
       before_action :correct_user, only: [:update, :destroy]
 
+      require 'open-uri'
+
       def index
         study_notes = current_user.study_notes
         study_materials = current_user.study_materials
@@ -17,7 +19,7 @@ module Api
         new_rich_text = study_note_params[:rich_text]
         old_rich_text = nil
         @study_note = current_user.study_notes.build(study_note_params)
-        
+
         if sgids = @study_note.files_added?(new_rich_text, old_rich_text) then @study_note.attach_files(sgids) end
 
         if @study_note.save
@@ -46,6 +48,38 @@ module Api
         render json: { study_note: @study_note }
       end
 
+      def download
+        url = URI.parse(params[:url])
+        download_host = url.host
+        host = request.domain
+
+        if host == download_host
+
+          signed_id = get_signed_id(url.path)
+          original_file = ActiveStorage::Blob.find_signed(signed_id)
+
+          new_file = ActiveStorage::Blob.create_and_upload!(
+            io: StringIO.new(original_file.download),
+            filename: original_file.filename.to_s
+          )
+
+          new_file ? ( render json: { signed_id: new_file.signed_id(), filename: new_file.filename } )
+                   : ( render json: { message: 'ERROR' }, status: 400 )
+
+        else
+
+          new_file = ActiveStorage::Blob.create_and_upload!(
+            io: open(url),
+            filename:  File.basename(url.path)
+          )
+
+          new_file ? ( render json: { signed_id: new_file.signed_id(), filename: new_file.filename } )
+                   : ( render json: { message: 'ERROR' }, status: 400 )
+
+        end
+      end
+      
+      
       private
 
       def study_note_params
@@ -55,6 +89,20 @@ module Api
       def correct_user
         @study_note = current_user.study_notes.find(params[:id])
         redirect_to root_url if @study_note.nil?
+      end
+
+      def get_signed_id(path)
+
+        if path.include?("/rails/active_storage/blobs/redirect/")
+          path[/rails\/active_storage\/blobs\/redirect\/(.+--.+)\//, 1]
+
+        elsif path.include?("/rails/active_storage/blobs/proxy/")
+          path[/rails\/active_storage\/blobs\/proxy\/(.+--.+)\//, 1]
+
+        elsif path.include?("/rails/active_storage/blobs/")
+          path[/rails\/active_storage\/blobs\/(.+--.+)\//, 1]
+        end
+
       end
 
     end

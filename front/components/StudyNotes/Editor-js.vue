@@ -167,6 +167,7 @@ import ImageTool from '@editorjs/image';
 
 import { DirectUpload } from "@rails/activestorage";
 import { ValidationObserver } from 'vee-validate';
+import axios from '@nuxtjs/axios'
 
 export default {
   data() {
@@ -233,6 +234,7 @@ export default {
     },
     initEditor() {
       const Host = this.$axios.defaults.baseURL
+      const axios = this.$axios
       let previousCount = 0
       
       this.editor = new EditorJS({
@@ -295,16 +297,21 @@ export default {
                   })
                 },
                 uploadByUrl(url){
-                  // your ajax request for uploading
-                  return MyAjax.upload(file).then(() => {
-                    return {
-                      success: 1,
-                      file: {
-                        url: 'https://codex.so/upload/redactor_images/o_e48549d1855c7fc1807308dd14990126.jpg',
-                        height: '80',
+                  console.log("uploadByUrl")
+                  return axios
+                    .post(Host + "/api/v1/study_notes/download", {
+                      url: url,
+                      title: "test"
+                    })
+                    .then(({ data }) => {
+                      return {
+                        success: 1,
+                        file: {
+                          url: Host + "/rails/active_storage/blobs/" + data.signed_id + "/" + data.filename,
+                          sgid: data.signed_id,
+                        }
                       }
-                    }
-                  })
+                    })
                 }
               }
             }
@@ -316,10 +323,10 @@ export default {
           // if(ev.blocks.getBlocksCount() < previousCount)
           // {
             // console.log(document.querySelectorAll('.image-tool__image-picture'))
-            document.querySelectorAll('.image-tool__image-picture').forEach((img) => {
-              console.log("img.src")
-              console.log(img.src)
-            })
+            // document.querySelectorAll('.image-tool__image-picture').forEach((img) => {
+            //   console.log("img.src")
+            //   console.log(img.src)
+            // })
           // }
           // {
           //   let noMatch = [...that.imagesUploaded]
@@ -334,8 +341,8 @@ export default {
           //   }
           // }
           // else{
-            previousCount = ev.blocks.getBlocksCount()
-            console.log(previousCount)
+            // previousCount = ev.blocks.getBlocksCount()
+            // console.log(previousCount)
           // }
         },
 
