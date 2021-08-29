@@ -78,7 +78,20 @@ module Api
 
         end
       end
-      
+
+      # def url_metadata
+      #   if meta = MetaInspector.new(params[:url])
+      #     render json: {
+      #       success: 1,
+      #       meta: {
+      #         title: meta.title,
+      #         description: meta.description,
+      #         image: { url: meta.image}}}
+      #   else
+      #     render json: { message: 'ERROR' }, status: 400 
+      #   end
+      # end
+
       
       private
 

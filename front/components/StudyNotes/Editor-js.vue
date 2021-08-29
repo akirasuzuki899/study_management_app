@@ -55,11 +55,10 @@
       >
         <form>
           <v-card-text>
-            <v-container
-              class="d-flex justify-center"
-            >
+            <v-container>
               <v-row 
                 style="max-width:650px"
+                class="mx-auto"
               >
                 <v-col cols="12" sm="12" md="12">
                   <TextInput
@@ -163,11 +162,11 @@ import List from "@editorjs/list";
 import Paragraph from "@editorjs/paragraph";
 import Checklist from "@editorjs/checklist";
 import Marker from "@editorjs/marker";
+// import LinkTool from '@editorjs/link'
 import ImageTool from '@editorjs/image';
 
 import { DirectUpload } from "@rails/activestorage";
 import { ValidationObserver } from 'vee-validate';
-import axios from '@nuxtjs/axios'
 
 export default {
   data() {
@@ -235,7 +234,6 @@ export default {
     initEditor() {
       const Host = this.$axios.defaults.baseURL
       const axios = this.$axios
-      let previousCount = 0
       
       this.editor = new EditorJS({
         holder: "editorjs",
@@ -270,6 +268,12 @@ export default {
           marker: {
             class: Marker,
           },
+          // linkTool: {
+          //   class: LinkTool,
+          //   config: {
+          //     endpoint: Host + '/api/v1/study_notes/url_metadata', // Your backend endpoint for url data fetching
+          //   }
+          // },
           image: {
             class: ImageTool,
             config: {
@@ -317,36 +321,6 @@ export default {
             }
           }
         },
-
-
-        onChange: (ev) => {
-          // if(ev.blocks.getBlocksCount() < previousCount)
-          // {
-            // console.log(document.querySelectorAll('.image-tool__image-picture'))
-            // document.querySelectorAll('.image-tool__image-picture').forEach((img) => {
-            //   console.log("img.src")
-            //   console.log(img.src)
-            // })
-          // }
-          // {
-          //   let noMatch = [...that.imagesUploaded]
-          //   document.querySelectorAll('.image-tool__image-picture').forEach((img) => {
-          //       let indx = (img.src).match(/images%2F(.*?)\?alt/)[1]
-          //       noMatch.splice(noMatch.indexOf(indx, 1));
-          //   })
-          //   if(noMatch.length == 1)
-          //   {
-          //     storageRef(`${that.sessionId}/images/${noMatch[0]}`).delete()
-          //     that.imagesUploaded.splice(that.imagesUploaded.indexOf(noMatch[0]), 1)
-          //   }
-          // }
-          // else{
-            // previousCount = ev.blocks.getBlocksCount()
-            // console.log(previousCount)
-          // }
-        },
-
-
         readOnly: true,
         defaultBlock: "paragraph",
       });

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       resources :study_notes do
         collection do
           post :download
+          # get :url_metadata
         end
       end
       resources :study_materials do
