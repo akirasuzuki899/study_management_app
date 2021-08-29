@@ -167,7 +167,6 @@ import ImageTool from '@editorjs/image';
 
 import { DirectUpload } from "@rails/activestorage";
 import { ValidationObserver } from 'vee-validate';
-import axios from '@nuxtjs/axios'
 
 export default {
   data() {
@@ -235,7 +234,6 @@ export default {
     initEditor() {
       const Host = this.$axios.defaults.baseURL
       const axios = this.$axios
-      let previousCount = 0
       
       this.editor = new EditorJS({
         holder: "editorjs",
@@ -323,36 +321,6 @@ export default {
             }
           }
         },
-
-
-        onChange: (ev) => {
-          // if(ev.blocks.getBlocksCount() < previousCount)
-          // {
-            // console.log(document.querySelectorAll('.image-tool__image-picture'))
-            // document.querySelectorAll('.image-tool__image-picture').forEach((img) => {
-            //   console.log("img.src")
-            //   console.log(img.src)
-            // })
-          // }
-          // {
-          //   let noMatch = [...that.imagesUploaded]
-          //   document.querySelectorAll('.image-tool__image-picture').forEach((img) => {
-          //       let indx = (img.src).match(/images%2F(.*?)\?alt/)[1]
-          //       noMatch.splice(noMatch.indexOf(indx, 1));
-          //   })
-          //   if(noMatch.length == 1)
-          //   {
-          //     storageRef(`${that.sessionId}/images/${noMatch[0]}`).delete()
-          //     that.imagesUploaded.splice(that.imagesUploaded.indexOf(noMatch[0]), 1)
-          //   }
-          // }
-          // else{
-            // previousCount = ev.blocks.getBlocksCount()
-            // console.log(previousCount)
-          // }
-        },
-
-
         readOnly: true,
         defaultBlock: "paragraph",
       });
