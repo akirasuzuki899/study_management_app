@@ -55,11 +55,10 @@
       >
         <form>
           <v-card-text>
-            <v-container
-              class="d-flex justify-center"
-            >
+            <v-container>
               <v-row 
                 style="max-width:650px"
+                class="mx-auto"
               >
                 <v-col cols="12" sm="12" md="12">
                   <TextInput
@@ -163,6 +162,7 @@ import List from "@editorjs/list";
 import Paragraph from "@editorjs/paragraph";
 import Checklist from "@editorjs/checklist";
 import Marker from "@editorjs/marker";
+// import LinkTool from '@editorjs/link'
 import ImageTool from '@editorjs/image';
 
 import { DirectUpload } from "@rails/activestorage";
@@ -270,6 +270,12 @@ export default {
           marker: {
             class: Marker,
           },
+          // linkTool: {
+          //   class: LinkTool,
+          //   config: {
+          //     endpoint: Host + '/api/v1/study_notes/url_metadata', // Your backend endpoint for url data fetching
+          //   }
+          // },
           image: {
             class: ImageTool,
             config: {
