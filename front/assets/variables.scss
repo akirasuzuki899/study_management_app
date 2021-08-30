@@ -4,3 +4,95 @@
 // $font-size-root: 20px;
 $expansion-panel-header-padding: 0px;
 $expansion-panel-content-padding: 0px;
+
+// Editor.js の設定
+//チェックリスト
+.cdx-checklist__item-checkbox {
+  width: 10px;
+  height: 10px;
+  margin-top: 10px;
+}
+.cdx-checklist__item-checkbox::after {
+  top: 3px;
+  left: 2px;
+  width: 4.5px;
+  height: 2px;
+}
+//チェックリスト
+
+::selection {
+  background-color: #1D2E3C;
+}
+.ce-block--selected .ce-block__content {
+  background: #1D2931;
+}
+.ce-toolbar__settings-btn {
+color: #717683;
+background: #232528;
+}
+.ce-settings {
+background-color: #121212;
+border: 1px solid #2B2B2B;
+}
+.ce-settings__button {
+color: #717683;
+}
+.cdx-settings-button {
+color: #717683;
+}
+.cdx-settings-button--active{
+color: #388ae5;
+}
+.ce-toolbar__plus {
+color: #717683;
+}
+.ce-toolbox__button {
+color: #717683;
+}
+.ce-inline-toolbar {
+background-color: #121212;
+border: 1px solid #2B2B2B;        
+color: #717683;
+}
+.ce-conversion-toolbar {
+background-color: #121212;
+border: 1px solid #2B2B2B;
+}
+.ce-conversion-toolbar__label {
+color: #717683;
+}
+.ce-conversion-tool__icon {
+border: 1px solid #69696A;
+background: #121212;
+}
+.ce-toolbar {
+  @media (max-width:650px){
+    background-color: #121212;
+    border: 1px solid #2B2B2B;
+  }
+}
+.ce-inline-tool-input{
+color:#717683
+}
+
+// ホバー
+.ce-settings__button:hover {
+background-color: #232528;
+}
+.cdx-settings-button:hover {
+background-color:#232528
+} 
+.ce-inline-tool:hover {
+background-color:#232528
+} 
+.ce-inline-toolbar__dropdown:hover  {
+background:#232528
+}
+.ce-conversion-tool:hover {
+background:#232528
+}     
+.ce-toolbar__settings-btn:hover {
+color:#1d202b
+}
+// ホバー
+// Editor.js の設定
