@@ -189,7 +189,7 @@ export default {
     ValidationObserver,
   },
   computed: {
-    ...mapGetters('studyNote', ['studyNotes', 'treeView']),
+    ...mapGetters('studyNote', ['treeView']),
     ...mapGetters('studyMaterial', ['studyMaterials']),
   },
   methods: {

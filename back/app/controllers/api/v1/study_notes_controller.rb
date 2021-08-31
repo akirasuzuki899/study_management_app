@@ -7,10 +7,8 @@ module Api
       require 'open-uri'
 
       def index
-        study_notes = current_user.study_notes
         study_materials = current_user.study_materials
         render json: { 
-          study_notes: study_notes,
           tree_view: ActiveModelSerializers::SerializableResource.new(study_materials, each_serializer: TreeViewSerializer).as_json
         }
       end
@@ -30,14 +28,15 @@ module Api
       end
 
       def update
-        new_rich_text = study_note_params[:rich_text]
+        old_note = @study_note.deep_dup
         old_rich_text = @study_note.rich_text
+        new_rich_text = study_note_params[:rich_text]
 
         if sgids = @study_note.files_deleted?(new_rich_text, old_rich_text) then @study_note.delete_files(sgids) end
         if sgids = @study_note.files_added?(new_rich_text, old_rich_text)   then @study_note.attach_files(sgids) end
 
         if @study_note.update(study_note_params)
-          render json: { study_note: @study_note }
+          render json: { study_note: @study_note, old_note: old_note }
         else
           render json: { status: 'ERROR', message: 'Loaded posts', study_note: @study_note.errors }
         end
