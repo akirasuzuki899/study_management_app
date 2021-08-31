@@ -13,27 +13,30 @@ export const state = () => ({
 })
 
 export const getters = {
-  studyNotes: state => state.studyNotes,
   treeView: state => state.treeView,
 };
 
 export const mutations = {
-  setStudyNotes(state, study_note) {
-    state.studyNotes = study_note
-  },
-  addStudyNote(state, study_note) {
-    state.studyNotes.push(study_note)
-  },
-  updateStudyNote(state, study_note) {
-    const index = state.studyNotes.findIndex((v) => v.id === study_note.id);
-    state.studyNotes.splice(index, 1, study_note)
-  },
-  destroyStudyNote(state, study_note) {
-    const index = state.studyNotes.findIndex((v) => v.id === study_note.id);
-    state.studyNotes.splice(index, 1)
-  },
   setTreeView(state, tree_view) {
     state.treeView = tree_view
+  },
+  addStudyNote(state, study_note) {
+    const index = state.treeView.findIndex((v) => v.id === study_note.study_material_id)
+    state.treeView[index].children.push(study_note)
+  },
+  updateStudyNote(state, { study_note, old_note }) {
+    const old_index = state.treeView.findIndex((v) => v.id === old_note.study_material_id)
+    const id = state.treeView[old_index].children.findIndex((v) => v.id === old_note.id)
+    state.treeView[old_index].children.splice(id, 1)
+
+    const new_index = state.treeView.findIndex((v) => v.id === study_note.study_material_id)
+    state.treeView[new_index].children.push(study_note)
+  },
+  destroyStudyNote(state, study_note) {
+    const index = state.treeView.findIndex((v) => v.id === study_note.study_material_id)
+    const id = state.treeView[index].children.findIndex((v) => v.id === study_note.id)
+    state.treeView[index].children.splice(id, 1)
+    
   }
 };
 export const actions = {
@@ -43,7 +46,6 @@ export const actions = {
       .then(({ data }) => {
         console.log("success")
         console.log(data)
-        commit("setStudyNotes", data.study_notes)
         commit("setTreeView", data.tree_view)
       });
   },
@@ -82,8 +84,8 @@ export const actions = {
         })
       .then(( { data } ) => {
         console.log("success")
-        console.log(data.study_note)
-        commit("updateStudyNote", data.study_note)
+        console.log(data)
+        commit("updateStudyNote", {study_note: data.study_note, old_note: data.old_note } )
         dispatch("snackbar/successMessage", '更新しました', { root: true })
       })
       .catch(error => {
