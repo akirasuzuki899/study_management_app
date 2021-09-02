@@ -11,64 +11,43 @@
       >
         <v-toolbar-title>再登録</v-toolbar-title>
       </v-toolbar>
-
-      <v-list
-        :dense="true"
-        :subheader="true"
-        max-height="100%"
-        class="overflow-y-auto"
+      <TaskList
+        ref="taskList"
+        :tasks="unfinished_tasks"
+        @clicked="openScheduleForm"
       >
-        <v-list-item-group
-          active-class="pink--text"
-          v-model="selectedId"
-        >
-          <template v-for="(item, index) in unfinished_tasks">
-
-            <Task
-              :key="`task-${item.id}`"
-              :task="item"
-              :index="index"
-              @clicked="openScheduleForm(index)"
-            ></Task>
-
-            <v-divider
-              v-if="index < unfinished_tasks.length - 1"
-              :key="`index-${index}`"
-            ></v-divider>
-          </template>
+        <template v-slot:default>
           <infinite-loading
             @infinite="infiniteHandler"
           >
             <template slot="no-more">{{LoadingMessage}}</template>
             <template slot="no-results">{{LoadingMessage}}</template>
           </infinite-loading>
-        </v-list-item-group>
-      </v-list>
-
+        </template>
+      </TaskList>
     </v-card>
     <TaskForm
       ref="scheduleForm"
       method="update"
       target="task"
       :selectedTask="selectedTask"
-      @formClosed="clearID"
+      @formClosed="$refs.taskList.clearID()"
     ></TaskForm>
-
   </div>
 </template>
 
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import Task from "../Schedule/Task"
-import TaskForm from "../Schedule/TaskForm.vue"
+import TaskList from "../Schedule/TaskList";
+import TaskForm from "../Schedule/TaskForm.vue";
 import InfiniteLoading from 'vue-infinite-loading';
 
-import mixinMoment from "../../plugins/mixin-moment"
+import mixinMoment from "../../plugins/mixin-moment";
 
   export default {
     components: {
-      Task,
+      TaskList,
       TaskForm,
       InfiniteLoading,
     },
@@ -81,7 +60,6 @@ import mixinMoment from "../../plugins/mixin-moment"
     },
     data() {
       return {
-        selectedId: "",
         selectedTask: {},
         page: 1,
       }
@@ -102,9 +80,7 @@ import mixinMoment from "../../plugins/mixin-moment"
         this.selectedTask = this.unfinished_tasks[index]
         this.$refs.scheduleForm.open()
       },
-      clearID(){
-        this.selectedId = ''
-      },
+
       infiniteHandler($state) {
         this.getUnfinishedTask({
           page: this.page

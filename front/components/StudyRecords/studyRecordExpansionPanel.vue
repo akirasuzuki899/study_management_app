@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panels flat v-model="openedPanel">
+  <v-expansion-panels v-model="openedPanel">
     <v-expansion-panel>
 
       <v-expansion-panel-header>
@@ -55,14 +55,19 @@ export default {
     }
   },
   watch: {
-    showMenu: function(showMenu) {
-      if (showMenu == true) {
+    openedPanel: function(openedPanel) {
+      if (openedPanel == 0) {
         this.$refs.StudyRecordForm.setDefaultFormData()
       } else {
         this.$refs.StudyRecordForm.initValidation()
         this.closePanel()
       }
     },
+    showMenu: function(showMenu) {
+      if (showMenu == false) {
+        this.closePanel()
+      }
+    }
   },
   methods: {
     closePanel () {

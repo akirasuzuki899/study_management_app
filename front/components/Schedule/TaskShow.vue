@@ -22,9 +22,9 @@
       </v-toolbar>
 
       <v-card-text v-if="selectedTask.study_material">  <!--参照エラーを防ぐ-->
-        <ShowStudyMaterial
+        <StudyMaterial
           :studyMaterial="selectedTask.study_material"
-        ></ShowStudyMaterial>
+        ></StudyMaterial>
         <v-card-text>
           <v-icon>mdi-calendar-month</v-icon>
           {{ fromToDateTime(selectedTask.start, selectedTask.end) }}
@@ -71,7 +71,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import TaskForm from "./TaskForm";
-import ShowStudyMaterial from "../StudyMaterials/ShowStudyMaterials";
+import StudyMaterial from "../StudyMaterials/StudyMaterial";
 import StudyRecordExpansionPanel from "../StudyRecords/studyRecordExpansionPanel";
 import Alert from "../Alert"
 
@@ -80,7 +80,7 @@ import mixinMoment from "../../plugins/mixin-moment"
 export default {
   components: {
       TaskForm,
-      ShowStudyMaterial,
+      StudyMaterial,
       StudyRecordExpansionPanel,
       Alert,
     },

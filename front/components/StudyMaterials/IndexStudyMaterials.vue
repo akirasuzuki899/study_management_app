@@ -6,49 +6,32 @@
       教材一覧
     </v-card-title>
     <v-card-text>
-      <v-list
-        :dense="true"
-        :subheader="true"
-        max-height="300"
-        class="overflow-y-auto"
+      <StudyMaterialList
+        :studyMaterials="studyMaterials"
       >
-        <template v-for="(item, index) in studyMaterials">
-
-          <StudyMaterial
-            :key="`material-${item.id}`"
-            :studyMaterial="item"
-            :index="index"
+        <template v-slot:btn="{studyMaterial, index}">
+          <v-btn
+            text
+            @click="toggleCompleteStatus({
+              studyMaterial: studyMaterial,
+              index: index,
+            })"
           >
-            <template v-slot:btn="{studyMaterial}">
-              <v-btn
-                text
-                @click="toggleCompleteStatus({
-                  studyMaterial: studyMaterial,
-                  index: index,
-                })"
-              >
-                {{ studyMaterial.is_completed ? '完了' : '学習中' }}
-              </v-btn>
-            </template>
-          </StudyMaterial>
-
-          <v-divider
-            v-if="index < studyMaterials.length - 1"
-            :key="`index-${index}`"
-          ></v-divider>
+            {{ studyMaterial.is_completed ? '完了' : '学習中' }}
+          </v-btn>
         </template>
-      </v-list>
+      </StudyMaterialList>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import StudyMaterial from './StudyMaterial'
+import StudyMaterialList from './StudyMaterialList'
 
 export default {
   components: {
-    StudyMaterial,
+    StudyMaterialList,
   },
   computed: {
     ...mapGetters('studyMaterial',['studyMaterials']),

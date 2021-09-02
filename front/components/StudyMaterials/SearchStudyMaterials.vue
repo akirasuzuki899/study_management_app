@@ -27,45 +27,30 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-list
-          :dense="true"
-          :subheader="true"
-          max-height="300"
-          class="overflow-y-auto"
+        <StudyMaterialList
+          :studyMaterials="serchResults"
         >
-          <template v-for="(item, index) in serchResults">
-
-            <StudyMaterial
-              :key="`material-${index}`"
-              :studyMaterial="item"
-              :index="index"
+          <template v-slot:btn="{studyMaterial, index}">
+            <v-btn
+              text
+              @click="register({
+                serchResult : studyMaterial,
+                index: index,
+              })"
             >
-              <template v-slot:btn>
-                <v-btn
-                  text
-                  @click="register({
-                    serchResult : item,
-                    index: index,
-                  })"
-                >
-                  登録
-                </v-btn>
-              </template>
-            </StudyMaterial>
-
-            <v-divider
-              v-if="index < serchResults.length - 1"
-              :key="`index-${index}`"
-            ></v-divider>
+              登録
+            </v-btn>
           </template>
-          <infinite-loading
-            @infinite="infiniteHandler"
-            v-if="SearchStatus"
-          >
-            <template slot="no-more">検索結果は以上です</template>
-            <template slot="no-results">ヒットしませんでした</template>
-          </infinite-loading>
-        </v-list>
+          <template v-slot:default>
+            <infinite-loading
+              @infinite="infiniteHandler"
+              v-if="SearchStatus"
+            >
+              <template slot="no-more">検索結果は以上です</template>
+              <template slot="no-results">ヒットしませんでした</template>
+            </infinite-loading>
+          </template>
+        </StudyMaterialList>
       </v-card-text>
     </v-card>
   </div>
@@ -76,12 +61,12 @@
 import { mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 import TextInput from '../Form/BaseTextInput'
-import StudyMaterial from './StudyMaterial'
+import StudyMaterialList from './StudyMaterialList'
 
 export default {
   components: {
     TextInput,
-    StudyMaterial,
+    StudyMaterialList,
     InfiniteLoading,
   },
   data() {
