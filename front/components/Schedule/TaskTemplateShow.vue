@@ -21,9 +21,9 @@
       </v-toolbar>
 
       <v-card-text v-if="selectedTask.study_material">
-        <ShowStudyMaterial
+        <StudyMaterial
           :studyMaterial="selectedTask.study_material"
-        ></ShowStudyMaterial>
+        ></StudyMaterial>
         <v-card-text>
             <v-icon>mdi-calendar-month</v-icon>
             {{ `毎週 ${selectedTask.day_of_week} ${time(selectedTask.start)} 〜 ${time(selectedTask.end)}` }}
@@ -66,7 +66,7 @@
 <script>
 import { mapActions } from "vuex";
 import TaskTemplateForm from "./TaskTemplateForm";
-import ShowStudyMaterial from "../StudyMaterials/ShowStudyMaterials";
+import StudyMaterial from "../StudyMaterials/StudyMaterial";
 import Alert from "../Alert"
 
 import mixinMoment from "../../plugins/mixin-moment"
@@ -74,7 +74,7 @@ import mixinMoment from "../../plugins/mixin-moment"
 export default {
   components: {
       TaskTemplateForm,
-      ShowStudyMaterial,
+      StudyMaterial,
       Alert,
     },
   mixins: [mixinMoment],

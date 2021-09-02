@@ -55,14 +55,22 @@ export default {
     }
   },
   watch: {
-    showMenu: function(showMenu) {
-      if (showMenu == true) {
+    openedPanel: function(openedPanel) {
+      if (openedPanel == 0) {
+        console.log("true  test")
         this.$refs.StudyRecordForm.setDefaultFormData()
       } else {
+        console.log("false test")
         this.$refs.StudyRecordForm.initValidation()
         this.closePanel()
       }
     },
+    showMenu: function(showMenu) {
+      if (showMenu == false) {
+        console.log('show menu test')
+        this.closePanel()
+      }
+    }
   },
   methods: {
     closePanel () {
