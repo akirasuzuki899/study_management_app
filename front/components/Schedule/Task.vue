@@ -5,9 +5,14 @@
         :src="task.study_material.image_url"
         contain
       >
+        <v-overlay
+          v-if="task.study_record.is_finished"
+          absolute
+          opacity='0.5'
+        ></v-overlay>
       </v-img>
     </v-avatar>
-    <v-card-text>{{ task.name }}</v-card-text>
+    <v-card-text v-bind:class="{'text--disabled': task.study_record.is_finished}">{{ task.name }}</v-card-text>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panels flat v-model="openedPanel">
+  <v-expansion-panels v-model="openedPanel">
     <v-expansion-panel>
 
       <v-expansion-panel-header>
@@ -57,17 +57,14 @@ export default {
   watch: {
     openedPanel: function(openedPanel) {
       if (openedPanel == 0) {
-        console.log("true  test")
         this.$refs.StudyRecordForm.setDefaultFormData()
       } else {
-        console.log("false test")
         this.$refs.StudyRecordForm.initValidation()
         this.closePanel()
       }
     },
     showMenu: function(showMenu) {
       if (showMenu == false) {
-        console.log('show menu test')
         this.closePanel()
       }
     }

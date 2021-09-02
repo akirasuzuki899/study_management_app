@@ -11,15 +11,18 @@
             :color="item.color"
             small
             :key="index"
-            >
+          >
             <v-row class="pt-1">
-              <v-col cols="12" sm="12" md="3">
+              <v-col cols="12" sm="12" md="3" v-bind:class="{darken: item.study_record.is_finished}">
                 <strong>{{time(item.start)}} ~ {{time(item.end)}}</strong>
               </v-col>
-              <v-col cols="12" sm="12" md="9">
-                <ShowStudyMaterial
-                  :studyMaterial="item.study_material"
-                ></ShowStudyMaterial>
+              <v-col cols="12" sm="12" md="9" v-bind:class="{darken: item.study_record.is_finished}">
+                <Task
+                  :task="item"
+                ></Task>
+                <StudyRecordExpansionPanel
+                  :studyRecord="item.study_record"
+                ></StudyRecordExpansionPanel>
               </v-col>
             </v-row>
           </v-timeline-item>
@@ -33,21 +36,27 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from "vuex";
+import { mapGetters } from "vuex";
 import mixinMoment from "../../plugins/mixin-moment";
-import ShowStudyMaterial from "../StudyMaterials/ShowStudyMaterials";
+import Task from "../Schedule/Task";
 import StudyRecordExpansionPanel from "../StudyRecords/studyRecordExpansionPanel";
 
 export default {
   components: {
-    ShowStudyMaterial,
+    Task,
     StudyRecordExpansionPanel,
   },
   mixins: [mixinMoment],
   computed: {
     ...mapGetters('task', ['tasks']),
-    todayTasks() {
-      return this.tasks.filter((task) => this.date(task.start) === this.now)
+    todayTasks() {      
+      const todayTasks =  this.tasks.filter((task) => this.date(task.start) === this.now)
+      todayTasks.sort(function(a, b){
+        return a.start < b.start
+          ?  -1
+          :  1
+      })
+      return todayTasks
     }
   },
   created() {
@@ -56,7 +65,7 @@ export default {
 }
 </script>
 <style scoped>
-.theme--light.v-timeline:before {
-    background: red;
+.darken > strong, .darken >>> .v-expansion-panels .v-expansion-panel .v-expansion-panel-header .v-card__text{
+  opacity: 0.5;
 }
 </style>
