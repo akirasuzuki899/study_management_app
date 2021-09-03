@@ -45,12 +45,8 @@ module Api
           study_materials << study_material if new_material?(study_material)
         end
 
-        if study_materials.present?
-          render json: study_materials, adapter: :json, each_serializer: StudyMaterialSerializer
-        else
-          !!results ? ( render json: { study_materials: [], next: true }, status:  200 )
-                    : ( render json: { study_materials: [], next: false, message: 'ヒットしませんでした' }, status:  200 )
-        end
+        study_materials.present? ? ( render json: study_materials, adapter: :json, each_serializer: StudyMaterialSerializer )
+                                 : ( render json: { study_materials: [], next: false }, status:  200 )
 
       end
 

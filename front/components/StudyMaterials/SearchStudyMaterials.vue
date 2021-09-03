@@ -96,7 +96,6 @@ export default {
             }
         })
         .then(({data}) => {
-          console.log(data)
           if(data.study_materials.length || data.next){
             this.page += 1;
             this.serchResults.push(...data.study_materials)
