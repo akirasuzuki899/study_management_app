@@ -30,7 +30,7 @@
       <template v-slot:event="{ event }">
         <div 
           style="pointer-events:none"
-          class="v-event-draggable"
+          class="v-calendar-event"
         >
           <strong>{{ event.name }}</strong><br>
           {{ time(event.start) }} - {{ time(event.end)}}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
@@ -40,9 +40,6 @@
         <v-btn fab depressed class="transparent">
           {{dayOfWeek[weekday]}}
         </v-btn>
-      </template>
-      <template v-slot:day-label>
-        test
       </template>
     </v-calendar>
 
@@ -140,27 +137,8 @@ import mixinSchedule from "../../plugins/mixin-schedule"
 </script>
 
 <style scoped>
-.my-event {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  border-radius: 2px;
-  background-color: #1867c0;
-  color: #ffffff;
-  border: 1px solid #1867c0;
-  font-size: 12px;
-  padding: 3px;
-  cursor: pointer;
-  margin-bottom: 1px;
-  left: 4px;
-  margin-right: 8px;
-  position: relative;
-}
-
-.my-event.with-time {
-  position: absolute;
-  right: 4px;
-  margin-right: 0px;
+.v-calendar-event {
+  padding-left: 6px;
 }
 .v-calendar >>> .v-calendar-daily__head .v-calendar-daily_head-day .v-calendar-daily_head-weekday{
   display: none;
