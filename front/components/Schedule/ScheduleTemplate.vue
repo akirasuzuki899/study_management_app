@@ -36,7 +36,14 @@
           {{ time(event.start) }} - {{ time(event.end)}}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
         </div>
       </template>
-      <!-- <template v-slot:day-label-header="{ day }">{{day = ""}}</template> -->
+      <template v-slot:day-label-header="{weekday}">
+        <v-btn fab depressed class="transparent">
+          {{dayOfWeek[weekday]}}
+        </v-btn>
+      </template>
+      <template v-slot:day-label>
+        test
+      </template>
     </v-calendar>
 
     <TaskTemplateShow
@@ -102,6 +109,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       return {
         target: "taskTemplate",
         baseDate: '2000-01-03',
+        dayOfWeek: [ "日", "月", "火", "水", "木", "金", "土" ],
         selectedTask: {},
         selectedElement: null,
         selecrtedTime: {},
@@ -153,5 +161,8 @@ import mixinSchedule from "../../plugins/mixin-schedule"
   position: absolute;
   right: 4px;
   margin-right: 0px;
+}
+.v-calendar >>> .v-calendar-daily__head .v-calendar-daily_head-day .v-calendar-daily_head-weekday{
+  display: none;
 }
 </style>
