@@ -45,6 +45,11 @@
               <strong>{{ event.name }}</strong><br>
               {{ time(event.start) }} - {{ time(event.end) }}
             </div>
+            <v-overlay
+              v-if="event.study_record.is_finished"
+              absolute
+              opacity='0.5'
+            ></v-overlay>
           </template>
 
           <template v-slot:day-body="{ date }">
