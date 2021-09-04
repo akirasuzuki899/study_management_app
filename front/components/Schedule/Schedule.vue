@@ -2,8 +2,7 @@
   <v-sheet>
 
     <v-row>
-      <v-col 
-      cols="12" sm="9" md="9">
+      <v-col>
 
         <v-toolbar>
           <v-btn
@@ -62,29 +61,29 @@
 
       </v-col>
 
-    <TaskShow
-      ref="taskShow"
-      :selectedTask="selectedTask"
-      :selectedElement="selectedElement"
-      :target="target"
-    ></TaskShow>
+      <TaskShow
+        ref="taskShow"
+        :selectedTask="selectedTask"
+        :selectedElement="selectedElement"
+        :target="target"
+      ></TaskShow>
 
-    <TaskForm
-      ref="form"
-      method="create"
-      :selecrtedTime="selecrtedTime"
-      :target="target"
-    ></TaskForm>
+      <TaskForm
+        ref="form"
+        method="create"
+        :selecrtedTime="selecrtedTime"
+        :target="target"
+      ></TaskForm>
 
-    <v-col 
-      v-if="listOpen"
-      cols="12" sm="3" md="3"
-      >
-      <UnfinishedTaskList
-        :tasks="tasks"
+      <v-col 
         v-if="listOpen"
-      ></UnfinishedTaskList>
-    </v-col>
+        cols="12" sm="3" md="3"
+        >
+        <UnfinishedTaskList
+          :tasks="tasks"
+          v-if="listOpen"
+        ></UnfinishedTaskList>
+      </v-col>
 
     </v-row>
   </v-sheet>
