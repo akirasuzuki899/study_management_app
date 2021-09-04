@@ -39,7 +39,7 @@
           <template v-slot:event="{ event }">
             <div
               style="pointer-events:none"
-              class="v-event-draggable"
+              class="v-calendar-event"
             >
               <strong>{{ event.name }}</strong><br>
               {{ time(event.start) }} - {{ time(event.end) }}
@@ -162,29 +162,10 @@ import mixinSchedule from "../../plugins/mixin-schedule"
 </script>
 
 <style scoped>
-.my-event {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  border-radius: 2px;
-  background-color: #1867c0;
-  color: #ffffff;
-  border: 1px solid #1867c0;
-  font-size: 12px;
-  padding: 3px;
-  cursor: pointer;
-  margin-bottom: 1px;
-  left: 4px;
-  margin-right: 8px;
-  position: relative;
-}
-.my-event.with-time {
-  position: absolute;
-  right: 4px;
-  margin-right: 0px;
+.v-calendar-event {
+  padding-left: 6px;
 }
 </style>
-
 
 <style lang="scss">
 .v-current-time {
@@ -205,11 +186,5 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     margin-top: -5px;
     margin-left: -6.5px;
   }
-}
-</style>
-
-<style scoped lang="scss">
-.v-event-draggable {
-  padding-left: 6px;
 }
 </style>
