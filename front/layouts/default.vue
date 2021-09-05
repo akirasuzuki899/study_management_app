@@ -22,8 +22,8 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
-          <v-list-item-action @click="logout()">
+        <v-list-item @click="logout()">
+          <v-list-item-action>
             <v-icon>mdi-logout-variant</v-icon>
           </v-list-item-action>
           <v-list-item-content>

@@ -6,7 +6,7 @@
       </v-col>
       <v-col cols="12" sm="6" md="6">
         <TimeLine></TimeLine>
-        </v-col>
+      </v-col>
     </v-row>
   </div>
 </template>
