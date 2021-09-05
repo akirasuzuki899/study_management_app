@@ -15,9 +15,8 @@
           >
             <template v-slot:prepend="{ item }">
               <v-img
-                max-height="50"
-                contain
                 aspect-ratio='1'
+                contain
                 :src="item.image_url"
               ></v-img>
             </template>
