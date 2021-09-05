@@ -47,7 +47,8 @@ export const actions = {
         console.log(error);
       });
   },
-  registerStudyMaterial( { commit },  { serchResult }){
+  registerStudyMaterial( { commit, dispatch },  { serchResult }){
+    dispatch("snackbar/processMessage", '登録しています...', { root: true })
     return this.$axios
       .post('/api/v1/study_materials',
       {
@@ -56,6 +57,7 @@ export const actions = {
       })
       .then( ({ data }) => {
         commit('addStudyMaterials', data.study_material)
+        dispatch("snackbar/successMessage", '登録しました', { root: true })
         return data
       })
       .catch( error => {
