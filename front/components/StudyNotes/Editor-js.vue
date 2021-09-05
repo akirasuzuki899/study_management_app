@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card>
+    <v-card class="overflow-hidden">
       <v-toolbar dense>
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       </v-toolbar>
@@ -15,7 +15,8 @@
           >
             <template v-slot:prepend="{ item }">
               <v-img
-                aspect-ratio="1"
+                aspect-ratio='1'
+                contain
                 :src="item.image_url"
               ></v-img>
             </template>
