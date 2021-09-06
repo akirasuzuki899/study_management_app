@@ -5,6 +5,8 @@ RUN apt-get update -qq && \
 
 WORKDIR /back
 
+ENV TZ=Asia/Tokyo
+
 COPY Gemfile /back/Gemfile
 COPY Gemfile.lock /back/Gemfile.lock
 RUN bundle install
