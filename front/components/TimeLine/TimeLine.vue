@@ -1,37 +1,66 @@
 <template>
-  <v-card>
-    <v-card-text class="py-0">
-      <v-timeline 
-        align-top 
-        dense 
-        v-if="todayTasks.length"
-      >
-        <template v-for="(item, index) in todayTasks">
-          <v-timeline-item 
-            :color="item.color"
-            small
-            :key="index"
+  <v-card class="fill-height">
+    <v-row class="fill-height flex-column no-gutters">
+      <v-col cols="auto" class="flex-shrink-1">
+        <v-toolbar dense>
+          今日のタスク
+        </v-toolbar>
+      </v-col>
+      <v-col cols="auto" class="flex-grow-1">
+        <v-card-text class="fill-height py-0">
+          <v-timeline 
+            align-top 
+            dense 
+            v-if="todayTasks.length"
           >
-            <v-row class="pt-1">
-              <v-col cols="12" sm="12" md="3" v-bind:class="{darken: item.study_record.is_finished}">
-                <strong>{{time(item.start)}} ~ {{time(item.end)}}</strong>
-              </v-col>
-              <v-col cols="12" sm="12" md="9" v-bind:class="{darken: item.study_record.is_finished}">
-                <Task
-                  :task="item"
-                ></Task>
-                <StudyRecordExpansionPanel
-                  :studyRecord="item.study_record"
-                ></StudyRecordExpansionPanel>
-              </v-col>
-            </v-row>
-          </v-timeline-item>
-        </template>
-      </v-timeline>
-      <div v-else>
-        タスクはありません
-      </div>
-    </v-card-text>
+            <template v-for="(item, index) in todayTasks">
+              <v-timeline-item 
+                :color="item.color"
+                small
+                :key="index"
+              >
+                <v-row class="no-gutters">
+                  <v-col cols="12" md="3" v-bind:class="{darken: item.study_record.is_finished}">
+                    <strong>{{time(item.start)}} ~ {{time(item.end)}}</strong>
+                  </v-col>
+                  <v-col cols="12" md="9" v-bind:class="{darken: item.study_record.is_finished}">
+                    <Task
+                      :task="item"
+                    ></Task>
+                    <StudyRecordExpansionPanel
+                      :studyRecord="item.study_record"
+                    ></StudyRecordExpansionPanel>
+                  </v-col>
+                </v-row>
+              </v-timeline-item>
+            </template>
+          </v-timeline>
+          <div v-else class="fill-height">
+            <v-container class="fill-height">
+              <v-row>
+                <v-col cols="12" class="text-center">
+                  <div class="subtitle-1">タスクはありません</div>
+                </v-col>
+                <v-col cols="12">
+                  <v-btn
+                    color="primary"
+                    block
+                    @click="$router.push('/plan')"
+                  >教材を登録する</v-btn>
+                </v-col>
+                <v-col cols="12">
+                  <v-btn
+                    block
+                    color="secondary"
+                    @click="$router.push('/schedule')"
+                  >タスクを登録する</v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+        </v-card-text>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 

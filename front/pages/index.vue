@@ -1,10 +1,10 @@
 <template>
-  <v-row>
-    <v-col cols="12" sm="6" md="6">
-      <Note></Note>
-    </v-col>
-    <v-col cols="12" sm="6" md="6">
+  <v-row class="flex-column flex-sm-row">
+    <v-col cols="auto" sm="6">
       <TimeLine></TimeLine>
+    </v-col>
+    <v-col cols="auto" sm="6">
+      <Note></Note>
     </v-col>
   </v-row>
 </template>
