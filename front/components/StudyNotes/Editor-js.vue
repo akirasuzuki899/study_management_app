@@ -132,6 +132,18 @@
               mdi-plus
             </v-icon>
           </template>
+
+          <template v-slot:default v-if="!treeView.length">
+            <v-container>
+              <v-btn
+                class="text-truncate"
+                color="primary"
+                block
+                @click="$router.push('/plan')"
+              >教材を登録する</v-btn>
+            </v-container>
+          </template>
+          
         </v-treeview>
       </v-navigation-drawer>
     </v-card>
