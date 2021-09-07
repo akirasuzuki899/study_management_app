@@ -49,7 +49,7 @@
       <v-spacer />
     </v-app-bar>
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="fill-height" align-stretch>
         <nuxt />
         <Snackbar
         ></Snackbar>

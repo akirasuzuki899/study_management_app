@@ -1,141 +1,139 @@
 <template>
-  <div>
-    <v-card class="overflow-hidden">
-      <v-toolbar dense>
-        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      </v-toolbar>
+  <div class="fill-height">
+    <v-card class="fill-height overflow-hidden">
+      <v-row class="fill-height flex-column no-gutters">
+        <v-col cols="auto" class="flex-shrink-1">
+          <v-toolbar dense>
+            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+          </v-toolbar>
+        </v-col>
+        <v-col cols="auto" class="flex-grow-1">
+          <validation-observer
+            ref="observer"
+            v-slot="{ invalid }"
+          >
+            <form class="fill-height">
+              <v-row class="fill-height flex-column no-gutters">
+                <v-col cols="auto" class="flex-grow-1">
+                  <v-card-text class="fill-height">
+                    <v-row class="fill-height flex-column no-gutters mx-auto" style="max-width:650px">
+                      <v-col cols="auto" class="flex-shrink-1">
+                        <TextInput
+                          v-model="formData.title"
+                          name="タイトル"
+                          label="タイトル"
+                          rules="max:50"
+                          :dense="true"
+                          :disabled="readOnlyIndicator"
+                        ></TextInput>
+                      </v-col>
+                      <v-col cols="auto" class="flex-shrink-1">
+                        <SelectStudyMaterial
+                          v-model="formData.study_material_id"
+                          :dense="true"
+                          :disabled="readOnlyIndicator"
+                        ></SelectStudyMaterial>
+                      </v-col>
+                      <v-col cols="auto" class="flex-grow-1">
+                          <div id="editorjs" class="fill-height"></div>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-col>
+                <v-col cols="auto" class="flex-shrink-1">
+                  <v-card-actions>
+                    <template
+                      v-if="readOnlyIndicator"
+                    >
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="toggle()"
+                      >
+                        編集
+                      </v-btn>
+                      <v-btn
+                        v-if="selectedNoteID"
+                        text
+                        color="secondary"
+                        @click="openAlert"
+                      >
+                        削除
+                      </v-btn>
+                    </template>
+                    <template
+                        v-else
+                    >
+                      <v-btn
+                        text
+                        color="primary"
+                        :disabled="invalid"
+                        @click="saveNote(); toggle()"
+                      >
+                        更新
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="secondary"
+                        @click="toggle()"
+                      >
+                        取消
+                      </v-btn>
+                    </template>
+                  </v-card-actions>
+                </v-col>
+              </v-row>
+            </form>
+          </validation-observer>
+        </v-col>
+      </v-row>
+
+
       <v-navigation-drawer
         v-model="drawer"
         temporary
         absolute
       >
-          <v-treeview
-            hoverable
-            :items="treeView"
-          >
-            <template v-slot:prepend="{ item }">
-              <v-img
-                aspect-ratio='1'
-                contain
-                :src="item.image_url"
-              ></v-img>
-            </template>
-            
-            <template v-slot:label="{ item }">
-              <div 
-                v-if="item.children"
-                class="text-truncate"
-              >
-                {{item.title}}
-              </div>
-              <v-btn 
-                v-else
-                block
-                text
-                class="text-truncate"
-                @click="setNote(item)"
-              >
-                {{item.title}}
-              </v-btn>
-            </template>
+        <v-treeview
+          hoverable
+          :items="treeView"
+        >
+          <template v-slot:prepend="{ item }">
+            <v-img
+              aspect-ratio='1'
+              contain
+              :src="item.image_url"
+            ></v-img>
+          </template>
+          
+          <template v-slot:label="{ item }">
+            <div 
+              v-if="item.children"
+              class="text-truncate"
+            >
+              {{item.title}}
+            </div>
+            <v-btn 
+              v-else
+              block
+              text
+              class="text-truncate"
+              @click="setNote(item)"
+            >
+              {{item.title}}
+            </v-btn>
+          </template>
 
-            <template v-slot:append="{ item }">
-              <v-icon
-                v-if="item.children"
-                @click="newNote(item.id)"
-              >
-                mdi-plus
-              </v-icon>
-            </template>
-          </v-treeview>
+          <template v-slot:append="{ item }">
+            <v-icon
+              v-if="item.children"
+              @click="newNote(item.id)"
+            >
+              mdi-plus
+            </v-icon>
+          </template>
+        </v-treeview>
       </v-navigation-drawer>
-
-      <validation-observer
-        ref="observer"
-        v-slot="{ invalid }"
-      >
-        <form>
-          <v-card-text>
-            <v-container>
-              <v-row 
-                style="max-width:650px"
-                class="mx-auto"
-              >
-                <v-col cols="12" sm="12" md="12">
-                  <TextInput
-                    v-model="formData.title"
-                    name="タイトル"
-                    label="タイトル"
-                    rules="max:50"
-                    :dense="true"
-                    :disabled="readOnlyIndicator"
-                  ></TextInput>
-                </v-col>
-                <v-col cols="12" sm="12" md="12">
-                  <SelectStudyMaterial
-                    v-model="formData.study_material_id"
-                    :dense="true"
-                    :disabled="readOnlyIndicator"
-                  ></SelectStudyMaterial>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-card-text>
-            <v-container>
-
-              <v-row>
-                <v-col cols="12" sm="12" md="12">
-                  <div>
-                    <div id="editorjs"></div>
-                  </div>
-                </v-col>
-              </v-row>
-
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <template
-              v-if="readOnlyIndicator"
-            >
-              <v-btn
-                text
-                color="primary"
-                @click="toggle()"
-              >
-                編集
-              </v-btn>
-              <v-btn
-                v-if="selectedNoteID"
-                text
-                color="secondary"
-                @click="openAlert"
-              >
-                削除
-              </v-btn>
-            </template>
-            <template
-                v-else
-            >
-              <v-btn
-                text
-                color="primary"
-                :disabled="invalid"
-                @click="saveNote(); toggle()"
-              >
-                更新
-              </v-btn>
-              <v-btn
-                text
-                color="secondary"
-                @click="toggle()"
-              >
-                取消
-              </v-btn>
-            </template>
-          </v-card-actions>
-        </form>
-      </validation-observer>
     </v-card>
     <Alert
       ref="alert"
