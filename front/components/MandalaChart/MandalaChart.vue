@@ -1,34 +1,34 @@
 <template>
-  <v-sheet
-    height="100%"
-    class="pa-6"
-  >
-    <v-card-actions>
-      <v-btn 
-        @click="openAlert"
-        outlined
-        text
-      >
-        <v-icon>
-          mdi-delete-outline
-        </v-icon>
-      </v-btn>
-    </v-card-actions>
-
-    <v-card
-      class="d-flex flex-wrap"
-      outlined
-      tile
-    >
-      <template v-for="n in 9">
-        <MandalaChartGroup
-          :GroupId="n"
-          :key="n"
-          :MandalaGroup="filterByPlaceNumber( selectedMandalaChart.mandala_groups, n )"
-          style="width: calc(100%/3);"
-          @item-clicked="openForm"
-        ></MandalaChartGroup>
-      </template>
+  <div>
+    <v-card>
+      <v-row class="no-gutters">
+        <v-col cols="12">
+          <v-card-actions>
+            <v-btn 
+              @click="openAlert"
+              outlined
+              text
+            >
+              <v-icon>
+                mdi-delete-outline
+              </v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-col>
+        <v-col cols="12">
+          <v-card-text class="d-flex flex-wrap px-2 pb-2 pt-0">
+            <template v-for="n in 9">
+              <MandalaChartGroup
+                :GroupId="n"
+                :key="n"
+                :MandalaGroup="filterByPlaceNumber( selectedMandalaChart.mandala_groups, n )"
+                style="width: calc(100%/3);"
+                @item-clicked="openForm"
+              ></MandalaChartGroup>
+            </template>
+          </v-card-text>
+        </v-col>
+      </v-row>
     </v-card>
     <MandalaDialog
       ref="dialog"
@@ -47,7 +47,7 @@
         削除
       </template>
     </Alert>
-  </v-sheet>
+  </div>
 </template>
 
 <script>
