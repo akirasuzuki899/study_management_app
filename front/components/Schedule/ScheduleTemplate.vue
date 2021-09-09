@@ -1,47 +1,55 @@
 <template>
-  <v-sheet>
-    <v-toolbar>
-      <v-btn
-        outlined
-        text
-        @click="openAlert"
-      >週間カレンダーに反映
-      </v-btn>
-    </v-toolbar>
-    <v-calendar
-      ref="calendar"
-      :value="baseDate"
-      :events="taskTemplates"
-      locale="ja"
-      color="primary"
-      type="week"
-      :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-      :event-color="getEventColor"
-      @click:event="showTask"
-      @click:time="createTask"
-      :interval-format="intervalFormat"
+  <div class="fill-height">    
+    <v-row class="flex-column no-gutters fill-height">
+      <v-col cols="auto" class="flex-shrink-1">
+        <v-toolbar>
+          <v-btn
+            outlined
+            text
+            @click="openAlert"
+          >週間カレンダーに反映
+          </v-btn>
+        </v-toolbar>
+      </v-col>
+      <v-col cols="auto" class="flex-grow-1" style="position: relative;">
+        <v-sheet class="fill-height overflow-y-auto" style="width: 100%; position: absolute; left: 0; top: 0;">
+          <v-calendar
+            ref="calendar"
+            :value="baseDate"
+            :events="taskTemplates"
+            locale="ja"
+            color="primary"
+            type="week"
+            :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+            :event-color="getEventColor"
+            @click:event="showTask"
+            @click:time="createTask"
+            :interval-format="intervalFormat"
 
-      @mousedown:event="startDrag"
-      @mousedown:time="startTime"
-      @mousemove:time="mouseMove"
-      @mouseup:time="endDrag"
-      @mouseleave.native="cancelDrag"
-    >
-      <template v-slot:event="{ event }">
-        <div 
-          style="pointer-events:none"
-          class="v-calendar-event"
-        >
-          <strong>{{ event.name }}</strong><br>
-          {{ time(event.start) }} - {{ time(event.end)}}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
-        </div>
-      </template>
-      <template v-slot:day-label-header="{weekday}">
-        <v-btn fab depressed class="transparent">
-          {{dayOfWeek[weekday]}}
-        </v-btn>
-      </template>
-    </v-calendar>
+            @mousedown:event="startDrag"
+            @mousedown:time="startTime"
+            @mousemove:time="mouseMove"
+            @mouseup:time="endDrag"
+            @mouseleave.native="cancelDrag"
+          >
+            <template v-slot:event="{ event }">
+              <div 
+                style="pointer-events:none"
+                class="v-calendar-event"
+              >
+                <strong>{{ event.name }}</strong><br>
+                {{ time(event.start) }} - {{ time(event.end)}}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
+              </div>
+            </template>
+            <template v-slot:day-label-header="{weekday}">
+              <v-btn fab depressed class="transparent">
+                {{dayOfWeek[weekday]}}
+              </v-btn>
+            </template>
+          </v-calendar>
+        </v-sheet>
+      </v-col>
+    </v-row>
 
     <TaskTemplateShow
       ref="taskShow"
@@ -80,8 +88,7 @@
         作成
       </template>
     </Alert>
-
-  </v-sheet>
+  </div>
 </template>
 
 <script>

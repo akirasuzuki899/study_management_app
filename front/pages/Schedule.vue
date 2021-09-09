@@ -12,7 +12,7 @@
         <v-tab-item value="tab-calendar" style="height: 100%;">
           <Calendar></Calendar>
         </v-tab-item>
-        <v-tab-item value="tab-template">
+        <v-tab-item value="tab-template" style="height: 100%;">
           <CalendarTemplate></CalendarTemplate>
         </v-tab-item>
       </v-tabs-items>
