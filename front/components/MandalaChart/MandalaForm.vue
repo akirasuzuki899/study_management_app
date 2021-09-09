@@ -4,11 +4,11 @@
     v-slot="{ invalid }"
   >
     <form>
-      <v-card >
+      <v-card>
         <v-card-text>
           <v-container>
-            <v-row>
-              <v-col cols="12" sm="12" md="12">
+            <v-row :class="{ 'no-gutters' : $vuetify.breakpoint.name == 'xs' }">
+              <v-col cols="12">
                 <TextInput
                   v-model="formData.text"
                   name="タイトル"
@@ -17,7 +17,7 @@
                   :dense="true"
                 ></TextInput>
               </v-col>
-              <v-col cols="12" sm="12" md="12">
+              <v-col cols="12">
                 <TextInput
                   v-model="formData.url"
                   name="リンク"
@@ -27,7 +27,7 @@
                   prependInnerIcon="mdi-link-variant"
                 ></TextInput>
               </v-col>
-              <v-col cols="12" sm="12" md="12">
+              <v-col cols="12">
                 <v-layout>
                 <CheckBox
                   v-model="formData.is_finished"

@@ -2,7 +2,7 @@
   <div class="text-center">
     <v-dialog
       v-model="Dialog"
-      width="500"
+      max-width="500"
       @click:outside="close()"
     >
       <v-card>
@@ -17,8 +17,8 @@
           <form>
             <v-card-text>
               <v-container>
-                <v-row>
-                  <v-col cols="12" sm="12" md="12">
+                <v-row :class="{ 'no-gutters' : $vuetify.breakpoint.name == 'xs' }">
+                  <v-col cols="12">
                     <TextInput
                       v-model="formData.name"
                       name="タイトル"
@@ -27,35 +27,29 @@
                       :dense="true"
                     ></TextInput>
                   </v-col>
-                </v-row>
 
-                <v-row>
-                  <v-col cols="12" sm="12" md="12">
+                  <v-col cols="12">
                     <SelectStudyMaterial
                       v-model="formData.study_material_id"
                       :dense="true"
                     ></SelectStudyMaterial>
                   </v-col>
-                </v-row>
 
-                <v-row>
-                  <v-col cols="12" sm="2" md="2">
+                  <v-col cols="12" sm="2">
                     <SelectorColor
                       v-model="formData.color"
                       :dense="true"
                     ></SelectorColor>
                   </v-col>
-                </v-row>
-                
-                <v-row>
-                  <v-col cols="12" sm="12" md="12">
+
+                  <v-col cols="12">
                     <SelectDayOfWeek
                       v-model="formData.start_date"
                       :dense="true"
                     ></SelectDayOfWeek>
                   </v-col>
 
-                  <v-col cols="12" sm="6" md="6" >
+                  <v-col cols="12" sm="6">
                     <SelectTime
                       vid="start_time"
                       v-model="formData.start_time"
@@ -67,7 +61,7 @@
                     ></SelectTime>
                   </v-col>
 
-                  <v-col cols="12" sm="6" md="6" >
+                  <v-col cols="12" sm="6">
                     <SelectTime
                       v-model="formData.end_time"
                       name="終了時刻"
