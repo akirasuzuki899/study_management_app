@@ -2,7 +2,7 @@
   <v-list
     :dense="true"
     :subheader="true"
-    max-height="300"
+    max-height="100%"
     class="overflow-y-auto"
   >
     <template v-for="(item, index) in studyMaterials">
@@ -39,6 +39,9 @@ export default {
     studyMaterials: {
       type: Array,
     },
+    maxHeight: {
+      type: String,
+    }
   }
 }
 </script>
