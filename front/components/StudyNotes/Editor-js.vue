@@ -14,7 +14,7 @@
           >
             <form class="fill-height">
               <v-row class="fill-height flex-column no-gutters">
-                <v-col cols="auto" class="flex-grow-1">
+                <v-col cols="auto" class="flex-grow-1 overflow-y-auto">
                   <v-card-text class="fill-height">
                     <v-row class="fill-height flex-column no-gutters mx-auto" style="max-width:650px">
                       <v-col cols="auto" class="flex-shrink-1">
@@ -34,8 +34,8 @@
                           :disabled="readOnlyIndicator"
                         ></SelectStudyMaterial>
                       </v-col>
-                      <v-col cols="auto" class="flex-grow-1">
-                          <div id="editorjs" class="fill-height"></div>
+                      <v-col cols="auto" class="flex-grow-1" style="position: relative; min-height: 300px;">
+                          <div id="editorjs" class="fill-height overflow-y-auto" style="width: 100%; position: absolute; left: 0; top: 0;"></div>
                       </v-col>
                     </v-row>
                   </v-card-text>

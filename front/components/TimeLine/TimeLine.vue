@@ -8,33 +8,36 @@
       </v-col>
       <v-col cols="auto" class="flex-grow-1">
         <v-card-text class="fill-height py-0">
-          <v-timeline 
-            align-top 
-            dense 
-            v-if="todayTasks.length"
-          >
-            <template v-for="(item, index) in todayTasks">
-              <v-timeline-item 
-                :color="item.color"
-                small
-                :key="index"
+          <div v-if="todayTasks.length" class="fill-height" style="position: relative; min-height: 300px;">
+            <div class="fill-height overflow-y-auto" style="width: 100%; position: absolute; left: 0; top: 0;">
+              <v-timeline 
+                align-top 
+                dense
               >
-                <v-row class="no-gutters">
-                  <v-col cols="12" md="3" v-bind:class="{darken: item.study_record.is_finished}">
-                    <strong>{{time(item.start)}} ~ {{time(item.end)}}</strong>
-                  </v-col>
-                  <v-col cols="12" md="9" v-bind:class="{darken: item.study_record.is_finished}">
-                    <Task
-                      :task="item"
-                    ></Task>
-                    <StudyRecordExpansionPanel
-                      :studyRecord="item.study_record"
-                    ></StudyRecordExpansionPanel>
-                  </v-col>
-                </v-row>
-              </v-timeline-item>
-            </template>
-          </v-timeline>
+                <template v-for="(item, index) in todayTasks">
+                  <v-timeline-item 
+                    :color="item.color"
+                    small
+                    :key="index"
+                  >
+                    <v-row class="no-gutters">
+                      <v-col cols="12" md="3" v-bind:class="{darken: item.study_record.is_finished}">
+                        <strong>{{time(item.start)}} ~ {{time(item.end)}}</strong>
+                      </v-col>
+                      <v-col cols="12" md="9" v-bind:class="{darken: item.study_record.is_finished}">
+                        <Task
+                          :task="item"
+                        ></Task>
+                        <StudyRecordExpansionPanel
+                          :studyRecord="item.study_record"
+                        ></StudyRecordExpansionPanel>
+                      </v-col>
+                    </v-row>
+                  </v-timeline-item>
+                </template>
+              </v-timeline>
+            </div>
+          </div>
           <div v-else class="fill-height">
             <v-container class="fill-height">
               <v-row>

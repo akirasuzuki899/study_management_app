@@ -1,5 +1,5 @@
 <template>
-  <v-row class="flex-column flex-sm-row">
+  <v-row class="flex-column flex-nowrap flex-sm-row flex-sm-wrap fill-height">
     <v-col cols="auto" sm="6">
       <TimeLine></TimeLine>
     </v-col>
