@@ -1,33 +1,39 @@
 <template>
-  <div>
-    <v-card
-      class="mx-auto"
-    >
-      <v-card-title>
-        教材を追加
-      </v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="6" sm="6" md="6">
-            <TextInput
-              v-model="keyword"
-              name="キーワード"
-              label="キーワード"
-              :dense="true"
-              @focus="initSearchStatus"
-            ></TextInput>
-            {{message}}
-          </v-col>
-          <v-col cols="6" sm="6" md="6">
-            <v-btn
-              text
-              @click="changeSearchStatus"
-            >
-              検索
-            </v-btn>
-          </v-col>
-        </v-row>
+  <v-card class="fill-height" style="min-height: 350px;">
+    <v-row class="flex-column fill-height no-gutters">
+      <v-col cols="auto" class="flex-shrink-1">
+        <v-card-title>
+          教材を追加
+        </v-card-title>
+        <v-card-text>
+          <v-row class="no-gutters">
+            <v-col cols="8">
+                <TextInput
+                  v-model="keyword"
+                  name="キーワード"
+                  label="キーワード"
+                  :dense="true"
+                  @focus="initSearchStatus"
+                ></TextInput>
+                <div style="color: #dd2c00;">
+                  {{message}}
+                </div>
+            </v-col>
+            <v-col cols="4" class="pl-4" >
+              <v-btn
+                text
+                @click="changeSearchStatus"
+              >
+                検索
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-col>
+      <v-col cols="auto" class="flex-grow-1" style="position: relative;">
         <StudyMaterialList
+          style="width: 100%; position: absolute; left: 0; top: 0;"
+          class="pl-3"
           :studyMaterials="serchResults"
         >
           <template v-slot:btn="{studyMaterial, index}">
@@ -51,9 +57,9 @@
             </infinite-loading>
           </template>
         </StudyMaterialList>
-      </v-card-text>
-    </v-card>
-  </div>
+      </v-col>
+    </v-row>
+  </v-card>
 </template>
 
 
