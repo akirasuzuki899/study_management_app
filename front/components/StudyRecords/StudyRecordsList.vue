@@ -1,31 +1,32 @@
 <template>
   <div>
-    <v-card
-      class="mx-auto"
-      max-width="300"
-    >
-      <v-toolbar
-        color="pink"
-        dark
-        dense
-      >
-        <v-toolbar-title>再登録</v-toolbar-title>
-      </v-toolbar>
-      <TaskList
-        ref="taskList"
-        :tasks="unfinished_tasks"
-        @clicked="openScheduleForm"
-      >
-        <template v-slot:default>
-          <infinite-loading
-            @infinite="infiniteHandler"
-          >
-            <template slot="no-more">{{LoadingMessage}}</template>
-            <template slot="no-results">{{LoadingMessage}}</template>
-          </infinite-loading>
-        </template>
-      </TaskList>
-    </v-card>
+    <v-row class="flex-column no-gutters fill-height">
+      <v-col cols="auto" class="flex-shrink-1">
+        <v-toolbar
+          color="pink"
+          dense
+        >
+          <v-toolbar-title>再登録</v-toolbar-title>
+        </v-toolbar>
+      </v-col>
+      <v-col cols="auto" class="flex-grow-1" style="position: relative;">
+        <TaskList
+          ref="taskList"
+          style="width: 100%; position: absolute; left: 0; top: 0;"
+          :tasks="unfinished_tasks"
+          @clicked="openScheduleForm"
+        >
+          <template v-slot:default>
+            <infinite-loading
+              @infinite="infiniteHandler"
+            >
+              <template slot="no-more">{{LoadingMessage}}</template>
+              <template slot="no-results">{{LoadingMessage}}</template>
+            </infinite-loading>
+          </template>
+        </TaskList>
+      </v-col>
+    </v-row>
     <TaskForm
       ref="scheduleForm"
       method="update"

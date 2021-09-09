@@ -1,63 +1,71 @@
 <template>
-  <v-sheet>
 
-    <v-row>
+    <v-row class="no-gutters fill-height ">
       <v-col>
+        <v-row class="flex-column no-gutters fill-height">
+          <v-col cols="auto" class="flex-shrink-1">
+            <v-sheet>
+              <v-toolbar>
+                <v-btn
+                  outlined
+                  text
+                  @click="toggleUnfinishedTaskList"
+                >未実施のタスク
+                <v-icon v-if="listOpen">
+                  mdi-close-box-outline
+                </v-icon>
+                <v-icon v-else>
+                  mdi-open-in-new
+                </v-icon>
+                </v-btn>
+              </v-toolbar>
+            </v-sheet>
+          </v-col>
+          <v-col cols="auto" class="flex-grow-1" style="position: relative;">
+            <v-sheet class="fill-height overflow-y-auto" style="width: 100%; position: absolute; left: 0; top: 0;">
+              <v-calendar
+                ref="calendar"
+                :events="tasks"
+                locale="ja"
+                color="primary"
+                type="week"
+                :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+                :event-color="getEventColor"
+                @click:event="showTask"
+                @click:time="createTask"
+                :interval-format="intervalFormat"
 
-        <v-toolbar>
-          <v-btn
-            outlined
-            text
-            @click="toggleUnfinishedTaskList"
-          >未実施のタスク
-          <v-icon v-if="listOpen">
-            mdi-close-box-outline
-          </v-icon>
-          <v-icon v-else>
-            mdi-open-in-new
-          </v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-calendar
-          ref="calendar"
-          :events="tasks"
-          locale="ja"
-          color="primary"
-          type="week"
-          :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-          :event-color="getEventColor"
-          @click:event="showTask"
-          @click:time="createTask"
-          :interval-format="intervalFormat"
+                @mousedown:event="startDrag"
+                @mousedown:time="startTime"
+                @mousemove:time="mouseMove"
+                @mouseup:time="endDrag"
+                @mouseleave.native="cancelDrag"
+              >
+                <template v-slot:event="{ event }">
+                  <div
+                    style="pointer-events:none"
+                    class="v-calendar-event"
+                  >
+                    <strong>{{ event.name }}</strong><br>
+                    {{ time(event.start) }} - {{ time(event.end) }}
+                  </div>
+                  <v-overlay
+                    v-if="event.study_record.is_finished"
+                    absolute
+                    opacity='0.5'
+                  ></v-overlay>
+                </template>
 
-          @mousedown:event="startDrag"
-          @mousedown:time="startTime"
-          @mousemove:time="mouseMove"
-          @mouseup:time="endDrag"
-          @mouseleave.native="cancelDrag"
-        >
-          <template v-slot:event="{ event }">
-            <div
-              style="pointer-events:none"
-              class="v-calendar-event"
-            >
-              <strong>{{ event.name }}</strong><br>
-              {{ time(event.start) }} - {{ time(event.end) }}
-            </div>
-            <v-overlay
-              v-if="event.study_record.is_finished"
-              absolute
-              opacity='0.5'
-            ></v-overlay>
-          </template>
-
-          <template v-slot:day-body="{ date }">
-            <div
-              :class="[date === getCurrentDate() ? ['first', 'v-current-time'] : '']"
-              :style="{ top: nowY }"
-            ></div>
-          </template>
-        </v-calendar>
+                <template v-slot:day-body="{ date }">
+                  <div
+                    :class="[date === getCurrentDate() ? ['first', 'v-current-time'] : '']"
+                    :style="{ top: nowY }"
+                  ></div>
+                </template>
+              </v-calendar>
+            </v-sheet>
+          </v-col>
+        </v-row>
 
       </v-col>
 
@@ -80,13 +88,13 @@
         cols="12" sm="3" md="3"
         >
         <UnfinishedTaskList
+          class="fill-height pl-3"
           :tasks="tasks"
           v-if="listOpen"
         ></UnfinishedTaskList>
       </v-col>
 
     </v-row>
-  </v-sheet>
 </template>
 
 <script>
