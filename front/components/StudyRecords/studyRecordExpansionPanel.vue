@@ -4,12 +4,12 @@
 
       <v-expansion-panel-header>
         <div class="d-flex" v-if="studyRecord.is_finished == true">
-          <v-card-text>
+          <v-card-text class="py-0">
             <v-icon>mdi-timer</v-icon>
             {{ fromToDateTime(studyRecord.start, studyRecord.end) }}
           </v-card-text>
         </div>
-        <v-card-text v-else>
+        <v-card-text v-else class="py-0">
           <v-icon>mdi-timer</v-icon>
           記録がありません
         </v-card-text>
