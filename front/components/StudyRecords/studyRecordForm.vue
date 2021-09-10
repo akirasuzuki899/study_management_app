@@ -6,11 +6,11 @@
     >
       <form>
         <v-card >
-          <v-card-text>
+          <v-card-text class="py-0">
             <v-container>
-              <v-row>
+              <v-row :class="{ 'no-gutters' : $vuetify.breakpoint.name == 'xs' }">
                 <!-- 開始日 -->
-                <v-col cols="12" sm="12" md="12" >
+                <v-col cols="12">
                   <DatePicker
                     v-model="formData.start_date"
                     name="日付"
@@ -21,7 +21,7 @@
                 </v-col>
 
                 <!-- 開始時間 -->
-                <v-col cols="12" sm="6" md="6">
+                <v-col cols="12" sm="6">
                   <SelectTime
                     vid="start_time"
                     v-model="formData.start_time"
@@ -34,7 +34,7 @@
                 </v-col>
 
                 <!-- 終了時間 -->
-                <v-col cols="12" sm="6" md="6">
+                <v-col cols="12" sm="6">
                   <SelectTime
                     v-model="formData.end_time"
                     name="終了時刻"
@@ -47,7 +47,7 @@
               </v-row>
             </v-container>
           </v-card-text>
-          <v-card-actions>
+          <v-card-actions class="pt-0">
             <v-alert
               v-model="alertable"
               class="ma-0 pa-1"
