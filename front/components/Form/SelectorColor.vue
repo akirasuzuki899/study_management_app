@@ -14,27 +14,22 @@
         @mouseup="colorMenu = true"
       >
         <template v-slot:prepend-inner>
-          <div
-            class="pa-2 rounded-circle"
-            :class="value"
-          ></div>
+          <v-icon :color="value">mdi-circle</v-icon>
         </template>
       </v-text-field>
     </template>
-    <v-list
-      class="d-flex justify-center"
-    >
-      <v-list-item
+    <v-sheet class="d-flex flex-wrap" style="width: 150px; height: 150px;">
+      <div 
         v-for="(color, index) in colors"
         :key="index"
-        @click="$emit('click', color); colorMenu = false"
+        style="width: calc(100%/3);"
+        class="align-self-center text-center"
       >
-        <div
-          class="pa-2 rounded-circle"
-          :class="color"
-        ></div>
-      </v-list-item>
-    </v-list>
+        <v-btn icon @click="$emit('click', color); colorMenu = false">
+          <v-icon :color="color">mdi-circle</v-icon>
+        </v-btn>
+      </div>
+    </v-sheet>
   </v-menu>
 </template>
 
@@ -44,7 +39,7 @@ export default {
   data () {
     return {
       colorMenu: false,
-      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+      colors: ['purple', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'amber', 'orange'],
     }
   },
   model: {
