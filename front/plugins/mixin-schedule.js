@@ -41,15 +41,13 @@ export default {
         const newStart = this.roundTime(newStartTime)
         const newEnd = newStart + duration
 
-        if (this.time(newEnd) !== "00:00" && tms.hour >= 0) {
-          this.dragUpdate({
-            dragEvent: this.dragEvent,
-            data: {
-              start: this.dateTime(newStart),
-              end: this.dateTime(newEnd),
-            }
-          })
-        }
+        this.dragUpdate({
+          dragEvent: this.dragEvent,
+          data: {
+            start: this.dateTime(newStart),
+            end: this.dateTime(newEnd),
+          }
+        })
 
       }
     },
