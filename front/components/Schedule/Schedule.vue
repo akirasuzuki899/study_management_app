@@ -84,15 +84,26 @@
       ></TaskForm>
 
       <v-col 
-        v-if="listOpen"
+        v-if="listOpen && $vuetify.breakpoint.name !== 'xs'"
         cols="12" sm="3" md="3"
         >
         <UnfinishedTaskList
           class="fill-height pl-3"
           :tasks="tasks"
-          v-if="listOpen"
         ></UnfinishedTaskList>
       </v-col>
+
+      <v-dialog
+        v-if="$vuetify.breakpoint.name == 'xs'"
+        v-model="listOpen"
+      >
+        <v-card style="height: 60vh;">
+          <UnfinishedTaskList
+            class="fill-height"
+            :tasks="tasks"
+          ></UnfinishedTaskList>
+        </v-card>
+      </v-dialog>
 
     </v-row>
 </template>
