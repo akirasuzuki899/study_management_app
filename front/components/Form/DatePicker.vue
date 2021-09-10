@@ -1,40 +1,77 @@
 <template>
-  <v-menu
-    v-model="datePicker"
-    :close-on-content-click="false"
-    :nudge-right="40"
-    transition="scale-transition"
-    offset-y
-    min-width="auto"
-  >
-    <template v-slot:activator="{ on, attrs }">
+  <div>
+    <v-menu
+      v-if="$vuetify.breakpoint.name !== 'xs'"
+      v-model="datePicker"
+      :close-on-content-click="false"
+      transition="scale-transition"
+      offset-y
+      min-width="auto"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <validation-provider
+          v-slot="{ errors }"
+          :name="name"
+          :vid="vid"
+          :rules="rules"
+        >
+          <v-text-field
+            :value="value"
+            :label="label"
+            prepend-icon="mdi-calendar"
+            :error-messages="errors"
+            readonly
+            :dense="dense"
+            v-bind="attrs"
+            v-on="on"
+          ></v-text-field>
+        </validation-provider>
+      </template>
+      <v-date-picker
+        :value="value"
+        :day-format="onlyNum"
+        :allowed-dates="dates ? allowedDates : null"
+        :first-day-of-week="1"
+        locale="ja-jp"
+        @input="datePicker = false; $emit('input', $event)"
+      ></v-date-picker>
+    </v-menu>
+    
+    <v-dialog
+      v-else
+      v-model="datePicker"
+      width="240"
+    >
+      <template v-slot:activator="{ on, attrs }">
       <validation-provider
         v-slot="{ errors }"
         :name="name"
         :vid="vid"
         :rules="rules"
       >
-        <v-text-field
-          :value="value"
-          :label="label"
-          prepend-icon="mdi-calendar"
-          :error-messages="errors"
-          readonly
-          :dense="dense"
-          v-bind="attrs"
-          v-on="on"
-        ></v-text-field>
-      </validation-provider>
-    </template>
-    <v-date-picker
-      :value="value"
-      :day-format="onlyNum"
-      :allowed-dates="dates ? allowedDates : null"
-      :first-day-of-week="1"
-      locale="ja-jp"
-      @input="datePicker = false; $emit('input', $event)"
-    ></v-date-picker>
-  </v-menu>
+          <v-text-field
+            :value="value"
+            :label="label"
+            prepend-icon="mdi-calendar"
+            :error-messages="errors"
+            readonly
+            :dense="dense"
+            v-bind="attrs"
+            v-on="on"
+          ></v-text-field>
+        </validation-provider>
+      </template>
+      <v-date-picker
+        width="240"
+        :value="value"
+        :day-format="onlyNum"
+        :allowed-dates="dates ? allowedDates : null"
+        :first-day-of-week="1"
+        locale="ja-jp"
+        @input="datePicker = false; $emit('input', $event)"
+      ></v-date-picker>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
