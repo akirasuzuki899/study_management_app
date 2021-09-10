@@ -4,6 +4,7 @@
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
+    min-width="150px"
   >
     <template v-slot:activator="{ attrs }">
       <v-text-field
