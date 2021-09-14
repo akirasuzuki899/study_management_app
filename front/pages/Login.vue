@@ -72,6 +72,10 @@
           <v-btn
             block
             color="secondary"
+            @click="login({
+                  email: 'testuser@test.com',
+                  password: 'password'
+                })"
           >ゲスト</v-btn>
         </v-col>
       </v-row>
