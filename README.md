@@ -29,7 +29,9 @@ URL：https://study-management-app.com<br><br>
 | Vue 2.6.13 | Ruby 2.7.2 | Docker |
 | Nuxt.js 2.15.6 | Rails 6.1.3 | CircleCI |
 | Vuetify 2.5.3 | RSpec / Rubocop | AWS |
-<br><br>
+<br>
+
+
 ## 工夫した点
 * スケジュール機能<br><br>
 ・スケジュールのテンプレートを作成することで、学習スケジュールの管理を簡単にしたこと<br>
