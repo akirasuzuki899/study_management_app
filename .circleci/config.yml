@@ -16,7 +16,6 @@ jobs:
           MYSQL_USER: root
         command: [--default-authentication-plugin=mysql_native_password]
     environment:
-      RAILS_MASTER_KEY: RAILS_MASTER_KEY
       RAILS_ENV: test
       DATABASE_HOST: '127.0.0.1'
     working_directory: ~/study_management_app/back
