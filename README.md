@@ -5,7 +5,9 @@
 使いやすさにこだわって作成しました（詳細は「工夫した点」セクションをご参照ください）<br>
 ゲストログインから簡単にアプリをお試しください！<br>
 URL：https://study-management-app.com<br><br>
+
 サービスのイメージ
+<br>
 ![DEMO](demo.gif "DEMO")
 <br><br><br>
 
