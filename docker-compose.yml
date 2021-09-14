@@ -26,19 +26,6 @@ services:
     stdin_open: true
     tty: true
 
-  # web:    
-  #   build:      
-  #     context: containers/nginx
-  #   container_name: nginx
-  #   volumes:
-  #     - public-data:/study_management_app/public
-  #     - tmp-data:/study_management_app/tmp
-  #   depends_on:      
-  #     - app    
-  #   ports:      
-  #     - 80:80
-    
-
   db:
     build: 
       context: ./back
