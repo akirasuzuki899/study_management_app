@@ -96,6 +96,11 @@ export default {
           icon: 'mdi-notebook-multiple',
           title: 'Plan',
           to: '/plan'
+        },
+        {
+          icon: 'mdi-chart-bar',
+          title: 'Summary',
+          to: '/Summary'
         }
       ],
       miniVariant: false,

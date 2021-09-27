@@ -27,6 +27,11 @@ Rails.application.routes.draw do
           patch :is_complete
         end
       end
+      resources :charts do
+        collection do
+          get :weekly
+        end
+      end
       get 'health_check', to: 'health_check#index'
       root 'static_pages#home'
     end
