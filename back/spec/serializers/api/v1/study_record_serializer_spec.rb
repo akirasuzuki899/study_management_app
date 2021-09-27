@@ -22,57 +22,7 @@ module Api
         expect(@subject[:end]).to eq("2050-05-17 11:00")
         expect(@subject[:is_finished]).to eq(false)
       end
-
-      it 'end_time = 00:00 かつ start_time > end_timeの時、endはstartの翌日であると有効' do
-          @study_record.assign_attributes({
-          start_time: "23:00",
-          end_time: "00:00",
-        })
-        subject = StudyRecordSerializer.new(@study_record).serializable_hash
-        expect(subject[:start]).to eq("2050-05-17 23:00")
-        expect(subject[:end]).to eq("2050-05-18 00:00")
-      end
-
-      it 'end_time = 00:00 かつ start_time = end_timeの時、endはstartの翌日であると有効' do
-        @study_record.assign_attributes({
-          start_time: "00:00",
-          end_time: "00:00",
-        })
-        subject = StudyRecordSerializer.new(@study_record).serializable_hash
-        expect(subject[:start]).to eq("2050-05-17 00:00")
-        expect(subject[:end]).to eq("2050-05-18 00:00")
-      end
-
-      it 'end_time ≠ 00:00 かつ start_time > end_timeの時、endはstartの翌日であると有効' do
-        @study_record.assign_attributes({
-          start_time: "23:00",
-          end_time: "00:15",
-        })
-        subject = StudyRecordSerializer.new(@study_record).serializable_hash
-        expect(subject[:start]).to eq("2050-05-17 23:00")
-        expect(subject[:end]).to eq("2050-05-18 00:15")
-      end
-
-      it 'end_time ≠ 00:00 かつ start_time < end_timeの時、endとstartは同じ日付であると有効' do
-        @study_record.assign_attributes({
-          start_time: "08:00",
-          end_time: "10:00",
-        })
-        subject = StudyRecordSerializer.new(@study_record).serializable_hash
-        expect(subject[:start]).to eq("2050-05-17 08:00")
-        expect(subject[:end]).to eq("2050-05-17 10:00")
-      end
-
-      it 'end_time ≠ 00:00 かつ start_time = end_timeの時、endはstartの翌日であると有効' do
-        @study_record.assign_attributes({
-          start_time: "08:00",
-          end_time: "08:00",
-        })
-        subject = StudyRecordSerializer.new(@study_record).serializable_hash
-        expect(subject[:start]).to eq("2050-05-17 08:00")
-        expect(subject[:end]).to eq("2050-05-18 08:00")
-      end
-
+      
     end
   end
 end
