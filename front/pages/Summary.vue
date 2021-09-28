@@ -1,51 +1,35 @@
 <template>
   <v-row>
-    <v-col>
+    <v-col cols="12">
       <div>
         <BarChart 
           v-if="loaded"
-          :chartdata="chartdata"
-          :options="options" />
+          :chartdata="bar_chartdata" />
+      </div>
+    </v-col>
+    <v-col cols="12">
+      <div>
+        <PieChart 
+          v-if="loaded"
+          :chartdata="pie_chartdata" />
       </div>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import BarChart from "../components/Chart"
+import BarChart from "../components/Chart/BarChart.vue"
+import PieChart from "../components/Chart/PieChart.vue"
 export default {
   components: {
-    BarChart
+    BarChart,
+    PieChart
   },
   data(){
     return {
         loaded: false,
-        chartdata: null,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          legend: {
-            display: false
-         },
-          scales: {
-            xAxes: [{
-              stacked: true,
-              scaleLabel: {
-                display: true,
-                labelString: '週'
-              }
-            }],
-            yAxes: [{
-              stacked: true,
-              ticks: {
-                beginAtZero: true, // 0からスタートするか
-                callback: function (label, index, labels) {
-                  return label + ' 時間';
-                }
-              }
-            }],
-          },
-        }
+        bar_chartdata: null,
+        pie_chartdata: null,
     }
   },
   async mounted () {
@@ -54,7 +38,8 @@ export default {
     .get('/api/v1/charts/weekly')
     .then(({ data }) => {
       console.log(data)
-      this.chartdata = data.chartdata
+      this.bar_chartdata = data.bar_chartdata
+      this.pie_chartdata = data.pie_chartdata
       this.loaded = true
     })
     .catch(error => {
