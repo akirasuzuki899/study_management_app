@@ -9,6 +9,7 @@ module Api
         sql = <<-"EOS"
         SELECT 
           SUM(TIMESTAMPDIFF(SECOND, study_records.start_time, study_records.end_time)/60/60) AS sum, 
+          `study_materials`.`id` AS study_materials_id, 
           `study_materials`.`title` AS study_materials_title, 
           DATE(`study_records`.`start_time`) AS start_date 
         FROM 
@@ -20,14 +21,15 @@ module Api
           AND 
           `study_records`.`start_time` BETWEEN '#{(today-6).beginning_of_day}' AND '#{today.end_of_day}' 
         GROUP BY 
-          `study_materials`.`title`, DATE(`study_records`.`start_time`)
+          `study_materials`.`id`, DATE(`study_records`.`start_time`)
         EOS
 
         items = ActiveRecord::Base.connection.select_all(sql).group_by{|i| i["study_materials_title"]}
 
         render json: {
           bar_chartdata: getBarChartdata(items, today-6, today), 
-          pie_chartdata: getPieChartdata(items)
+          pie_chartdata: getPieChartdata(items),
+          material_info: materialInfo(items)
         }
       end
       
@@ -79,6 +81,29 @@ module Api
         datasets = [{label: label, data: data, backgroundColor: backgroundColor}]
         chartdata = {labels: labels, datasets: datasets}
       end
+
+      def materialInfo(items)
+        materialInfo = []
+
+
+        material_ids = items.map do |item|
+          item[1][0]["study_materials_id"]
+        end
+
+        materials = StudyMaterial.where(id:  material_ids)
+
+        urls = materials.map do |material|
+          material.image_url
+        end
+
+        items.each.each_with_index do |item, i|
+          materialInfo.push({title: item[0], image_url: urls[i], color: getColor(i)})
+        end
+
+
+        materialInfo
+      end
+      
       
     end
   end
