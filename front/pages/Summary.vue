@@ -1,25 +1,70 @@
 <template>
   <div class="fill-height" style="width: 100%;">
-    <v-row v-if="loaded" class="no-gutters fill-height">
-        <v-col cols="12" md="6">
+    <v-row 
+      v-if="loaded" 
+      class="flex-column flex-nowrap flex-md-row flex-md-wrap fill-height"
+      :class="{ 'no-gutters' : $vuetify.breakpoint.name == 'xs' }"
+      >
+        <v-col cols="auto" md="6">
           <BarChart
-            :chartdata="bar_chartdata" />
+            :class="{ 'fill-height' : $vuetify.breakpoint.name == 'md' || 'lg' || 'xl',
+                             'pb-4' : $vuetify.breakpoint.name == 'xs' || 'sm' }"
+            :chartdata="bar_chartdata"
+          ></BarChart>
         </v-col>
-        <v-col cols="12" md="6">
-          <v-row class="no-gutters fill-height flex-column flex-nowrap flex-sm-row flex-sm-wrap flex-md-column flex-md-nowrap">
-            <v-col cols="auto" sm="6" md="auto" class="flex-shrink-1 flex-sm-shrink-0 flex-md-shrink-1">
+        <v-col cols="auto" md="6">
+          <v-row 
+            class="flex-column flex-nowrap flex-sm-row flex-sm-wrap flex-md-column flex-md-nowrap fill-height"
+            :class="{ 'no-gutters' : $vuetify.breakpoint.name == 'xs' }"
+          >
+            <v-col cols="auto" sm="6" md="auto" class="flex-shrink-1">
               <PieChart 
-                :chartdata="pie_chartdata" />
+                :class="{ 'pb-4' : $vuetify.breakpoint.name == 'xs' }"
+                :chartdata="pie_chartdata"
+              ></PieChart>
             </v-col>
-            <v-col cols="auto" sm="6" md="auto" class="flex-grow-1 flex-sm-grow-0 flex-md-grow-1" style="min-height: 200px; position: relative;">
-              <StudyMaterialList
-                style="width: 100%; position: absolute; left: 0; top: 0;"
-                :studyMaterials="material_info" />
+            <v-col cols="auto" sm="6" md="auto" class="flex-grow-1">
+              <div style="position: relative; min-height: 100px;" class="fill-height">
+                <v-data-table
+                  class="fill-height overflow-y-auto"
+                  style="width: 100%; position: absolute; left: 0; top: 0;"
+                  :headers="headers"
+                  :items="material_info"
+                  hide-default-header
+                  hide-default-footer
+                  mobile-breakpoint="0"
+                  :items-per-page=-1
+                  dense
+                >
+                  <template v-slot:[`item.color`]="{ item }">
+                    <v-icon
+                      dark
+                      :color="item.color"
+                      size="12"
+                    >
+                      mdi-circle
+                    </v-icon>
+                  </template>
+                  <template v-slot:[`item.image_url`]="{ item }">
+                    <v-avatar tile size="28">
+                      <v-img
+                        :src="item.image_url"
+                        contain
+                      ></v-img>
+                    </v-avatar>
+                  </template>
+                  <template v-slot:[`item.title`]="{ item }">
+                    <div class="text-truncate">
+                      {{item.title}}
+                    </div>
+                  </template>
+                </v-data-table>
+              </div>
             </v-col>
           </v-row>
         </v-col>
     </v-row>
-    <v-row v-else class="align-content-center text-center no-gutters fill-height">
+    <v-row v-else class="align-content-center text-center fill-height">
       <v-col cols="12">
         <v-progress-circular
           indeterminate
@@ -51,6 +96,11 @@ export default {
         bar_chartdata: null,
         pie_chartdata: null,
         material_info: null,
+        headers: [
+          { text: 'Color', value: 'color' },
+          { text: 'TextBooks', value: 'image_url' },
+          { text: 'Title', value: 'title' },
+        ],
     }
   },
   async mounted () {
@@ -70,3 +120,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">  
+  tbody {
+     tr:hover {
+        background-color: transparent !important;
+     }
+  }
+</style>

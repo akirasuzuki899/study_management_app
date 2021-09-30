@@ -16,6 +16,11 @@ export default {
           legend: {
             display: false
          },
+          elements: {
+            arc: {
+                borderWidth: 0
+            }
+          }
         },
     }
   },
