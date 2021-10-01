@@ -2,64 +2,75 @@
   <div class="fill-height" style="width: 100%;">
     <v-row 
       v-if="loaded" 
-      class="flex-column flex-nowrap flex-md-row flex-md-wrap fill-height"
-      :class="{ 'no-gutters' : $vuetify.breakpoint.name == 'xs' }"
+      class="no-gutters flex-column flex-nowrap flex-md-row flex-md-wrap fill-height"
       >
-        <v-col cols="auto" md="6">
-          <BarChart
-            :class="{ 'fill-height' : $vuetify.breakpoint.name == 'md' || 'lg' || 'xl',
-                             'pb-4' : $vuetify.breakpoint.name == 'xs' || 'sm' }"
-            :chartdata="bar_chartdata"
-          ></BarChart>
+        <v-col 
+          cols="auto" md="6" class="pr-md-3 pb-3 pb-md-0">
+          <v-card class="fill-height">
+            <v-card-text class="fill-height">
+              <BarChart
+                :class="{ 'fill-height' : $vuetify.breakpoint.name == 'md' || 'lg' || 'xl'}"
+                :chartdata="bar_chartdata"
+              ></BarChart>
+            </v-card-text>
+          </v-card>
         </v-col>
         <v-col cols="auto" md="6">
           <v-row 
-            class="flex-column flex-nowrap flex-sm-row flex-sm-wrap flex-md-column flex-md-nowrap fill-height"
-            :class="{ 'no-gutters' : $vuetify.breakpoint.name == 'xs' }"
+            class="no-gutters flex-column flex-nowrap flex-sm-row flex-sm-wrap flex-md-column flex-md-nowrap fill-height"
           >
-            <v-col cols="auto" sm="6" md="auto" class="flex-shrink-1">
-              <PieChart 
-                :class="{ 'pb-4' : $vuetify.breakpoint.name == 'xs' }"
-                :chartdata="pie_chartdata"
-              ></PieChart>
+            <v-col 
+              cols="auto" sm="6" md="auto" 
+              class="flex-shrink-1 pr-sm-3 pr-md-0  pb-3 pb-sm-0 pb-md-3">
+              <v-card class="fill-height">
+                <v-card-text class="fill-height">  
+                  <PieChart 
+                    :chartdata="pie_chartdata"
+                  ></PieChart>
+                </v-card-text>
+              </v-card>
             </v-col>
             <v-col cols="auto" sm="6" md="auto" class="flex-grow-1">
-              <div style="position: relative; min-height: 100px;" class="fill-height">
-                <v-data-table
-                  class="fill-height overflow-y-auto"
-                  style="width: 100%; position: absolute; left: 0; top: 0;"
-                  :headers="headers"
-                  :items="material_info"
-                  hide-default-header
-                  hide-default-footer
-                  mobile-breakpoint="0"
-                  :items-per-page=-1
-                  dense
-                >
-                  <template v-slot:[`item.color`]="{ item }">
-                    <v-icon
-                      dark
-                      :color="item.color"
-                      size="12"
+              <v-card class="fill-height">
+                <v-card-text class="fill-height">  
+                  <div class="fill-height" style="position: relative; min-height: 100px;">
+                    <v-data-table
+                      class="fill-height overflow-y-auto"
+                      style="width: 100%; position: absolute; left: 0; top: 0;"
+                      :headers="headers"
+                      :items="material_info"
+                      hide-default-header
+                      hide-default-footer
+                      mobile-breakpoint="0"
+                      :items-per-page=-1
+                      dense
                     >
-                      mdi-circle
-                    </v-icon>
-                  </template>
-                  <template v-slot:[`item.image_url`]="{ item }">
-                    <v-avatar tile size="28">
-                      <v-img
-                        :src="item.image_url"
-                        contain
-                      ></v-img>
-                    </v-avatar>
-                  </template>
-                  <template v-slot:[`item.title`]="{ item }">
-                    <div class="text-truncate">
-                      {{item.title}}
-                    </div>
-                  </template>
-                </v-data-table>
-              </div>
+                      <template v-slot:[`item.color`]="{ item }">
+                        <v-icon
+                          dark
+                          :color="item.color"
+                          size="12"
+                        >
+                          mdi-circle
+                        </v-icon>
+                      </template>
+                      <template v-slot:[`item.image_url`]="{ item }">
+                        <v-avatar tile size="28">
+                          <v-img
+                            :src="item.image_url"
+                            contain
+                          ></v-img>
+                        </v-avatar>
+                      </template>
+                      <template v-slot:[`item.title`]="{ item }">
+                        <div class="text-truncate">
+                          {{item.title}}
+                        </div>
+                      </template>
+                    </v-data-table>
+                  </div>
+                </v-card-text>
+              </v-card>
             </v-col>
           </v-row>
         </v-col>

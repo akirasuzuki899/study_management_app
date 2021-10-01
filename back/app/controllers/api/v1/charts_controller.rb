@@ -46,7 +46,7 @@ module Api
       end
 
       def getBarChartdata(items, from, to)
-        labels = (from.strftime("%m/%d")..to.strftime("%m/%d")).to_a
+        labels = (from..to).to_a.map { |i| i.strftime("%m/%d") }
         datasets = []
 
         items.each.each_with_index do |item, i|
