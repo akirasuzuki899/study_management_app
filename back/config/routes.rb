@@ -29,7 +29,9 @@ Rails.application.routes.draw do
       end
       resources :charts do
         collection do
+          get :daily
           get :weekly
+          get :monthly
         end
       end
       get 'health_check', to: 'health_check#index'
