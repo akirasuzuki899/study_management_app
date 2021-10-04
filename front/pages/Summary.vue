@@ -6,6 +6,7 @@
           <v-tab @click="getDailyData()">日</v-tab>
           <v-tab @click="getWeeklyData()">週</v-tab>
           <v-tab @click="getMonthlyData()">月</v-tab>
+          <v-tab >{{height}}</v-tab>
         </v-tabs>
       </v-col>
       <v-col cols="auto" class="flex-grow-1">
@@ -14,35 +15,55 @@
             v-if="loaded" 
             class="no-gutters flex-column flex-nowrap flex-md-row flex-md-wrap fill-height"
             >
-              <v-col cols="auto" md="6" class="pr-md-3 pb-3 pb-md-0">
-                <!-- <v-card class="fill-height">
-                  <v-card-text class="fill-height"> -->
-                    <BarChart
-                      :class="{ 'fill-height' : $vuetify.breakpoint.name == 'md' || 'lg' || 'xl'}"
-                      :chart-data="bar_chartdata"
-                    ></BarChart>
-                  <!-- </v-card-text>
-                </v-card> -->
+              <v-col 
+                cols="auto" md="6" 
+                class="pr-md-3 pb-3 pb-md-0"
+                :class="{ 'flex-shrink-1' : $vuetify.breakpoint.name == 'xs' || 'sm' }"
+              >
+                <v-row 
+                  class="no-gutters flex-column flex-nowrap fill-height"
+                >
+                  <v-col cols="auto" class="flex-shrink-1 pb-3">
+                    <div>
+                      学習時間(教材)
+                    </div>
+                  </v-col>
+                  <v-col cols="auto" class="flex-grow-1">
+                  <BarChart
+                    :chart-data="bar_chartdata"
+                    :styles="barChartHeight"
+                  ></BarChart>
+                  </v-col>
+                </v-row>
               </v-col>
-              <v-col cols="auto" md="6">
+              <v-col 
+                cols="auto" md="6"
+                :class="{'flex-grow-1' : $vuetify.breakpoint.name == 'xs' || 'sm'}"
+              >
                 <v-row 
                   class="no-gutters flex-column flex-nowrap flex-sm-row flex-sm-wrap flex-md-column flex-md-nowrap fill-height"
                 >
                   <v-col 
                     cols="auto" sm="6" md="auto" 
                     class="flex-shrink-1 pr-sm-3 pr-md-0  pb-3 pb-sm-0 pb-md-3">
-                    <!-- <v-card class="fill-height">
-                      <v-card-text class="fill-height">   -->
+                    <v-row  class="no-gutters flex-column flex-nowrap">
+                      <v-col cols="auto" class="pb-3">
+                        <div>
+                          時間配分(教材)
+                        </div>
+                      </v-col>
+                      <v-col cols="auto">
                         <PieChart 
                           :chart-data="pie_chartdata"
+                          :style="pieChartHeight"
                         ></PieChart>
-                      <!-- </v-card-text>
-                    </v-card> -->
+                      </v-col>
+                    </v-row>
                   </v-col>
                   <v-col cols="auto" sm="6" md="auto" class="flex-grow-1">
-                    <!-- <v-card class="fill-height">
-                      <v-card-text class="fill-height">   -->
-                        <div class="fill-height" style="position: relative; min-height: 100px;">
+                    <v-card outlined class="fill-height">
+                      <v-card-text class="fill-height">  
+                        <div class="fill-height" style="position: relative; min-height: 150px;">
                           <v-data-table
                             class="fill-height overflow-y-auto"
                             style="width: 100%; position: absolute; left: 0; top: 0;"
@@ -78,8 +99,8 @@
                             </template>
                           </v-data-table>
                         </div>
-                      <!-- </v-card-text>
-                    </v-card> -->
+                      </v-card-text>
+                    </v-card>
                   </v-col>
                 </v-row>
               </v-col>
@@ -112,6 +133,35 @@ export default {
     PieChart,
     StudyMaterialList
   },
+  computed: {
+      height () {
+        switch (this.$vuetify.breakpoint.name) {
+          case 'xs': return 'xs'
+          case 'sm': return 'sm'
+          case 'md': return 'md'
+          case 'lg': return 'lg'
+          case 'xl': return 'xl'
+        }
+      },
+      barChartHeight () {
+        switch (this.$vuetify.breakpoint.name) {
+          case 'xs': return { height: "150px" , position: 'relative'}
+          case 'sm': return { height: "250px" , position: 'relative'}
+          case 'md': return { height: "100%" , position: 'relative'}
+          case 'lg': return { height: "100%" , position: 'relative'}
+          case 'xl': return { height: "100%" , position: 'relative'}
+        }
+      },
+      pieChartHeight () {
+        switch (this.$vuetify.breakpoint.name) {
+          case 'xs': return { height: "150px" , position: 'relative'}
+          case 'sm': return { height: "250px" , position: 'relative'}
+          case 'md': return { height: "300px" , position: 'relative'}
+          case 'lg': return { height: "300px" , position: 'relative'}
+          case 'xl': return { height: "300px" , position: 'relative'}
+        }
+      }
+    },
   data(){
     return {
         loaded: false,

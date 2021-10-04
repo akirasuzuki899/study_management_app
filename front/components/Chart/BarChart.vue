@@ -16,20 +16,30 @@ export default {
           scales: {
             xAxes: [{
               stacked: true,
+              gridLines: {
+              color: '#393939'
+            },
               scaleLabel: {
                 display: true,
               }
             }],
             yAxes: [{
               stacked: true,
+              gridLines: {
+              color: '#393939'
+            },
               ticks: {
                 beginAtZero: true,
+                maxTicksLimit:5,
                 callback: function (label, index, labels) {
                   return label + ' 時間';
                 }
               }
             }],
           },
+          tooltips: {
+            
+          }
         }
     }
   },
