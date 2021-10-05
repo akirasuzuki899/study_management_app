@@ -143,16 +143,16 @@ module Api
                 item[1].each.each_with_index {|data, i|
 
                   if    format == "daily" then
-                    break data["sum"] if data["date"] == d
-                    break "0" if i == item[1].size - 1 
+                    break data["sum"].to_f if data["date"] == d
+                    break 0 if i == item[1].size - 1 
 
                   elsif format == "weekly" then
-                    break data["sum"] if data["week"] == d.cweek
-                    break "0" if i == item[1].size - 1 
+                    break data["sum"].to_f if data["week"] == d.cweek
+                    break 0 if i == item[1].size - 1 
 
                   elsif format == "monthly" then
-                    break data["sum"] if data["month"] == d
-                    break "0" if i == item[1].size - 1 
+                    break data["sum"].to_f if data["month"] == d
+                    break 0 if i == item[1].size - 1 
                   end
                 }
               }
@@ -171,7 +171,7 @@ module Api
             labels.push(item[0])
             label.push(item[0])
             backgroundColor.push(getColor(i))
-            data.push(item[1].sum { |hash| hash["sum"]})
+            data.push(item[1].sum { |hash| hash["sum"].to_f})
           end
 
           datasets = [{label: label, data: data, backgroundColor: backgroundColor}]

@@ -17,7 +17,7 @@
     "@nuxtjs/axios": "^5.13.1",
     "@rails/activestorage": "^6.0.3-7",
     "chart.js": "^2.9.4",
-    "chartjs-plugin-datalabels": "^2.0.0",
+    "chartjs-plugin-datalabels": "^1.0.0",
     "core-js": "^3.9.1",
     "nuxt": "^2.15.3",
     "vee-validate": "^3.4.8",

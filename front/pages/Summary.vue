@@ -6,7 +6,6 @@
           <v-tab @click="getDailyData()">日</v-tab>
           <v-tab @click="getWeeklyData()">週</v-tab>
           <v-tab @click="getMonthlyData()">月</v-tab>
-          <v-tab >{{height}}</v-tab>
         </v-tabs>
       </v-col>
       <v-col cols="auto" class="flex-grow-1">
@@ -134,15 +133,6 @@ export default {
     StudyMaterialList
   },
   computed: {
-      height () {
-        switch (this.$vuetify.breakpoint.name) {
-          case 'xs': return 'xs'
-          case 'sm': return 'sm'
-          case 'md': return 'md'
-          case 'lg': return 'lg'
-          case 'xl': return 'xl'
-        }
-      },
       barChartHeight () {
         switch (this.$vuetify.breakpoint.name) {
           case 'xs': return { height: "150px" , position: 'relative'}
@@ -192,7 +182,6 @@ export default {
       this.$axios
         .get('/api/v1/charts/weekly')
         .then(({ data }) => {
-          console.log(data)
           this.bar_chartdata = data.bar_chartdata
           this.pie_chartdata = data.pie_chartdata
           this.material_info = data.material_info
@@ -205,7 +194,6 @@ export default {
       this.$axios
         .get('/api/v1/charts/monthly')
         .then(({ data }) => {
-          console.log(data)
           this.bar_chartdata = data.bar_chartdata
           this.pie_chartdata = data.pie_chartdata
           this.material_info = data.material_info
