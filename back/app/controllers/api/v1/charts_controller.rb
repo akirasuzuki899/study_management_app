@@ -30,9 +30,8 @@ module Api
         fromTo = (today-6..today).to_a
 
         render json: {
-          bar_chartdata: getBarChartdata(items, fromTo, format), 
-          pie_chartdata: getPieChartdata(items),
-          material_info: materialInfo(items)
+          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format))}, 
+          pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items))},
         }
       end
 
@@ -63,9 +62,8 @@ module Api
         fromTo = (6.week.ago(today).monday..today.sunday).map { |i| i if i.wday == 1 }.compact
 
         render json: {
-          bar_chartdata: getBarChartdata(items, fromTo, format), 
-          pie_chartdata: getPieChartdata(items),
-          material_info: materialInfo(items)
+          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format))}, 
+          pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items))},
         }
       end
 
@@ -96,9 +94,8 @@ module Api
         fromTo = (6.month.ago(now).month..now.month).to_a
 
         render json: {
-          bar_chartdata: getBarChartdata(items, fromTo, format), 
-          pie_chartdata: getPieChartdata(items),
-          material_info: materialInfo(items)
+          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format))}, 
+          pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items))},
         }
       end
       
@@ -137,6 +134,7 @@ module Api
 
           datasets = items.map.with_index { |item, i| 
             {
+              id: item[1][0]["study_materials_id"],
               label: item[0], 
               backgroundColor:  getColor(i), 
               data: data = fromTo.map { |d|
@@ -161,41 +159,71 @@ module Api
         end
 
         def getPieChartdata(items)
-          labels = []
-          label = []
-          datasets = []
-          data = []
-          backgroundColor = []
-
-          items.each.each_with_index do |item, i|
-            labels.push(item[0])
-            label.push(item[0])
-            backgroundColor.push(getColor(i))
-            data.push(item[1].sum { |hash| hash["sum"].to_f})
-          end
-
-          datasets = [{label: label, data: data, backgroundColor: backgroundColor}]
+          labels = items.keys
+          datasets = getPieDatasets(items)
           chartdata = {labels: labels, datasets: datasets}
         end
 
-        def materialInfo(items)
-          materialInfo = []
+        def getPieDatasets(items)
+          datasets = [
+            {
+              id: [],
+              label: [],
+              backgroundColor: [],
+              data: [],
+            }
+          ]
 
-          material_ids = items.map do |item|
-            item[1][0]["study_materials_id"]
+          items.each.each_with_index { |item, i| 
+            datasets[0][:id].push(item[1][0]["study_materials_id"])
+            datasets[0][:label].push(item[0])
+            datasets[0][:backgroundColor].push(getColor(i))
+            datasets[0][:data].push(item[1].sum{ |i| i["sum"].to_f})
+          }
+
+          datasets
+        end
+
+        def getPieLegend(datasets)
+          total = datasets[0][:data].sum
+          material_ids = datasets[0][:id]
+          materials = StudyMaterial.with_attached_image.where(id: material_ids)
+
+          legend = datasets[0][:id].map.with_index{ |id, i| 
+            material = materials.find { |material| material.id == id }
+            {
+              image_url: material.image_url,
+              color: datasets[0][:backgroundColor][i],
+              title: datasets[0][:label][i],
+              sum: datasets[0][:data][i],
+              percentage: percentage = (datasets[0][:data][i]/total*100).round
+            }
+          }
+        end
+
+        def getBarLegend(datasets)
+          material_ids = datasets.map do |dataset|
+            dataset[:id]
           end
-
-          materials = StudyMaterial.where(id:  material_ids)
-
-          urls = materials.map do |material|
-            material.image_url
-          end
-
-          items.each.each_with_index do |item, i|
-            materialInfo.push({title: item[0], image_url: urls[i], color: getColor(i)})
-          end
-
-          materialInfo
+          
+          materials = StudyMaterial.with_attached_image.where(id: material_ids)
+          
+          legend = datasets.map{ |dataset| 
+            material = materials.find { |i| i.id == dataset[:id] }
+            dataset[:id] = material.image_url
+            dataset.transform_keys{ |k| 
+              case k
+              when :id 
+                :image_url
+              when :backgroundColor 
+                :color
+              when :label 
+                :title
+              else
+                k
+              end
+            }
+          }
         end
 
       

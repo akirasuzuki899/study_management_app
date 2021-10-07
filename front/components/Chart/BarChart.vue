@@ -40,10 +40,14 @@ export default {
           plugins: {
             datalabels: {
               formatter: (value, ctx) => {
-                const total = ctx.chart.$totalizer.totals[ctx.dataIndex]
-                return Number.isInteger(total)
-                  ? `${total}時間`
-                  : [`${Math.floor(total)}時間`, `${(total - Math.floor(total))*60}分`]
+                const sum = ctx.chart.$totalizer.totals[ctx.dataIndex]
+                if ( sum < 1 ) {
+                  return `${sum*60}分`
+                } else {
+                  return Number.isInteger(sum)
+                    ? `${sum}時間`
+                    : [`${Math.floor(sum)}時間`, `${(sum - Math.floor(sum))*60}分`]
+                }
               },
               font: {
                 size: 10,
