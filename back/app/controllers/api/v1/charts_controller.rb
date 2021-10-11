@@ -5,7 +5,18 @@ module Api
 
       def daily
         format = "daily"
-        today = Date.today
+        today  = Date.today
+        diff   = params[:diff].to_i  ## to_i は、数字に変更できなければ0を返す
+        from   = ''
+        to     = ''
+
+        if     params[:chart_type] == 'bar' 
+          from = today.beginning_of_day - 6.day + diff.week
+          to   = today.end_of_day               + diff.week
+        elsif  params[:chart_type] == 'pie'
+          from = today.beginning_of_day         + diff.day
+          to   = today.end_of_day               + diff.day
+        end
 
         sql = <<-"EOS"
         SELECT 
@@ -20,24 +31,35 @@ module Api
         WHERE 
           `study_records`.`user_id` = #{current_user.id}
           AND 
-          `study_records`.`start_time` BETWEEN '#{(today-6).beginning_of_day}' AND '#{today.end_of_day}' 
+          `study_records`.`start_time` BETWEEN '#{from}' AND '#{to}' 
         GROUP BY 
           `study_materials`.`id`, DATE(`study_records`.`start_time`)
         EOS
 
         items = ActiveRecord::Base.connection.select_all(sql).group_by{|i| i["study_materials_title"]}
 
-        fromTo = (today-6..today).to_a
+        fromTo = (from.to_date..to.to_date).to_a
 
         render json: {
-          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format))}, 
-          pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items))},
+          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format)), range: getChartRange(fromTo)}, 
+          # pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items)), range: getChartRange(fromTo)},
         }
       end
 
       def weekly
         format = "weekly"
         today = Date.today
+        diff   = params[:diff].to_i  ## to_i は、数字に変更できなければ0を返す
+        from   = ''
+        to     = ''
+
+        if     params[:chart_type] == 'bar' 
+          from = today.monday.beginning_of_day - 6.week + diff*7.week
+          to   = today.sunday.end_of_day                + diff*7.week
+        elsif  params[:chart_type] == 'pie'
+          from = today.monday.beginning_of_day          + diff.week
+          to   = today.sunday.end_of_day                + diff.week
+        end
 
         sql = <<-"EOS"
         SELECT 
@@ -52,24 +74,35 @@ module Api
         WHERE 
           `study_records`.`user_id` = #{current_user.id}
           AND 
-          `study_records`.`start_time` BETWEEN '#{6.week.ago(today).monday.beginning_of_day}' AND '#{today.sunday.end_of_day}' 
+          `study_records`.`start_time` BETWEEN '#{from}' AND '#{to}' 
         GROUP BY 
           `study_materials`.`id`, WEEK(`study_records`.`start_time`, 3)
         EOS
 
         items = ActiveRecord::Base.connection.select_all(sql).group_by{|i| i["study_materials_title"]}
 
-        fromTo = (6.week.ago(today).monday..today.sunday).map { |i| i if i.wday == 1 }.compact
+        fromTo = (from.to_date..to.to_date).map { |i| i if i.wday == 1 }.compact
 
         render json: {
-          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format))}, 
-          pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items))},
+          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format)), range: getChartRange(fromTo)}, 
+          # pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items))},
         }
       end
 
       def monthly
         format = "monthly"
         now = Time.now
+        diff   = params[:diff].to_i  ## to_i は、数字に変更できなければ0を返す
+        from   = ''
+        to     = ''
+
+        if     params[:chart_type] == 'bar' 
+          from = now.at_beginning_of_month - 6.month + diff*7.month
+          to   = now.at_end_of_month                 + diff*7.month
+        elsif  params[:chart_type] == 'pie'
+          from = now.at_beginning_of_month           + diff.month
+          to   = now.at_end_of_month                 + diff.month
+        end
 
         sql = <<-"EOS"
         SELECT 
@@ -84,17 +117,18 @@ module Api
         WHERE 
           `study_records`.`user_id` = #{current_user.id}
           AND 
-          `study_records`.`start_time` BETWEEN '#{6.month.ago(now).at_beginning_of_month}' AND '#{now.at_end_of_month}' 
+          `study_records`.`start_time` BETWEEN '#{from}' AND '#{to}' 
         GROUP BY 
           `study_materials`.`id`, MONTH(`study_records`.`start_time`)
         EOS
 
         items = ActiveRecord::Base.connection.select_all(sql).group_by{|i| i["study_materials_title"]}
 
-        fromTo = (6.month.ago(now).month..now.month).to_a
+        fromTo = (from.to_date..to.to_date).select{ |i| i.day == 1}
+        fromTo[-1] = fromTo.last.end_of_month
 
         render json: {
-          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format))}, 
+          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format)), range: getChartRange(fromTo)}, 
           pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items))},
         }
       end
@@ -102,6 +136,12 @@ module Api
 
       private
 
+        def getChartRange(fromTo)
+          {
+            start: fromTo.first,
+            end: fromTo.last
+          }
+        end
 
         def getColor(index)
           colors = [
@@ -125,7 +165,7 @@ module Api
             if    format == "daily" || format == "weekly" then
               i.strftime("%m/%d") 
             elsif format == "monthly" then
-              "#{i}月"
+              i.strftime("%m月") 
             end
           }
         end
@@ -149,7 +189,7 @@ module Api
                     break 0 if i == item[1].size - 1 
 
                   elsif format == "monthly" then
-                    break data["sum"].to_f if data["month"] == d
+                    break data["sum"].to_f if data["month"] == d.month
                     break 0 if i == item[1].size - 1 
                   end
                 }

@@ -1,18 +1,11 @@
 <template>
   <v-card class="fill-height" style="width: 100%;">
-    <v-row class="flex-column no-gutters fill-height">
-      <v-col cols="auto" class="flex-shrink-1">
-        <v-tabs>
-          <v-tab @click="getDailyData()">日</v-tab>
-          <v-tab @click="getWeeklyData()">週</v-tab>
-          <v-tab @click="getMonthlyData()">月</v-tab>
-          <v-tab >{{height}}</v-tab>
-        </v-tabs>
-      </v-col>
+    <v-row 
+      v-if="loaded" 
+      class="flex-column no-gutters fill-height">
       <v-col cols="auto" class="flex-grow-1">
         <v-card-text class="fill-height">
           <v-row 
-            v-if="loaded" 
             class="no-gutters flex-column flex-nowrap flex-md-row flex-md-wrap fill-height"
             >
 
@@ -33,8 +26,26 @@
                         </div>
                       </v-col>
                       <v-col cols="auto">
+                        <v-tabs grow>
+                          <v-tab @click="getDailyData('bar', 0)">日</v-tab>
+                          <v-tab @click="getWeeklyData('bar', 0)">週</v-tab>
+                          <v-tab @click="getMonthlyData('bar', 0)">月</v-tab>
+                        </v-tabs>
+                      </v-col>
+                      <v-col cols="auto">
+                        <div class="text-caption text-center">
+                          <v-icon
+                            @click="getChartData(bar.format, 'bar', bar.diff-1)"
+                          >mdi-chevron-left</v-icon>
+                            {{`${dateYyMmDd(bar.range.start)} ~ ${dateYyMmDd(bar.range.end)}`}} 
+                          <v-icon
+                            @click="getChartData(bar.format, 'bar', bar.diff+1)"
+                          >mdi-chevron-right</v-icon>
+                        </div>
+                      </v-col>
+                      <v-col cols="auto">
                         <BarChart
-                          :chart-data="bar_chartdata"
+                          :chart-data="bar.chartdata"
                           :styles="ChartHeight"
                         ></BarChart>
                       </v-col>
@@ -48,7 +59,7 @@
                       >
                         <div class="fill-height" style="position: relative; min-height: 150px;">
                           <ChartLegend
-                            :items="bar_legend"
+                            :items="bar.legend"
                             :headers="bar_headers"
                             :custom="true"
                           >
@@ -144,19 +155,19 @@
 
 
           </v-row>
-          <v-row v-else class="align-content-center text-center fill-height">
-            <v-col cols="12">
-              <v-progress-circular
-                indeterminate
-                color="primary"
-                class="mb-4"
-              ></v-progress-circular>
-            </v-col>
-            <v-col cols="12" class="font-weight-bold">
-              Loading...
-            </v-col>
-          </v-row>
         </v-card-text>
+      </v-col>
+    </v-row>
+    <v-row v-else class="align-content-center text-center fill-height">
+      <v-col cols="12">
+        <v-progress-circular
+          indeterminate
+          color="primary"
+          class="mb-4"
+        ></v-progress-circular>
+      </v-col>
+      <v-col cols="12" class="font-weight-bold">
+        Loading...
       </v-col>
     </v-row>
   </v-card>
@@ -166,12 +177,14 @@
 import BarChart from "../components/Chart/BarChart.vue"
 import PieChart from "../components/Chart/PieChart.vue"
 import ChartLegend from "../components/Chart/ChartLegend.vue"
+import mixinMoment from "../plugins/mixin-moment"
 export default {
   components: {
     BarChart,
     PieChart,
     ChartLegend,
   },
+  mixins: [mixinMoment],
   computed: {
       height () {
         switch (this.$vuetify.breakpoint.name) {
@@ -208,10 +221,17 @@ export default {
   data(){
     return {
         loaded: false,
-        bar_chartdata: null,
-        pie_chartdata: null,
-        bar_legend: null,
-        pie_legend: null,
+        bar: {
+          chartdata: {},  //受け取るデータ
+          legend: [],
+          range: {
+            start: null,
+            end: null
+          },
+          chart_type: null,  //フロントのみ
+          format: null,
+          diff: 0
+        },
         bar_headers: [
           { text: 'Color', value: 'color', cellClass: 'td-color', divider: true},
           { text: 'TextBooks', value: 'image_url', cellClass: 'td-image', divider: true},
@@ -227,51 +247,45 @@ export default {
     }
   },
   methods: {
-    getDailyData(){
+    getChartData(format ,chart_type, diff){
       return this.$axios
-        .get('/api/v1/charts/daily')
+        .get(`/api/v1/charts/${format}?chart_type=${chart_type}&diff=${diff}`)
         .then(({ data }) => {
           console.log(data)
-          this.bar_chartdata = data.bar.chartdata
-          this.pie_chartdata = data.pie.chartdata
-          this.bar_legend = data.bar.legend
-          this.pie_legend = data.pie.legend
+          this[chart_type].chartdata = data.bar.chartdata
+          this[chart_type].legend = data.bar.legend
+          this[chart_type].range = data.bar.range
+          this[chart_type].diff = diff
+          console.log(diff)
         })
         .catch(error => {
           console.log(error)
         })
     },
-    getWeeklyData(){
-      this.$axios
-        .get('/api/v1/charts/weekly')
-        .then(({ data }) => {
-          this.bar_chartdata = data.bar.chartdata
-          this.pie_chartdata = data.pie.chartdata
-          this.bar_legend = data.bar.legend
-          this.pie_legend = data.pie.legend
-        })
-        .catch(error => {
-          console.log(error)
-        })
+    getDailyData(chart_type, diff){
+      this.bar.format = 'daily'
+      this.getChartData('daily', chart_type, diff)
     },
-    getMonthlyData(){
-      this.$axios
-        .get('/api/v1/charts/monthly')
-        .then(({ data }) => {
-          this.bar_chartdata = data.bar.chartdata
-          this.pie_chartdata = data.pie.chartdata
-          this.bar_legend = data.bar.legend
-          this.pie_legend = data.pie.legend
-        })
-        .catch(error => {
-          console.log(error)
-        })
+    getWeeklyData(chart_type, diff){
+      this.bar.format = 'weekly'
+      this.getChartData('weekly', chart_type, diff)
     },
+    getMonthlyData(chart_type, diff){
+      this.bar.format = 'monthly'
+      this.getChartData('monthly', chart_type, diff)
+    },
+
   },
   async mounted () {
     this.loaded = false
-    await this.getDailyData()
+    await this.getDailyData('bar', 0)
     this.loaded = true
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.v-tabs ::v-deep .v-slide-group__prev {
+display: none !important;
+}
+</style>
