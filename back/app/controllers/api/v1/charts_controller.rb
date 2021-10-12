@@ -3,20 +3,14 @@ module Api
     class ChartsController < ApplicationController
       before_action :authenticate_user!
 
-      def daily
-        format = "daily"
-        today  = Date.today
-        diff   = params[:diff].to_i  ## to_i は、数字に変更できなければ0を返す
-        from   = ''
-        to     = ''
+      def index
+        barFormat  = "daily"
+        pieFormat  = "weekly"
+        today      = Date.today
+        from       = today.beginning_of_day - 6.day
+        to         = today.end_of_day              
 
-        if     params[:chart_type] == 'bar' 
-          from = today.beginning_of_day - 6.day + diff.week
-          to   = today.end_of_day               + diff.week
-        elsif  params[:chart_type] == 'pie'
-          from = today.beginning_of_day         + diff.day
-          to   = today.end_of_day               + diff.day
-        end
+        fromTo = (from.to_date..to.to_date).to_a
 
         sql = <<-"EOS"
         SELECT 
@@ -38,12 +32,55 @@ module Api
 
         items = ActiveRecord::Base.connection.select_all(sql).group_by{|i| i["study_materials_title"]}
 
+        render json: {
+          bar: {chartdata: getBarChartdata(items, fromTo, barFormat), legend: getBarLegend(getBarDatasets(items, fromTo, barFormat)), range: getChartRange(from.to_date, to.to_date)}, 
+          pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items)), range: getChartRange(from.to_date, to.to_date)}
+        }
+      end
+      
+
+      def daily
+        format = "daily"
+        today  = Date.today
+        diff   = params[:diff].to_i  ## to_i は、数字に変更できなければ0を返す
+        from   = ''
+        to     = ''
+
+        if     params[:chart_type] == 'bar' 
+          from = today.beginning_of_day - 6.day + diff.week
+          to   = today.end_of_day               + diff.week
+        elsif  params[:chart_type] == 'pie'
+          from = today.beginning_of_day         + diff.day
+          to   = today.end_of_day               + diff.day
+        end
+
         fromTo = (from.to_date..to.to_date).to_a
 
-        render json: {
-          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format)), range: getChartRange(fromTo)}, 
-          # pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items)), range: getChartRange(fromTo)},
-        }
+        sql = <<-"EOS"
+        SELECT 
+          SUM(TIMESTAMPDIFF(SECOND, study_records.start_time, study_records.end_time)/60/60) AS sum, 
+          `study_materials`.`id` AS study_materials_id, 
+          `study_materials`.`title` AS study_materials_title, 
+          DATE(`study_records`.`start_time`) AS date 
+        FROM 
+          `study_records`
+        INNER JOIN 
+          `study_materials` ON `study_materials`.`id` = `study_records`.`study_material_id` 
+        WHERE 
+          `study_records`.`user_id` = #{current_user.id}
+          AND 
+          `study_records`.`start_time` BETWEEN '#{from}' AND '#{to}' 
+        GROUP BY 
+          `study_materials`.`id`, DATE(`study_records`.`start_time`)
+        EOS
+
+        items = ActiveRecord::Base.connection.select_all(sql).group_by{|i| i["study_materials_title"]}
+
+        if params[:chart_type] == 'bar' 
+          render json: { bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format)), range: getChartRange(from.to_date, to.to_date)}}
+        elsif  params[:chart_type] == 'pie'
+          render json: { pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items)), range: getChartRange(from.to_date, to.to_date)} }
+        end
       end
 
       def weekly
@@ -54,12 +91,16 @@ module Api
         to     = ''
 
         if     params[:chart_type] == 'bar' 
-          from = today.monday.beginning_of_day - 6.week + diff*7.week
-          to   = today.sunday.end_of_day                + diff*7.week
+          from   = today.monday.beginning_of_day - 6.week + diff*7.week
+          to     = today.sunday.end_of_day                + diff*7.week
         elsif  params[:chart_type] == 'pie'
-          from = today.monday.beginning_of_day          + diff.week
-          to   = today.sunday.end_of_day                + diff.week
+          # from   = today.monday.beginning_of_day          + diff.week
+          # to     = today.sunday.end_of_day                + diff.week
+          from = today.beginning_of_day          - 6.day  + diff.week
+          to   = today.end_of_day                         + diff.week
         end
+        
+        fromTo = (from.to_date..to.to_date).select { |i| i if i.wday == 1 }
 
         sql = <<-"EOS"
         SELECT 
@@ -81,12 +122,11 @@ module Api
 
         items = ActiveRecord::Base.connection.select_all(sql).group_by{|i| i["study_materials_title"]}
 
-        fromTo = (from.to_date..to.to_date).map { |i| i if i.wday == 1 }.compact
-
-        render json: {
-          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format)), range: getChartRange(fromTo)}, 
-          # pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items))},
-        }
+        if params[:chart_type] == 'bar' 
+          render json: { bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format)), range: getChartRange(from.to_date, to.to_date)}}
+        elsif  params[:chart_type] == 'pie'
+          render json: { pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items)), range: getChartRange(from.to_date, to.to_date)} }
+        end
       end
 
       def monthly
@@ -103,6 +143,8 @@ module Api
           from = now.at_beginning_of_month           + diff.month
           to   = now.at_end_of_month                 + diff.month
         end
+
+        fromTo = (from.to_date..to.to_date).select{ |i| i.day == 1}
 
         sql = <<-"EOS"
         SELECT 
@@ -124,22 +166,20 @@ module Api
 
         items = ActiveRecord::Base.connection.select_all(sql).group_by{|i| i["study_materials_title"]}
 
-        fromTo = (from.to_date..to.to_date).select{ |i| i.day == 1}
-        fromTo[-1] = fromTo.last.end_of_month
-
-        render json: {
-          bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format)), range: getChartRange(fromTo)}, 
-          pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items))},
-        }
+        if params[:chart_type] == 'bar' 
+          render json: { bar: {chartdata: getBarChartdata(items, fromTo, format), legend: getBarLegend(getBarDatasets(items, fromTo, format)), range: getChartRange(from.to_date, to.to_date)}}
+        elsif  params[:chart_type] == 'pie'
+          render json: { pie: {chartdata: getPieChartdata(items), legend: getPieLegend(getPieDatasets(items)), range: getChartRange(from.to_date, to.to_date)} }
+        end
       end
       
 
       private
 
-        def getChartRange(fromTo)
+        def getChartRange(from, to)
           {
-            start: fromTo.first,
-            end: fromTo.last
+            start: from,
+            end: to,
           }
         end
 
