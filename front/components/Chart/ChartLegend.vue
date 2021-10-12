@@ -4,6 +4,7 @@
     style="width: 100%; position: absolute; left: 0; top: 0;"
     :headers="headers"
     :items="items"
+    no-data-text="該当する期間のログはありません"
     hide-default-header
     hide-default-footer
     mobile-breakpoint="0"

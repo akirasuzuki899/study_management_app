@@ -1,5 +1,5 @@
 <template>
-  <v-card class="fill-height" style="width: 100%;">
+  <v-card class="fill-height" style="width: 100%;" id="test">
     <v-row 
       v-if="loaded" 
       class="flex-column no-gutters fill-height">
@@ -22,9 +22,9 @@
                     cols="auto" sm="6" md="auto" 
                     class="flex-shrink-1 pr-sm-3 pr-md-0  pb-3 pb-sm-0 pb-md-3">
                     <v-row  class="no-gutters flex-column flex-nowrap">
-                      <v-col cols="auto" class="pb-3">
-                        <div>
-                          学習時間(教材)
+                      <v-col cols="auto" class="pb-0 pb-sm-3">
+                        <div class="text-subtitle-1">
+                          学習時間
                         </div>
                       </v-col>
                       <v-col cols="auto">
@@ -35,11 +35,13 @@
                         </v-tabs>
                       </v-col>
                       <v-col cols="auto">
-                        <div class="text-caption text-center">
+                        <div class="text-caption d-flex align-center mx-auto my-3" style="max-width: 400px;">
                           <v-icon
                             @click="getChartData(bar.format, 'bar', bar.diff-1)"
                           >mdi-chevron-left</v-icon>
+                          <v-spacer></v-spacer>
                             {{barChartRange}} 
+                          <v-spacer></v-spacer>
                           <v-icon
                             @click="getChartData(bar.format, 'bar', bar.diff+1)"
                           >mdi-chevron-right</v-icon>
@@ -119,9 +121,9 @@
                     cols="auto" sm="6" md="auto" 
                     class="flex-shrink-1 pr-sm-3 pr-md-0  pb-3 pb-sm-0 pb-md-3">
                     <v-row  class="no-gutters flex-column flex-nowrap">
-                      <v-col cols="auto" class="pb-3">
-                        <div>
-                          時間配分(教材)
+                      <v-col cols="auto" class="pb-0 pb-sm-3">
+                        <div class="text-subtitle-1">
+                          時間配分
                         </div>
                       </v-col>
                       <v-col cols="auto">
@@ -132,11 +134,13 @@
                         </v-tabs>
                       </v-col>
                       <v-col cols="auto">
-                        <div class="text-caption text-center">
+                        <div class="text-caption d-flex align-center mx-auto my-3" style="max-width: 400px;">
                           <v-icon
                             @click="getChartData(pie.format, 'pie', pie.diff-1)"
                           >mdi-chevron-left</v-icon>
+                          <v-spacer></v-spacer>
                             {{pieChartRange}} 
+                          <v-spacer></v-spacer>
                           <v-icon
                             @click="getChartData(pie.format, 'pie', pie.diff+1)"
                           >mdi-chevron-right</v-icon>
@@ -146,6 +150,8 @@
                         <PieChart
                           :chart-data="pie.chartdata"
                           :style="ChartHeight"
+                          @chart:render="scrollTo(positionY)"
+                          @chart:update="scrollTo(positionY)"
                         ></PieChart>
                       </v-col>
                     </v-row>
@@ -283,6 +289,7 @@ export default {
             { text: 'Percentage', value: 'percentage', cellClass: 'td-percentage'},
           ],
         },
+        positionY: null,
     }
   },
   methods: {
@@ -309,6 +316,7 @@ export default {
         .get(`/api/v1/charts/${format}?chart_type=${chart_type}&diff=${diff}`)
         .then(({ data }) => {
           console.log(data)
+          this.setPositionY()
           this[chart_type].chartdata = data[chart_type].chartdata
           this[chart_type].legend = data[chart_type].legend
           this[chart_type].range = data[chart_type].range
@@ -329,6 +337,12 @@ export default {
     getMonthlyData(chart_type, diff){
       this[chart_type].format = 'monthly'
       this.getChartData('monthly', chart_type, diff)
+    },
+    setPositionY() {
+      this.positionY = window.scrollY
+    },
+    scrollTo(positionY){
+      window.scrollTo(0,positionY)
     },
 
   },
