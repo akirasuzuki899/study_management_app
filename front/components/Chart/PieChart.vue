@@ -13,7 +13,10 @@ export default {
           maintainAspectRatio: false,
           legend: {
             display: false
-         },
+          },
+          tooltips: {
+            enabled: false
+          },
           elements: {
             arc: {
                 borderWidth: 0

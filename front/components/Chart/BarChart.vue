@@ -37,34 +37,13 @@ export default {
               top: 30
             }
           },
-          plugins: {
-            datalabels: {
-              formatter: (value, ctx) => {
-                const sum = ctx.chart.$totalizer.totals[ctx.dataIndex]
-                if ( sum < 1 ) {
-                  return `${sum*60}分`
-                } else {
-                  return Number.isInteger(sum)
-                    ? `${sum}時間`
-                    : [`${Math.floor(sum)}時間`, `${(sum - Math.floor(sum))*60}分`]
-                }
-              },
-              font: {
-                size: 10,
-              },
-              textAlign: 'center',
-              align: 'end',
-              anchor: 'end',
-              display: function(ctx) {
-                const total = ctx.chart.$totalizer.totals[ctx.dataIndex]
-                return ctx.datasetIndex === ctx.chart.$totalizer.utmost && total !== 0
-              }
-            }
-          },
           responsive: true,
           maintainAspectRatio: false,
           legend: {
             display: false
+          },
+          tooltips: {
+            enabled: false
           },
           scales: {
             xAxes: [{
@@ -89,6 +68,30 @@ export default {
                 }
               }
             }],
+          },
+          plugins: {
+            datalabels: {
+              formatter: (value, ctx) => {
+                const sum = ctx.chart.$totalizer.totals[ctx.dataIndex]
+                if ( sum < 1 ) {
+                  return `${sum*60}分`
+                } else {
+                  return Number.isInteger(sum)
+                    ? `${sum}時間`
+                    : [`${Math.floor(sum)}時間`, `${(sum - Math.floor(sum))*60}分`]
+                }
+              },
+              font: {
+                size: 10,
+              },
+              textAlign: 'center',
+              align: 'end',
+              anchor: 'end',
+              display: function(ctx) {
+                const total = ctx.chart.$totalizer.totals[ctx.dataIndex]
+                return ctx.datasetIndex === ctx.chart.$totalizer.utmost && total !== 0
+              }
+            }
           },
         }
     }

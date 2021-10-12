@@ -20,6 +20,12 @@ export default {
         return moment(date).format('MM月DD日')
       }
     },
+    dateYyMmDd: function() {
+      return function(date){
+        if (!date) return ''
+        return moment(date).format('YYYY月MM月DD日')
+      }
+    },
     time: function(){
       return function(time) {
         if (!time) return ''

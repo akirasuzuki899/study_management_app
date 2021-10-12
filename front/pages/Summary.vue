@@ -1,22 +1,17 @@
 <template>
-  <v-card class="fill-height" style="width: 100%;">
-    <v-row class="flex-column no-gutters fill-height">
-      <v-col cols="auto" class="flex-shrink-1">
-        <v-tabs>
-          <v-tab @click="getDailyData()">日</v-tab>
-          <v-tab @click="getWeeklyData()">週</v-tab>
-          <v-tab @click="getMonthlyData()">月</v-tab>
-          <v-tab >{{height}}</v-tab>
-        </v-tabs>
-      </v-col>
+  <v-card class="fill-height" style="width: 100%;" id="test">
+    <v-row 
+      v-if="loaded" 
+      class="flex-column no-gutters fill-height">
       <v-col cols="auto" class="flex-grow-1">
         <v-card-text class="fill-height">
           <v-row 
-            v-if="loaded" 
             class="no-gutters flex-column flex-nowrap flex-md-row flex-md-wrap fill-height"
             >
 
-              <v-col 
+
+              <!-- barChart -->
+              <v-col  
                 cols="auto" md="6"
                 class="flex-grow-1 pb-6 pb-md-0 pr-md-3"
               >
@@ -27,14 +22,34 @@
                     cols="auto" sm="6" md="auto" 
                     class="flex-shrink-1 pr-sm-3 pr-md-0  pb-3 pb-sm-0 pb-md-3">
                     <v-row  class="no-gutters flex-column flex-nowrap">
-                      <v-col cols="auto" class="pb-3">
-                        <div>
-                          学習時間(教材)
+                      <v-col cols="auto" class="pb-0 pb-sm-3">
+                        <div class="text-subtitle-1">
+                          学習時間
+                        </div>
+                      </v-col>
+                      <v-col cols="auto">
+                        <v-tabs grow v-model="bar.format">
+                          <v-tab @click="getDailyData('bar', 0)" href="#daily">日</v-tab>
+                          <v-tab @click="getWeeklyData('bar', 0)" href="#weekly">週</v-tab>
+                          <v-tab @click="getMonthlyData('bar', 0)" href="#monthly">月</v-tab>
+                        </v-tabs>
+                      </v-col>
+                      <v-col cols="auto">
+                        <div class="text-caption d-flex align-center mx-auto my-3" style="max-width: 400px;">
+                          <v-icon
+                            @click="getChartData(bar.format, 'bar', bar.diff-1)"
+                          >mdi-chevron-left</v-icon>
+                          <v-spacer></v-spacer>
+                            {{barChartRange}} 
+                          <v-spacer></v-spacer>
+                          <v-icon
+                            @click="getChartData(bar.format, 'bar', bar.diff+1)"
+                          >mdi-chevron-right</v-icon>
                         </div>
                       </v-col>
                       <v-col cols="auto">
                         <BarChart
-                          :chart-data="bar_chartdata"
+                          :chart-data="bar.chartdata"
                           :styles="ChartHeight"
                         ></BarChart>
                       </v-col>
@@ -48,8 +63,7 @@
                       >
                         <div class="fill-height" style="position: relative; min-height: 150px;">
                           <ChartLegend
-                            :items="bar_legend"
-                            :headers="bar_headers"
+                            :items="bar.legend"
                             :custom="true"
                           >
                             <template v-slot:item="{ item }">
@@ -92,7 +106,10 @@
                   </v-col>
                 </v-row>
               </v-col>
+              <!-- barChart -->
 
+
+              <!-- pieChart -->
               <v-col 
                 cols="auto" md="6"
                 class="flex-grow-1 pl-md-3"
@@ -104,15 +121,37 @@
                     cols="auto" sm="6" md="auto" 
                     class="flex-shrink-1 pr-sm-3 pr-md-0  pb-3 pb-sm-0 pb-md-3">
                     <v-row  class="no-gutters flex-column flex-nowrap">
-                      <v-col cols="auto" class="pb-3">
-                        <div>
-                          時間配分(教材)
+                      <v-col cols="auto" class="pb-0 pb-sm-3">
+                        <div class="text-subtitle-1">
+                          時間配分
                         </div>
                       </v-col>
                       <v-col cols="auto">
-                        <PieChart 
-                          :chart-data="pie_chartdata"
+                        <v-tabs grow v-model="pie.format">
+                          <v-tab @click="getDailyData('pie', 0)" href="#daily">日</v-tab>
+                          <v-tab @click="getWeeklyData('pie', 0)" href="#weekly">週</v-tab>
+                          <v-tab @click="getMonthlyData('pie', 0)" href="#monthly">月</v-tab>
+                        </v-tabs>
+                      </v-col>
+                      <v-col cols="auto">
+                        <div class="text-caption d-flex align-center mx-auto my-3" style="max-width: 400px;">
+                          <v-icon
+                            @click="getChartData(pie.format, 'pie', pie.diff-1)"
+                          >mdi-chevron-left</v-icon>
+                          <v-spacer></v-spacer>
+                            {{pieChartRange}} 
+                          <v-spacer></v-spacer>
+                          <v-icon
+                            @click="getChartData(pie.format, 'pie', pie.diff+1)"
+                          >mdi-chevron-right</v-icon>
+                        </div>
+                      </v-col>
+                      <v-col cols="auto">
+                        <PieChart
+                          :chart-data="pie.chartdata"
                           :style="ChartHeight"
+                          @chart:render="scrollTo(positionY)"
+                          @chart:update="scrollTo(positionY)"
                         ></PieChart>
                       </v-col>
                     </v-row>
@@ -125,8 +164,8 @@
                       >
                         <div class="fill-height" style="position: relative; min-height: 150px;">
                           <ChartLegend
-                            :items="pie_legend"
-                            :headers="pie_headers"
+                            :items="pie.legend"
+                            :headers="pie.headers"
                           >
                             <template v-slot:sum="{ item }">
                                 {{sumToTime(item.sum)}}
@@ -141,22 +180,23 @@
                   </v-col>
                 </v-row>
               </v-col>
+              <!-- pieChart -->
 
 
-          </v-row>
-          <v-row v-else class="align-content-center text-center fill-height">
-            <v-col cols="12">
-              <v-progress-circular
-                indeterminate
-                color="primary"
-                class="mb-4"
-              ></v-progress-circular>
-            </v-col>
-            <v-col cols="12" class="font-weight-bold">
-              Loading...
-            </v-col>
           </v-row>
         </v-card-text>
+      </v-col>
+    </v-row>
+    <v-row v-else class="align-content-center text-center fill-height">
+      <v-col cols="12">
+        <v-progress-circular
+          indeterminate
+          color="primary"
+          class="mb-4"
+        ></v-progress-circular>
+      </v-col>
+      <v-col cols="12" class="font-weight-bold">
+        Loading...
       </v-col>
     </v-row>
   </v-card>
@@ -166,12 +206,14 @@
 import BarChart from "../components/Chart/BarChart.vue"
 import PieChart from "../components/Chart/PieChart.vue"
 import ChartLegend from "../components/Chart/ChartLegend.vue"
+import mixinMoment from "../plugins/mixin-moment"
 export default {
   components: {
     BarChart,
     PieChart,
     ChartLegend,
   },
+  mixins: [mixinMoment],
   computed: {
       height () {
         switch (this.$vuetify.breakpoint.name) {
@@ -202,76 +244,118 @@ export default {
                       ? `${sum}時間`
                       : `${Math.floor(sum)}時間${(sum - Math.floor(sum))*60}分`
           }
+        }
+      },
+      barChartRange: function() {
+        return `${this.dateYyMmDd(this.bar.range.start)} ~ ${this.dateYyMmDd(this.bar.range.end)}`
+      },
+      pieChartRange: function() {
+        if (this.pie.range.start == this.pie.range.end) {
+          return this.dateYyMmDd(this.pie.range.start)
+        } else {
+          return `${this.dateYyMmDd(this.pie.range.start)} ~ ${this.dateYyMmDd(this.pie.range.end)}`
+        }
       }
-    }
     },
   data(){
     return {
         loaded: false,
-        bar_chartdata: null,
-        pie_chartdata: null,
-        bar_legend: null,
-        pie_legend: null,
-        bar_headers: [
-          { text: 'Color', value: 'color', cellClass: 'td-color', divider: true},
-          { text: 'TextBooks', value: 'image_url', cellClass: 'td-image', divider: true},
-          { text: 'Title', value: 'title', cellClass: 'td-title', divider: true},
-        ],
-        pie_headers: [
-          { text: 'Color', value: 'color', cellClass: 'td-color'},
-          { text: 'TextBooks', value: 'image_url', cellClass: 'td-image'},
-          { text: 'Title', value: 'title', cellClass: 'td-title'},
-          { text: 'Sum', value: 'sum', cellClass: 'td-sum'},
-          { text: 'Percentage', value: 'percentage', cellClass: 'td-percentage'},
-        ],
+        bar: {
+          chartdata: {},
+          legend: [],
+          range: {
+            start: null,
+            end: null
+          },
+          chart_type: null,
+          format: null,
+          diff: 0
+        },
+        pie: {
+          chartdata: {},
+          legend: [],
+          range: {
+            start: null,
+            end: null
+          },
+          chart_type: null,
+          format: null,
+          diff: 0,
+          headers: [
+            { text: 'Color', value: 'color', cellClass: 'td-color'},
+            { text: 'TextBooks', value: 'image_url', cellClass: 'td-image'},
+            { text: 'Title', value: 'title', cellClass: 'td-title'},
+            { text: 'Sum', value: 'sum', cellClass: 'td-sum'},
+            { text: 'Percentage', value: 'percentage', cellClass: 'td-percentage'},
+          ],
+        },
+        positionY: null,
     }
   },
   methods: {
-    getDailyData(){
+    getBarAndPieChartData(){
       return this.$axios
-        .get('/api/v1/charts/daily')
+        .get(`/api/v1/charts`)
+        .then(({data}) => {
+          console.log(data)
+          this.bar.chartdata = data.bar.chartdata
+          this.bar.legend = data.bar.legend
+          this.bar.range = data.bar.range
+          this.bar.format = 'daily'
+          this.pie.chartdata = data.pie.chartdata
+          this.pie.legend = data.pie.legend
+          this.pie.range = data.pie.range
+          this.pie.format = 'weekly'
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getChartData(format ,chart_type, diff){
+      return this.$axios
+        .get(`/api/v1/charts/${format}?chart_type=${chart_type}&diff=${diff}`)
         .then(({ data }) => {
           console.log(data)
-          this.bar_chartdata = data.bar.chartdata
-          this.pie_chartdata = data.pie.chartdata
-          this.bar_legend = data.bar.legend
-          this.pie_legend = data.pie.legend
+          this.setPositionY()
+          this[chart_type].chartdata = data[chart_type].chartdata
+          this[chart_type].legend = data[chart_type].legend
+          this[chart_type].range = data[chart_type].range
+          this[chart_type].diff = diff
         })
         .catch(error => {
           console.log(error)
         })
     },
-    getWeeklyData(){
-      this.$axios
-        .get('/api/v1/charts/weekly')
-        .then(({ data }) => {
-          this.bar_chartdata = data.bar.chartdata
-          this.pie_chartdata = data.pie.chartdata
-          this.bar_legend = data.bar.legend
-          this.pie_legend = data.pie.legend
-        })
-        .catch(error => {
-          console.log(error)
-        })
+    getDailyData(chart_type, diff){
+      this[chart_type].format = 'daily'
+      this.getChartData('daily', chart_type, diff)
     },
-    getMonthlyData(){
-      this.$axios
-        .get('/api/v1/charts/monthly')
-        .then(({ data }) => {
-          this.bar_chartdata = data.bar.chartdata
-          this.pie_chartdata = data.pie.chartdata
-          this.bar_legend = data.bar.legend
-          this.pie_legend = data.pie.legend
-        })
-        .catch(error => {
-          console.log(error)
-        })
+    getWeeklyData(chart_type, diff){
+      this[chart_type].format = 'weekly'
+      this.getChartData(this[chart_type].format, chart_type, diff)
     },
+    getMonthlyData(chart_type, diff){
+      this[chart_type].format = 'monthly'
+      this.getChartData('monthly', chart_type, diff)
+    },
+    setPositionY() {
+      this.positionY = window.scrollY
+    },
+    scrollTo(positionY){
+      window.scrollTo(0,positionY)
+    },
+
   },
   async mounted () {
     this.loaded = false
-    await this.getDailyData()
+    await this.getBarAndPieChartData()
     this.loaded = true
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.v-tabs ::v-deep .v-slide-group__prev {
+display: none !important;
+}
+</style>
