@@ -39,17 +39,18 @@ export default {
           },
           responsive: true,
           maintainAspectRatio: false,
+          events: [],
           legend: {
             display: false
-          },
-          tooltips: {
-            enabled: false
           },
           scales: {
             xAxes: [{
               stacked: true,
               gridLines: {
                 color: '#393939'
+              },
+              ticks: {
+                fontColor: '#FFF',
               },
               scaleLabel: {
                 display: true,
@@ -63,6 +64,7 @@ export default {
               ticks: {
                 beginAtZero: true,
                 maxTicksLimit:5,
+                fontColor: '#FFF',
                 callback: function (label, index, labels) {
                   return label + ' 時間';
                 }
@@ -71,6 +73,13 @@ export default {
           },
           plugins: {
             datalabels: {
+              color: '#FFF',
+              font: {
+                size: 10,
+              },
+              textAlign: 'center',
+              align: 'end',
+              anchor: 'end',
               formatter: (value, ctx) => {
                 const sum = ctx.chart.$totalizer.totals[ctx.dataIndex]
                 if ( sum < 1 ) {
@@ -81,12 +90,6 @@ export default {
                     : [`${Math.floor(sum)}時間`, `${(sum - Math.floor(sum))*60}分`]
                 }
               },
-              font: {
-                size: 10,
-              },
-              textAlign: 'center',
-              align: 'end',
-              anchor: 'end',
               display: function(ctx) {
                 const total = ctx.chart.$totalizer.totals[ctx.dataIndex]
                 return ctx.datasetIndex === ctx.chart.$totalizer.utmost && total !== 0
