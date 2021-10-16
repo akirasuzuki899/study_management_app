@@ -12,11 +12,9 @@ export default {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          events: [],
           legend: {
             display: false
-          },
-          tooltips: {
-            enabled: false
           },
           elements: {
             arc: {
@@ -24,8 +22,8 @@ export default {
             }
           },
           plugins: {
-              datalabels: {
-              color: '#FFFFFF',
+            datalabels: {
+              color: '#FFF',
               display: 'auto',
               formatter: (value, ctx) => {
                 let sum = 0;
@@ -35,7 +33,7 @@ export default {
                 });
                 let percentage = Math.round((value*100 / sum))+"%";
                 return percentage;
-                },
+              },
             }
           }
         },
@@ -56,11 +54,9 @@ export default {
             options: {
               responsive: true,
               maintainAspectRatio: false,
+              events: [],
               legend: {
                 display: false
-              },
-              tooltips: {
-                enabled: false
               },
               animation: {
                 duration: 0
