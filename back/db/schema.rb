@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_23_073807) do
+ActiveRecord::Schema.define(version: 2021_10_16_192422) do
 
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -87,12 +87,13 @@ ActiveRecord::Schema.define(version: 2021_09_23_073807) do
 
   create_table "study_notes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "study_material_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "title"
     t.text "rich_text"
-    t.index ["study_material_id"], name: "index_study_notes_on_study_material_id"
+    t.string "noteable_type", null: false
+    t.bigint "noteable_id", null: false
+    t.index ["noteable_type", "noteable_id"], name: "index_study_notes_on_noteable"
     t.index ["user_id"], name: "index_study_notes_on_user_id"
   end
 
@@ -164,7 +165,6 @@ ActiveRecord::Schema.define(version: 2021_09_23_073807) do
   add_foreign_key "mandala_groups", "mandala_charts"
   add_foreign_key "mandala_items", "mandala_groups"
   add_foreign_key "study_materials", "users"
-  add_foreign_key "study_notes", "study_materials"
   add_foreign_key "study_notes", "users"
   add_foreign_key "study_records", "study_materials"
   add_foreign_key "study_records", "tasks"
