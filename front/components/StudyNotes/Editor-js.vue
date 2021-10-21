@@ -29,7 +29,7 @@
                       </v-col>
                       <v-col cols="auto" class="flex-shrink-1">
                         <SelectStudyMaterial
-                          v-model="formData.study_material_id"
+                          v-model="formData.noteable_id"
                           :dense="true"
                           :disabled="readOnlyIndicator"
                         ></SelectStudyMaterial>
@@ -188,7 +188,7 @@ export default {
       editor: undefined,
       formData: {
         title: 'untitled',
-        study_material_id: '',
+        noteable_id: '',
         rich_text: '',
       }
     }
@@ -220,15 +220,15 @@ export default {
     setNote(note){
       this.selectedNoteID = note.id
       this.formData.title = note.title
-      this.formData.study_material_id = note.study_material_id
+      this.formData.noteable_id = note.noteable_id
       this.editor.render(
         JSON.parse(note.rich_text)
       )
       this.drawer = false
     },
-    newNote(study_material_id){
+    newNote(noteable_id){
       console.log('newNote')
-      this.formData.study_material_id = study_material_id
+      this.formData.noteable_id = noteable_id
       this.formData.rich_text = {}
       this.formData.title = "untitled"
       this.selectedNoteID = ''

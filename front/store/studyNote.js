@@ -4,7 +4,7 @@ export const state = () => ({
     id: '',
     user_id: '',
     title: '',
-    study_material_id: '',
+    noteable_id: '',
     rich_text: '',
     created_at: '',
     updated_at: '',
@@ -21,19 +21,19 @@ export const mutations = {
     state.treeView = tree_view
   },
   addStudyNote(state, study_note) {
-    const index = state.treeView.findIndex((v) => v.id === study_note.study_material_id)
+    const index = state.treeView.findIndex((v) => v.id === study_note.noteable_id)
     state.treeView[index].children.push(study_note)
   },
   updateStudyNote(state, { study_note, old_note }) {
-    const old_index = state.treeView.findIndex((v) => v.id === old_note.study_material_id)
+    const old_index = state.treeView.findIndex((v) => v.id === old_note.noteable_id)
     const id = state.treeView[old_index].children.findIndex((v) => v.id === old_note.id)
     state.treeView[old_index].children.splice(id, 1)
 
-    const new_index = state.treeView.findIndex((v) => v.id === study_note.study_material_id)
+    const new_index = state.treeView.findIndex((v) => v.id === study_note.noteable_id)
     state.treeView[new_index].children.push(study_note)
   },
   destroyStudyNote(state, study_note) {
-    const index = state.treeView.findIndex((v) => v.id === study_note.study_material_id)
+    const index = state.treeView.findIndex((v) => v.id === study_note.noteable_id)
     const id = state.treeView[index].children.findIndex((v) => v.id === study_note.id)
     state.treeView[index].children.splice(id, 1)
     
@@ -42,7 +42,7 @@ export const mutations = {
 export const actions = {
   getStudyNotes( { commit } ) {
     this.$axios
-      .get('/api/v1/study_notes')
+      .get('/api/v1/study_materials/study_notes')
       .then(({ data }) => {
         console.log("success")
         console.log(data)
@@ -53,10 +53,9 @@ export const actions = {
     dispatch("snackbar/processMessage", '作成しています...', { root: true })
     this.$axios
       .post(
-        '/api/v1/study_notes',
+        `/api/v1/study_materials/${formData.noteable_id}/study_notes`,
         {
           title: formData.title,
-          study_material_id: formData.study_material_id,
           rich_text: formData.rich_text
         })
       .then(({ data }) => {
@@ -79,7 +78,7 @@ export const actions = {
         '/api/v1/study_notes/' + selectedNoteID,
         {
           title: formData.title,
-          study_material_id: formData.study_material_id,
+          noteable_id: formData.noteable_id,
           rich_text: formData.rich_text
         })
       .then(( { data } ) => {

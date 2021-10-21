@@ -13,13 +13,16 @@ Rails.application.routes.draw do
       resources :mandala_charts
       resources :mandala_items
       resources :study_records
-      resources :study_notes do
-        collection do
-          post :download
-          # get :url_metadata
-        end
-      end
-      resources :study_materials do
+      # resources :study_notes do
+      #   collection do
+      #     post :download
+      #     # get :url_metadata
+      #   end
+      # end
+      get 'study_materials/study_notes', to: 'study_materials/study_notes#index'
+      post 'study_notes/download', to: 'study_notes#download'
+      resources :study_materials, shallow: true  do
+        resources :study_notes, module: :study_materials, except: :index 
         collection do
           get :search
         end
