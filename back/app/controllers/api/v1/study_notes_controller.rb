@@ -8,7 +8,7 @@ module Api
 
       def index
         render json: { 
-          tree_view: ActiveModelSerializers::SerializableResource.new(@noteables, each_serializer: TreeViewSerializer).as_json
+          tree_view: ActiveModelSerializers::SerializableResource.new(@noteables, each_serializer: @serializer).as_json
         }
       end
       
@@ -28,7 +28,7 @@ module Api
       end
 
       def update
-        old_note = @study_note.deep_dup
+        old_note = @study_note.attributes
         old_rich_text = @study_note.rich_text
         new_rich_text = study_note_params[:rich_text]
 

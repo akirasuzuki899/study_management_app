@@ -10,17 +10,15 @@ Rails.application.routes.draw do
         end
       end
       resources :task_templates
-      resources :mandala_charts
-      resources :mandala_items
       resources :study_records
-      # resources :study_notes do
-      #   collection do
-      #     post :download
-      #     # get :url_metadata
-      #   end
-      # end
+      resources :mandala_charts
+      
       get 'study_materials/study_notes', to: 'study_materials/study_notes#index'
+      get 'mandala_items/study_notes', to: 'mandala_items/study_notes#index'
       post 'study_notes/download', to: 'study_notes#download'
+      resources :mandala_items, shallow: true  do
+        resources :study_notes, module: :mandala_items, except: :index 
+      end
       resources :study_materials, shallow: true  do
         resources :study_notes, module: :study_materials, except: :index 
         collection do
