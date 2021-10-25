@@ -1,23 +1,24 @@
 module Api
   module V1
     class MandalaItemNoteSerializer < ActiveModel::Serializer
-      attributes :id, :mandala_chart_id, :children, :text
+      attributes :id, :mandala_chart_id, :place_number , :children, :title
 
       def children
           children = object.mandala_items.map { |item| 
             {
               id: item.id,
-              text: item.text,
+              mandala_group_id: item.mandala_group_id,
+              title: item.text,
               children: item.study_notes
             }
           }
       end
 
-      def text
+      def title
         item = object.mandala_items.find_by(place_number: 5)
         item.text
       end
-      
+
     end
   end
 end
