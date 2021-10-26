@@ -8,6 +8,10 @@ module Api
             {
               id: item.id,
               mandala_group_id: item.mandala_group_id,
+              mandala_group: {
+                place_number: object.place_number,
+              },
+              place_number: item.place_number,
               title: item.text,
               children: item.study_notes
             }

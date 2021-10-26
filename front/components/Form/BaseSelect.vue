@@ -21,6 +21,20 @@
       <template v-slot:no-data>
         <slot name="no-data-message"></slot>
       </template>
+
+      <template 
+        v-slot:item="{item}" 
+        v-if="customItem"
+      >
+        <slot name="item" :item="item"></slot>
+      </template>
+
+      <template 
+        v-slot:selection="{item}" 
+        v-if="customSelection"
+      >
+        <slot name="selection" :item="item"></slot>
+      </template>
     </v-select>
   </validation-provider>
 </template>
@@ -85,7 +99,16 @@ export default {
     noDataText: {
       type: String,
       default: undefined
-    }
+    },
+    customItem: {
+      type: Boolean,
+      default: false
+    },
+    customSelection: {
+      type: Boolean,
+      default: false
+    },
+    
   },
   data: () => ({
     item: {}
