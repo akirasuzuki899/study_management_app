@@ -4,7 +4,7 @@ class StudyMaterial < ApplicationRecord
   attr_accessor :rakuten_image_url
 
   belongs_to :user
-  has_many :study_notes, dependent: :destroy
+  has_many :study_notes, as: :noteable, dependent: :destroy
   has_many :study_records,  dependent: :destroy
   has_one_attached :image
   validates :user_id, presence: true

@@ -2,33 +2,33 @@ module Api
   module V1
     class StudyNotesController < ApplicationController
       before_action :authenticate_user!
-      before_action :correct_user, only: [:update, :destroy]
+      before_action :set_note, only: [:update, :destroy]
 
       require 'open-uri'
 
       def index
-        study_materials = current_user.study_materials
         render json: { 
-          tree_view: ActiveModelSerializers::SerializableResource.new(study_materials, each_serializer: TreeViewSerializer).as_json
+          tree_view: ActiveModelSerializers::SerializableResource.new(@noteables, each_serializer: @serializer).as_json
         }
       end
       
       def create
         new_rich_text = study_note_params[:rich_text]
         old_rich_text = nil
-        @study_note = current_user.study_notes.build(study_note_params)
+        @study_note = @noteable.study_notes.build(study_note_params)
+        @study_note.user_id = current_user.id
 
         if sgids = @study_note.files_added?(new_rich_text, old_rich_text) then @study_note.attach_files(sgids) end
 
         if @study_note.save
-          render json: { study_note: @study_note }
+          render json: { study_note: @study_note, noteable: @noteable }
         else
           render json: { status: 'ERROR', study_note: @study_note.errors }
         end
       end
 
       def update
-        old_note = @study_note.deep_dup
+        old_note = @study_note.attributes
         old_rich_text = @study_note.rich_text
         new_rich_text = study_note_params[:rich_text]
 
@@ -36,7 +36,7 @@ module Api
         if sgids = @study_note.files_added?(new_rich_text, old_rich_text)   then @study_note.attach_files(sgids) end
 
         if @study_note.update(study_note_params)
-          render json: { study_note: @study_note, old_note: old_note }
+          render json: { study_note: @study_note, noteable: @study_note.noteable, old_note: old_note, old_noteable: @noteable}
         else
           render json: { status: 'ERROR', message: 'Loaded posts', study_note: @study_note.errors }
         end
@@ -44,7 +44,7 @@ module Api
 
       def destroy
         @study_note.destroy
-        render json: { study_note: @study_note }
+        render json: { study_note: @study_note, noteable: @noteable }
       end
 
       def download
@@ -95,11 +95,12 @@ module Api
       private
 
       def study_note_params
-        params.require(:study_note).permit(:study_material_id, :title, :rich_text)
+        params.require(:study_note).permit(:noteable_id, :title, :rich_text)
       end
 
-      def correct_user
+      def set_note
         @study_note = current_user.study_notes.find(params[:id])
+        @noteable = @study_note.noteable
         redirect_to root_url if @study_note.nil?
       end
 

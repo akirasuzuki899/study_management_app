@@ -18,6 +18,7 @@
       :append-outer-icon="appendOuterIcon"
       :prepend-icon="prependIcon"
       :prepend-inner-icon="prependInnerIcon"
+      :placeholder="placeholder"
     ></v-text-field>
   </validation-provider>
 </template>
@@ -79,6 +80,10 @@ export default {
       type: String,
       default: undefined
     },
+    placeholder: {
+      type: String,
+      default: undefined
+    }
   },
 };
 </script>

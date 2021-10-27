@@ -12,6 +12,7 @@
           :MandalaItem="filterByPlaceNumber( MandalaGroup.mandala_items, n )"
           style="width: calc(100%/3);"
           @item-clicked="itemClicked"
+          @item-text-changed="itemTextChanged"
         ></MandalaChartItem>
       </template>
   </v-card>
@@ -44,6 +45,9 @@ export default {
     },
     itemClicked(item){
       this.$emit('item-clicked', item)
+    },
+    itemTextChanged(item){
+      this.$emit('item-text-changed', item)
     }
   }
 }

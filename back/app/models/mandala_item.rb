@@ -1,6 +1,7 @@
 class MandalaItem < ApplicationRecord
   belongs_to :mandala_group
   has_one :mandala_chart, through: :mandala_group
+  has_many :study_notes, as: :noteable, dependent: :destroy
 
   validates :mandala_group_id, presence: true
   validates :place_number, presence: true, uniqueness: { scope: :mandala_group }, inclusion: { in: 1..9 }

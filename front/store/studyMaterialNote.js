@@ -4,7 +4,7 @@ export const state = () => ({
     id: '',
     user_id: '',
     title: '',
-    study_material_id: '',
+    noteable_id: '',
     rich_text: '',
     created_at: '',
     updated_at: '',
@@ -21,65 +21,70 @@ export const mutations = {
     state.treeView = tree_view
   },
   addStudyNote(state, study_note) {
-    const index = state.treeView.findIndex((v) => v.id === study_note.study_material_id)
+    const index = state.treeView.findIndex((v) => v.id === study_note.noteable_id)
     state.treeView[index].children.push(study_note)
   },
   updateStudyNote(state, { study_note, old_note }) {
-    const old_index = state.treeView.findIndex((v) => v.id === old_note.study_material_id)
+    const old_index = state.treeView.findIndex((v) => v.id === old_note.noteable_id)
     const id = state.treeView[old_index].children.findIndex((v) => v.id === old_note.id)
-    state.treeView[old_index].children.splice(id, 1)
+    
+    if ( study_note.noteable_id == old_note.noteable_id ){
+      state.treeView[old_index].children.splice(id, 1, study_note)
+    } else {
+      state.treeView[old_index].children.splice(id, 1)
+      const new_index = state.treeView.findIndex((v) => v.id === study_note.noteable_id)
+      state.treeView[new_index].children.push(study_note)
+    }
 
-    const new_index = state.treeView.findIndex((v) => v.id === study_note.study_material_id)
-    state.treeView[new_index].children.push(study_note)
   },
   destroyStudyNote(state, study_note) {
-    const index = state.treeView.findIndex((v) => v.id === study_note.study_material_id)
+    const index = state.treeView.findIndex((v) => v.id === study_note.noteable_id)
     const id = state.treeView[index].children.findIndex((v) => v.id === study_note.id)
     state.treeView[index].children.splice(id, 1)
     
   }
 };
 export const actions = {
-  getStudyNotes( { commit } ) {
+  getNotes( { commit } ) {
     this.$axios
-      .get('/api/v1/study_notes')
+      .get('/api/v1/study_materials/study_notes')
       .then(({ data }) => {
         console.log("success")
         console.log(data)
         commit("setTreeView", data.tree_view)
       });
   },
-  createStudyNote( { commit, dispatch } , { formData } ) {
+  createNote( { commit, dispatch } , { formData } ) {
     dispatch("snackbar/processMessage", '作成しています...', { root: true })
-    this.$axios
+    return this.$axios
       .post(
-        '/api/v1/study_notes',
+        `/api/v1/study_materials/${formData.noteable_id}/study_notes`,
         {
           title: formData.title,
-          study_material_id: formData.study_material_id,
           rich_text: formData.rich_text
         })
       .then(({ data }) => {
         console.log("success")
-        console.log("createStudyNote")
+        console.log("createNote")
         console.log(data)
         commit("addStudyNote", data.study_note)
         dispatch("snackbar/successMessage", '作成しました', { root: true })
+        return data.study_note.id
       })
       .catch(error => {
         console.log("error");
-        console.log("createStudyNote")
+        console.log("createNote")
         console.log(error.response);
       })
   },
-  updateStudyNote( { commit, dispatch }, { selectedNoteID, formData } )  {
+  updateNote( { commit, dispatch }, { selectedNoteID, formData } )  {
     dispatch("snackbar/processMessage", '更新しています...', { root: true })
     this.$axios
       .put(
         '/api/v1/study_notes/' + selectedNoteID,
         {
           title: formData.title,
-          study_material_id: formData.study_material_id,
+          noteable_id: formData.noteable_id,
           rich_text: formData.rich_text
         })
       .then(( { data } ) => {
@@ -92,7 +97,7 @@ export const actions = {
         console.log(error);
       })
   },
-  deleteStudyNote( { commit, dispatch }, { selectedNoteID } ) {
+  deleteNote( { commit, dispatch }, { selectedNoteID } ) {
     dispatch("snackbar/processMessage", '削除しています...', { root: true })
     this.$axios
       .delete('/api/v1/study_notes/' + selectedNoteID)
