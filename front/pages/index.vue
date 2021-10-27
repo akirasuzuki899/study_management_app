@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Note from "../components/StudyNotes/Editor-js.vue"
+import Note from "../components/StudyNotes/StudyMaterialNotes.vue"
 import TimeLine from "../components/TimeLine/TimeLine.vue"
 
 export default {
