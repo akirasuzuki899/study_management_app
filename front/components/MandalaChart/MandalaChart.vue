@@ -24,6 +24,7 @@
                 :MandalaGroup="filterByPlaceNumber( selectedMandalaChart.mandala_groups, n )"
                 style="width: calc(100%/3);"
                 @item-clicked="openForm"
+                @item-text-changed="itemTextChanged"
               ></MandalaChartGroup>
             </template>
           </v-card-text>
@@ -79,18 +80,21 @@ export default {
       ...mapGetters('mandalaChart', ['mandala_charts']),
   },
   methods: {
-     ...mapActions('mandalaChart', ['getMandalaCharts', 'deleteMandalaChart']),
-     filterByPlaceNumber(array, place_number) {
-       if (!array.length) return undefined
-       return array.find( v => v.place_number == place_number)
-     },
-     openForm(item) {
-       this.selectedMandalaItem = item
-       this.$refs.dialog.open()
-     },
-     openAlert() {
-       this.$refs.alert.open();
-     },
+    ...mapActions('mandalaChart', ['getMandalaCharts', 'deleteMandalaChart']),
+    filterByPlaceNumber(array, place_number) {
+      if (!array.length) return undefined
+      return array.find( v => v.place_number == place_number)
+    },
+    openForm(item) {
+      this.selectedMandalaItem = item
+      this.$refs.dialog.open()
+    },
+    openAlert() {
+      this.$refs.alert.open();
+    },
+    itemTextChanged(item){
+    this.$emit('item-text-changed', item)
+    }
   },
   created() {
     this.getMandalaCharts()

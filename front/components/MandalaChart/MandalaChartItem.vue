@@ -10,33 +10,35 @@
       :color="getColor()"
       @click="$emit('item-clicked', MandalaItem)"
     >
-    <!-- font-size: 0; は、アイコンの周りに生じる謎のスペースを消すために使用している -->
-    <div
-      style="position: absolute; top: 0; font-size: 0;"   
-    >
-      <v-icon
-        v-if="MandalaItem.is_finished"
-        size="10"
-      >
-        mdi-sticker-check-outline
-      </v-icon>
-      <v-icon
-        v-if="MandalaItem.url"
-        size="10"
-      >
-        mdi-link-variant
-      </v-icon>
-    </div>
-      <v-card-text
-        
-        class="text-center pa-0"
-        v-resize-text="{minFontSize: '6px'}"
-        style="line-height: 1;"
-      >
-        <VClamp :max-lines="2">
-        {{MandalaItem.text}}
-        </VClamp>
-      </v-card-text>
+      <template v-if="MandalaItem">
+        <!-- font-size: 0; は、アイコンの周りに生じる謎のスペースを消すために使用している -->
+        <div
+          style="position: absolute; top: 0; font-size: 0;"   
+        >
+          <v-icon
+            v-if="MandalaItem.is_finished"
+            size="10"
+          >
+            mdi-sticker-check-outline
+          </v-icon>
+          <v-icon
+            v-if="MandalaItem.url"
+            size="10"
+          >
+            mdi-link-variant
+          </v-icon>
+        </div>
+          <v-card-text
+          
+          class="text-center pa-0"
+          v-resize-text="{minFontSize: '6px'}"
+          style="line-height: 1;"
+        >
+          <VClamp :max-lines="2">
+          {{MandalaItem.text}}
+          </VClamp>
+        </v-card-text>
+      </template>
     </v-card>
   </v-responsive>
 </template>
@@ -55,13 +57,7 @@ export default {
   props: {
     MandalaItem: {
       type: Object,
-      default:() => ({
-        text: '',
-        is_finished: false,
-        place_number: '',
-        mandala_group_id: '',
-        url: '',
-      })
+      default:() => undefined
     },
     ItemId: {
       type: Number
@@ -87,6 +83,17 @@ export default {
         maxSize: 16,
     },
   }),
+  watch: {
+    'MandalaItem.text': {
+      handler: function(newItem, oldItem) {
+        if (oldItem == undefined) return 
+
+        console.log("item-changed")
+        this.$emit('item-text-changed', this.MandalaItem)
+      },
+      deep: true,
+    }
+  },
   methods: {
     getColor(){
       if(this.GroupId == 5){

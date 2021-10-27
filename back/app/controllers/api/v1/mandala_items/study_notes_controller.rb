@@ -11,7 +11,7 @@ module Api
         @noteables = current_user.mandala_charts.last.mandala_groups
       end
       def set_noteable
-        @noteable = StudyMaterial.find(params[:study_material_id])
+        @noteable = MandalaItem.find(params[:mandala_item_id])
       end
     end
   end

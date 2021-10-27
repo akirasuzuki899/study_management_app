@@ -25,11 +25,14 @@
                           rules="max:50"
                           :dense="true"
                           :disabled="readOnlyIndicator"
+                          placeholder="untitled"
                         ></TextInput>
                       </v-col>
                       <v-col cols="auto" class="flex-shrink-1">
                         <MandalaItemSelect
                           v-model="formData.noteable_id"
+                          name="項目"
+                          label="項目"
                           :items="mandalaItems"
                           :value="mandalaItems.id"
                           item-value="id"
@@ -37,6 +40,7 @@
                           :disabled="readOnlyIndicator"
                           :customItem="true"
                           :customSelection="true"
+                          rules="required"
                         >
                           <template v-slot:item="{item}">
                             <v-icon
@@ -243,7 +247,7 @@ export default {
       selectedNoteID: '',
       drawer: false,
       formData: {
-        title: 'untitled',
+        title: '',
         noteable_id: '',
         rich_text: '',
       },
@@ -268,7 +272,6 @@ export default {
   },
   computed: {
     ...mapGetters('mandalaItemNote', ['treeView']),
-    ...mapGetters('studyMaterial', ['studyMaterials']),
     mandlaGroupText: function() {
       return function(item) {
         var centerItem = this.mandalaItems.find(i => i.mandala_group_id == item.mandala_group_id && i.place_number == 5);
@@ -278,14 +281,17 @@ export default {
   },
   methods: {
     ...mapActions('mandalaItemNote', ['getNotes','createNote','updateNote','deleteNote']),
-    ...mapActions('studyMaterial', ['getStudyMaterials']),
     saveNote() {
       this.$refs.editor.editor.save().then(savedData => {
         this.formData.rich_text = JSON.stringify(savedData);
 
+        console.log("!this.formData.title")
+        console.log(!this.formData.title)
+        if (!this.formData.title.trim()) this.formData.title = "untitled"
+
         this.selectedNoteID
          ? this.updateNote({formData: this.formData, selectedNoteID: this.selectedNoteID})
-         : this.createNote({formData: this.formData, selectedNoteID: this.selectedNoteID})
+         : this.createNote({formData: this.formData}).then( noteID => {this.selectedNoteID = noteID})
         
         this.toggleEditable()
       });
@@ -302,7 +308,7 @@ export default {
     newNote(noteable_id){
       this.formData.noteable_id = noteable_id
       this.formData.rich_text = {}
-      this.formData.title = "untitled"
+      this.formData.title = ''
       this.selectedNoteID = ''
       this.$refs.editor.editor.clear();
       if(this.readOnlyIndicator) this.toggleEditable()
@@ -322,28 +328,26 @@ export default {
       this.$refs.editor.toggleEditable()
     },
     getColor(item){
-      // console.log("item")
-      // console.log(item)
       if (item.mandala_chart_id) {
         return this.colors[item.place_number]  
       }
       if (item.mandala_group_id){
-        console.log("if item")
         if (item.mandala_group.place_number == 5) {
-          console.log("item.mandala_group.place_number == 5")
           return this.colors[item.place_number]
         }
         if (item.place_number == 5){
-          console.log("item.place_number == 5")
           return this.colors[item.mandala_group.place_number]
         }
       }
       return undefined
     },
+    updateMandalaItemTitle(item){
+      const item_index = this.mandalaItems.findIndex((v) => v.id === item.id)
+      this.mandalaItems[item_index].text = item.text
+    }
   },
   created() {
     this.getNotes()
-    this.getStudyMaterials()
   },
   mounted () {
     this.$axios

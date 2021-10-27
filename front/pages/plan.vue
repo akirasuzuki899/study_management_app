@@ -19,7 +19,7 @@
         <v-col cols="auto" class="flex-grow-1">
           <v-tabs-items v-model="currentItem" style="height: 100%;">
             <v-tab-item value="tab-note" style="height: 100%;">
-              <Note></Note>
+              <Note ref="note"></Note>
             </v-tab-item>
             <v-tab-item value="tab-studyMaterial-index" style="height: 100%;">
               <IndexStudyMaterials></IndexStudyMaterials>
@@ -32,7 +32,9 @@
       </v-row>
     </v-col>
      <v-col cols="auto" sm="6">
-      <MandalaChart></MandalaChart>
+      <MandalaChart
+          @item-text-changed="updateTitle"
+      ></MandalaChart>
     </v-col>
   </v-row>
 </template>
@@ -53,5 +55,11 @@ export default {
   data: () => ({
     currentItem: "tab-note",
   }),
+  methods: {
+    updateTitle(item) {
+      this.$store.commit('mandalaItemNote/updateTreeViewTitle', item)
+      this.$refs.note.updateMandalaItemTitle(item)
+    },
+  }
 }
 </script>

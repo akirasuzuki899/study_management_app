@@ -21,7 +21,7 @@ module Api
         if sgids = @study_note.files_added?(new_rich_text, old_rich_text) then @study_note.attach_files(sgids) end
 
         if @study_note.save
-          render json: { study_note: @study_note }
+          render json: { study_note: @study_note, noteable: @noteable }
         else
           render json: { status: 'ERROR', study_note: @study_note.errors }
         end
@@ -36,7 +36,7 @@ module Api
         if sgids = @study_note.files_added?(new_rich_text, old_rich_text)   then @study_note.attach_files(sgids) end
 
         if @study_note.update(study_note_params)
-          render json: { study_note: @study_note, old_note: old_note }
+          render json: { study_note: @study_note, noteable: @study_note.noteable, old_note: old_note, old_noteable: @noteable}
         else
           render json: { status: 'ERROR', message: 'Loaded posts', study_note: @study_note.errors }
         end
@@ -44,7 +44,7 @@ module Api
 
       def destroy
         @study_note.destroy
-        render json: { study_note: @study_note }
+        render json: { study_note: @study_note, noteable: @noteable }
       end
 
       def download
@@ -100,6 +100,7 @@ module Api
 
       def set_note
         @study_note = current_user.study_notes.find(params[:id])
+        @noteable = @study_note.noteable
         redirect_to root_url if @study_note.nil?
       end
 
