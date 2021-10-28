@@ -2,7 +2,11 @@
   <v-row 
     class="flex-column flex-nowrap flex-sm-row flex-sm-wrap no-gutters fill-height"
   >
-    <v-col cols="auto" sm="6" class="pr-sm-2">
+    <v-col 
+      cols="auto" sm="6" 
+      class="pr-sm-2"
+      :class="{ 'pb-3' : $vuetify.breakpoint.name == 'xs' }" 
+    >
       <MandalaChart
           @item-text-changed="updateTitle"
       ></MandalaChart>
@@ -11,9 +15,9 @@
       cols="auto" 
       sm="6" 
       class="pl-sm-2"
-      :class="{ 'pb-3' : $vuetify.breakpoint.name == 'xs' }"
     >
-      <v-row class="flex-column no-gutters fill-height">
+    <v-card class="fill-height">
+      <v-row class="flex-column no-gutters fill-height overflow-hidden">
         <v-col cols="auto" class="flex-shrink-1">
           <v-tabs v-model="currentItem" background-color="#272727">
             <v-tab href="#tab-note">ノート</v-tab>
@@ -35,6 +39,7 @@
           </v-tabs-items>
         </v-col>
       </v-row>
+    </v-card>
     </v-col>
   </v-row>
 </template>
