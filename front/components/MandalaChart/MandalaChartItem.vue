@@ -86,12 +86,11 @@ export default {
   watch: {
     'MandalaItem.text': {
       handler: function(newItem, oldItem) {
-        if (oldItem == undefined) return 
 
-        console.log("item-changed")
+        if (oldItem === undefined) return 
+
         this.$emit('item-text-changed', this.MandalaItem)
       },
-      deep: true,
     }
   },
   methods: {
