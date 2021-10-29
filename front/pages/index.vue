@@ -1,16 +1,19 @@
 <template>
   <v-row 
-    class="flex-column flex-nowrap flex-sm-row flex-sm-wrap fill-height"
-    :class="{ 'no-gutters' : $vuetify.breakpoint.name == 'xs' }"
+    class="flex-column flex-nowrap flex-sm-row flex-sm-wrap no-gutters fill-height"
   >
     <v-col 
       cols="auto" 
       sm="6"
+      class="pr-sm-2"
       :class="{ 'pb-3' : $vuetify.breakpoint.name == 'xs' }"
-      >
+    >
       <TimeLine></TimeLine>
     </v-col>
-    <v-col cols="auto" sm="6">
+    <v-col 
+      cols="auto" sm="6"
+      class="pl-sm-2"
+    >
       <Note></Note>
     </v-col>
   </v-row>

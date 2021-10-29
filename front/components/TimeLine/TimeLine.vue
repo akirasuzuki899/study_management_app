@@ -2,7 +2,7 @@
   <v-card class="fill-height">
     <v-row class="fill-height flex-column no-gutters">
       <v-col cols="auto" class="flex-shrink-1">
-        <v-toolbar dense>
+        <v-toolbar dense class="rounded-t">
           今日のタスク
         </v-toolbar>
       </v-col>

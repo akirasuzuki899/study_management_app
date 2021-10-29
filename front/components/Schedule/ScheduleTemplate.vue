@@ -2,7 +2,7 @@
   <div class="fill-height">    
     <v-row class="flex-column no-gutters fill-height">
       <v-col cols="auto" class="flex-shrink-1">
-        <v-toolbar>
+        <v-toolbar color="#303030">
           <v-btn
             outlined
             text
@@ -12,9 +12,14 @@
         </v-toolbar>
       </v-col>
       <v-col cols="auto" class="flex-grow-1" style="position: relative;">
-        <v-sheet class="fill-height overflow-y-auto" style="width: 100%; position: absolute; left: 0; top: 0;">
+        <v-sheet 
+          class="fill-height overflow-y-auto px-1 pb-1" 
+          style="width: 100%; position: absolute; left: 0; top: 0;"
+          color="#303030"
+        >
           <v-calendar
             ref="calendar"
+            class="rounded"
             :value="baseDate"
             :events="taskTemplates"
             locale="ja"

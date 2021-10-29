@@ -9,6 +9,7 @@
       <v-list-item 
         @click="$emit('clicked', index)"
         :key="`material-${index}`"
+        :ripple="ripple"
       >
         <v-list-item-avatar tile size="50">
           <v-img
@@ -41,6 +42,10 @@ export default {
     },
     maxHeight: {
       type: String,
+    },
+    ripple: {
+      type: Boolean,
+      default: true
     }
   }
 }

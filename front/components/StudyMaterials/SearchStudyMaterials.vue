@@ -1,43 +1,43 @@
 <template>
-  <v-card class="fill-height" style="min-height: 350px;">
+  <v-sheet class="fill-height" style="min-height: 350px;">
     <v-row class="flex-column fill-height no-gutters">
       <v-col cols="auto" class="flex-shrink-1">
-        <v-card-title>
-          教材を追加
-        </v-card-title>
-        <v-card-text>
-          <v-row class="no-gutters">
-            <v-col cols="8">
-                <TextInput
-                  v-model="keyword"
-                  name="キーワード"
-                  label="キーワード"
-                  :dense="true"
-                  @focus="initSearchStatus"
-                ></TextInput>
-                <div style="color: #dd2c00;">
-                  {{message}}
-                </div>
+        <v-container>
+          <v-row>
+            <v-col>
+              <TextInput
+                v-model="keyword"
+                name="キーワード"
+                label="キーワード"
+                :dense="true"
+                :singleLine="true"
+                @focus="initSearchStatus"
+              ></TextInput>
+              <div style="color: #dd2c00;">
+                {{message}}
+              </div>
             </v-col>
-            <v-col cols="4" class="pl-4" >
+            <v-col cols="auto">
               <v-btn
-                text
+                color="blue darken-1"
+                outlined
                 @click="changeSearchStatus"
               >
                 検索
               </v-btn>
             </v-col>
           </v-row>
-        </v-card-text>
+        </v-container>
       </v-col>
       <v-col cols="auto" class="flex-grow-1" style="position: relative;">
         <StudyMaterialList
           style="width: 100%; position: absolute; left: 0; top: 0;"
-          class="pl-3"
           :studyMaterials="serchResults"
+          :ripple="false"
         >
           <template v-slot:btn="{studyMaterial, index}">
             <v-btn
+              color="blue darken-1"
               text
               @click="register({
                 serchResult : studyMaterial,
@@ -59,7 +59,7 @@
         </StudyMaterialList>
       </v-col>
     </v-row>
-  </v-card>
+  </v-sheet>
 </template>
 
 
@@ -133,3 +133,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .v-list ::v-deep .v-list-item {
+    &:hover::before {
+      opacity: 0 !important;
+    }
+    cursor: default;
+  }
+</style>
