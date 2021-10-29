@@ -1,32 +1,35 @@
 <template>
   <div>
-    <v-row class="flex-column no-gutters fill-height">
-      <v-col cols="auto" class="flex-shrink-1">
-        <v-toolbar
-          color="pink"
-          dense
-        >
-          <v-toolbar-title>再登録</v-toolbar-title>
-        </v-toolbar>
-      </v-col>
-      <v-col cols="auto" class="flex-grow-1" style="position: relative;">
-        <TaskList
-          ref="taskList"
-          style="width: 100%; position: absolute; left: 0; top: 0;"
-          :tasks="unfinished_tasks"
-          @clicked="openScheduleForm"
-        >
-          <template v-slot:default>
-            <infinite-loading
-              @infinite="infiniteHandler"
-            >
-              <template slot="no-more">{{LoadingMessage}}</template>
-              <template slot="no-results">{{LoadingMessage}}</template>
-            </infinite-loading>
-          </template>
-        </TaskList>
-      </v-col>
-    </v-row>
+    <v-card class="fill-height">
+      <v-row class="flex-column no-gutters fill-height">
+        <v-col cols="auto" class="flex-shrink-1">
+          <v-toolbar
+            color="pink"
+            dense
+            class="rounded-t"
+          >
+            <v-toolbar-title>再登録</v-toolbar-title>
+          </v-toolbar>
+        </v-col>
+        <v-col cols="auto" class="flex-grow-1" style="position: relative;">
+          <TaskList
+            ref="taskList"
+            style="width: 100%; position: absolute; left: 0; top: 0;"
+            :tasks="unfinished_tasks"
+            @clicked="openScheduleForm"
+          >
+            <template v-slot:default>
+              <infinite-loading
+                @infinite="infiniteHandler"
+              >
+                <template slot="no-more">{{LoadingMessage}}</template>
+                <template slot="no-results">{{LoadingMessage}}</template>
+              </infinite-loading>
+            </template>
+          </TaskList>
+        </v-col>
+      </v-row>
+    </v-card>
     <TaskForm
       ref="scheduleForm"
       method="update"
@@ -53,12 +56,6 @@ import mixinMoment from "../../plugins/mixin-moment";
       InfiniteLoading,
     },
     mixins: [mixinMoment],
-    props: {
-      tasks: {
-        type: Array,
-        default: [{}]
-      }
-    },
     data() {
       return {
         selectedTask: {},

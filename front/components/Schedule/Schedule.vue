@@ -1,123 +1,99 @@
 <template>
+  <v-row class="no-gutters fill-height">
+    <v-col>
+      <v-row class="flex-column no-gutters fill-height">
+        <v-col cols="auto" class="flex-shrink-1">
+          <v-sheet>
+            <v-toolbar color="#303030">
+              <v-btn
+                outlined
+                text
+                @click="$emit('task-list-open')"
+              >未実施のタスク
+              <v-icon v-if="taskListOpen">
+                mdi-close-box-outline
+              </v-icon>
+              <v-icon v-else>
+                mdi-open-in-new
+              </v-icon>
+              </v-btn>
+            </v-toolbar>
+          </v-sheet>
+        </v-col>
+        <v-col cols="auto" class="flex-grow-1" style="position: relative;">
+          <v-sheet 
+            class="fill-height overflow-y-auto px-1 pb-1" 
+            style="width: 100%; position: absolute; left: 0; top: 0;"
+            color="#303030"
+          >
+            <v-calendar
+              ref="calendar"
+              class="rounded"
+              :events="tasks"
+              locale="ja"
+              color="primary"
+              type="week"
+              :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+              :event-color="getEventColor"
+              @click:event="showTask"
+              @click:time="createTask"
+              :interval-format="intervalFormat"
 
-    <v-row class="no-gutters fill-height ">
-      <v-col>
-        <v-row class="flex-column no-gutters fill-height">
-          <v-col cols="auto" class="flex-shrink-1">
-            <v-sheet>
-              <v-toolbar color="#303030">
-                <v-btn
-                  outlined
-                  text
-                  @click="toggleUnfinishedTaskList"
-                >未実施のタスク
-                <v-icon v-if="listOpen">
-                  mdi-close-box-outline
-                </v-icon>
-                <v-icon v-else>
-                  mdi-open-in-new
-                </v-icon>
-                </v-btn>
-              </v-toolbar>
-            </v-sheet>
-          </v-col>
-          <v-col cols="auto" class="flex-grow-1" style="position: relative;">
-            <v-sheet 
-              class="fill-height overflow-y-auto px-1 pb-1" 
-              style="width: 100%; position: absolute; left: 0; top: 0;"
-              color="#303030"
+              @mousedown:event="startDrag"
+              @mousedown:time="startTime"
+              @mousemove:time="mouseMove"
+              @mouseup:time="endDrag"
+              @mouseleave.native="cancelDrag"
             >
-              <v-calendar
-                ref="calendar"
-                class="rounded"
-                :events="tasks"
-                locale="ja"
-                color="primary"
-                type="week"
-                :weekdays="[1, 2, 3, 4, 5, 6, 0]"
-                :event-color="getEventColor"
-                @click:event="showTask"
-                @click:time="createTask"
-                :interval-format="intervalFormat"
+              <template v-slot:event="{ event }">
+                <div
+                  style="pointer-events:none"
+                  class="v-calendar-event"
+                >
+                  <strong>{{ event.name }}</strong><br>
+                  {{ time(event.start) }} - {{ time(event.end) }}
+                </div>
+                <v-overlay
+                  v-if="event.study_record.is_finished"
+                  absolute
+                  opacity='0.5'
+                ></v-overlay>
+              </template>
 
-                @mousedown:event="startDrag"
-                @mousedown:time="startTime"
-                @mousemove:time="mouseMove"
-                @mouseup:time="endDrag"
-                @mouseleave.native="cancelDrag"
-              >
-                <template v-slot:event="{ event }">
-                  <div
-                    style="pointer-events:none"
-                    class="v-calendar-event"
-                  >
-                    <strong>{{ event.name }}</strong><br>
-                    {{ time(event.start) }} - {{ time(event.end) }}
-                  </div>
-                  <v-overlay
-                    v-if="event.study_record.is_finished"
-                    absolute
-                    opacity='0.5'
-                  ></v-overlay>
-                </template>
+              <template v-slot:day-body="{ date }">
+                <div
+                  :class="[date === getCurrentDate() ? ['first', 'v-current-time'] : '']"
+                  :style="{ top: nowY }"
+                ></div>
+              </template>
+            </v-calendar>
+          </v-sheet>
+        </v-col>
+      </v-row>
 
-                <template v-slot:day-body="{ date }">
-                  <div
-                    :class="[date === getCurrentDate() ? ['first', 'v-current-time'] : '']"
-                    :style="{ top: nowY }"
-                  ></div>
-                </template>
-              </v-calendar>
-            </v-sheet>
-          </v-col>
-        </v-row>
+    </v-col>
 
-      </v-col>
+    <TaskShow
+      ref="taskShow"
+      :selectedTask="selectedTask"
+      :selectedElement="selectedElement"
+      :target="target"
+    ></TaskShow>
 
-      <TaskShow
-        ref="taskShow"
-        :selectedTask="selectedTask"
-        :selectedElement="selectedElement"
-        :target="target"
-      ></TaskShow>
+    <TaskForm
+      ref="form"
+      method="create"
+      :selecrtedTime="selecrtedTime"
+      :target="target"
+    ></TaskForm>
 
-      <TaskForm
-        ref="form"
-        method="create"
-        :selecrtedTime="selecrtedTime"
-        :target="target"
-      ></TaskForm>
-
-      <v-col 
-        v-if="listOpen && $vuetify.breakpoint.name !== 'xs'"
-        cols="12" sm="3" md="3"
-        >
-        <UnfinishedTaskList
-          class="fill-height pl-3"
-          :tasks="tasks"
-        ></UnfinishedTaskList>
-      </v-col>
-
-      <v-dialog
-        v-if="$vuetify.breakpoint.name == 'xs'"
-        v-model="listOpen"
-      >
-        <v-card style="height: 60vh;">
-          <UnfinishedTaskList
-            class="fill-height"
-            :tasks="tasks"
-          ></UnfinishedTaskList>
-        </v-card>
-      </v-dialog>
-
-    </v-row>
+  </v-row>
 </template>
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import TaskShow from "./TaskShow";
 import TaskForm from "./TaskForm";
-import UnfinishedTaskList from "../StudyRecords/StudyRecordsList"
 
 import mixinMoment from "../../plugins/mixin-moment"
 import mixinSchedule from "../../plugins/mixin-schedule"
@@ -126,16 +102,20 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     components: {
       TaskShow,
       TaskForm,
-      UnfinishedTaskList,
     },
     mixins: [mixinMoment, mixinSchedule],
+    props: {
+      taskListOpen: {
+        type: Boolean,
+        default: false
+      }
+    },
     data: () => ({
       ready: false,
       target: "task",
       selectedTask: {},
       selectedElement: null,
       selecrtedTime: {},
-      listOpen: false
     }),
     computed: {
       ...mapGetters('task', ['tasks']),
@@ -167,10 +147,6 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       },
       updateTime () {
         setInterval(() => this.cal.updateTimes(), 60 * 1000)
-      },
-
-      toggleUnfinishedTaskList(){
-        this.listOpen = !this.listOpen
       },
     },
     mounted () {
