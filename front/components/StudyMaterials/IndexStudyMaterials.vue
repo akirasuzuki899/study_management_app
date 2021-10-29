@@ -1,10 +1,11 @@
 <template>
-  <v-card class="fill-height" style="min-height: 350px;">
+  <v-sheet class="fill-height" style="min-height: 350px;">
     <template v-if="loaded">
       <StudyMaterialList
         v-if="studyMaterials.length"
         style="height: 100%; width: 100%; position: absolute; left: 0; top: 0;"
         :studyMaterials="studyMaterials"
+        :ripple="false"
       >
         <template v-slot:btn="{studyMaterial, index}">
           <v-btn
@@ -51,7 +52,7 @@
       </v-container>
     </template>
 
-  </v-card>
+  </v-sheet>
 </template>
 
 <script>
@@ -80,3 +81,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .v-list ::v-deep .v-list-item {
+    &:hover::before {
+      opacity: 0 !important;
+    }
+    cursor: default;
+  }
+</style>
