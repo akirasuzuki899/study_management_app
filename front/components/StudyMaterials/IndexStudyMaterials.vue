@@ -7,7 +7,7 @@
         :studyMaterials="studyMaterials"
         :ripple="false"
       >
-        <template v-slot:btn="{studyMaterial, index}">
+        <!-- <template v-slot:btn="{studyMaterial, index}">
           <v-btn
             text
             @click="toggleCompleteStatus({
@@ -17,7 +17,7 @@
           >
             {{ studyMaterial.is_completed ? '完了' : '学習中' }}
           </v-btn>
-        </template>
+        </template> -->
       </StudyMaterialList>
 
       <v-container v-else class="fill-height">
