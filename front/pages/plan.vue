@@ -21,8 +21,8 @@
         <v-col cols="auto" class="flex-shrink-1">
           <v-tabs v-model="currentItem" background-color="#272727">
             <v-tab href="#tab-note">ノート</v-tab>
-            <v-tab href="#tab-studyMaterial-index">一覧</v-tab>
-            <v-tab href="#tab-studyMaterial-search">検索</v-tab>
+            <v-tab href="#tab-studyMaterial-index">教材一覧</v-tab>
+            <v-tab href="#tab-studyMaterial-search">教材追加</v-tab>
           </v-tabs>
         </v-col>
         <v-col cols="auto" class="flex-grow-1">
