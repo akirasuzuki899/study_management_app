@@ -10,6 +10,7 @@
                 name="キーワード"
                 label="キーワード"
                 :dense="true"
+                :singleLine="true"
                 @focus="initSearchStatus"
               ></TextInput>
               <div style="color: #dd2c00;">

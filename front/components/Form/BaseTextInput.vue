@@ -19,6 +19,7 @@
       :prepend-icon="prependIcon"
       :prepend-inner-icon="prependInnerIcon"
       :placeholder="placeholder"
+      :single-line="singleLine"
     ></v-text-field>
   </validation-provider>
 </template>
@@ -83,6 +84,10 @@ export default {
     placeholder: {
       type: String,
       default: undefined
+    },
+    singleLine: {
+      type: String,
+      default: false
     }
   },
 };
