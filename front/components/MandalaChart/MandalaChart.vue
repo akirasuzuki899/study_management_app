@@ -3,7 +3,7 @@
     <v-card>
       <v-row class="no-gutters">
         <v-col cols="12">
-          <v-card-actions>
+          <v-card-actions class="pb-0" ref="chartToolbar">
             <v-btn 
               @click="openAlert"
               outlined
@@ -16,18 +16,17 @@
           </v-card-actions>
         </v-col>
         <v-col cols="12">
-          <v-card-text class="d-flex flex-wrap px-2 pb-2 pt-0">
-            <template v-for="n in 9">
+          <v-row class="no-gutters pa-2">
+            <v-col cols="4" v-for="n in 9" :key="n">
               <MandalaChartGroup
                 :GroupId="n"
                 :key="n"
                 :MandalaGroup="filterByPlaceNumber( selectedMandalaChart.mandala_groups, n )"
-                style="width: calc(100%/3);"
                 @item-clicked="openForm"
                 @item-text-changed="itemTextChanged"
               ></MandalaChartGroup>
-            </template>
-          </v-card-text>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-card>

@@ -1,21 +1,16 @@
 <template>
-  <v-card
-    class="d-flex flex-wrap"
-    outlined
-    tile
-  >
-      <template v-for="n in 9">
-        <MandalaChartItem
-          :ItemId="n"
-          :GroupId="GroupId"
-          :key="n"
-          :MandalaItem="filterByPlaceNumber( MandalaGroup.mandala_items, n )"
-          style="width: calc(100%/3);"
-          @item-clicked="itemClicked"
-          @item-text-changed="itemTextChanged"
-        ></MandalaChartItem>
-      </template>
-  </v-card>
+  <v-row class="no-gutters">
+    <v-col cols="4" v-for="n in 9" :key="n">
+      <MandalaChartItem
+        :ItemId="n"
+        :GroupId="GroupId"
+        :key="n"
+        :MandalaItem="filterByPlaceNumber( MandalaGroup.mandala_items, n )"
+        @item-clicked="itemClicked"
+        @item-text-changed="itemTextChanged"
+      ></MandalaChartItem>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

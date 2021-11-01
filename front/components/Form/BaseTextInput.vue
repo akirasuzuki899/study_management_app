@@ -86,7 +86,7 @@ export default {
       default: undefined
     },
     singleLine: {
-      type: String,
+      type: Boolean,
       default: false
     }
   },
