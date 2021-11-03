@@ -63,7 +63,7 @@ export const mutations = {
 
 export const actions = {
   getTasks( { commit } ) {
-    this.$axios
+    return this.$axios
       .get('/api/v1/tasks')
       .then(({ data }) => {
         console.log("success")

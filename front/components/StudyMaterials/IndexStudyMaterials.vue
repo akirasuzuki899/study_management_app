@@ -38,17 +38,7 @@
 
     <template v-else>
       <v-container class="fill-height">
-        <v-row class="align-content-center text-center fill-height">
-          <v-col cols="12">
-            <v-progress-circular
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
-          </v-col>
-          <v-col cols="12" class="font-weight-bold">
-            Loading...
-          </v-col>
-        </v-row>
+        <Loader></Loader>
       </v-container>
     </template>
 
@@ -58,10 +48,12 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import StudyMaterialList from './StudyMaterialList'
+import Loader from "../Loader.vue"
 
 export default {
   components: {
     StudyMaterialList,
+    Loader
   },
   data(){
     return {

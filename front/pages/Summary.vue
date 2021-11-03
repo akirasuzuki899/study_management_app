@@ -203,18 +203,7 @@
         </v-card-text>
       </v-col>
     </v-row>
-    <v-row v-else class="align-content-center text-center fill-height">
-      <v-col cols="12">
-        <v-progress-circular
-          indeterminate
-          color="primary"
-          class="mb-4"
-        ></v-progress-circular>
-      </v-col>
-      <v-col cols="12" class="font-weight-bold">
-        Loading...
-      </v-col>
-    </v-row>
+    <Loader v-else></Loader>
   </v-card>
 </template>
 
@@ -222,12 +211,14 @@
 import BarChart from "../components/Chart/BarChart.vue"
 import PieChart from "../components/Chart/PieChart.vue"
 import ChartLegend from "../components/Chart/ChartLegend.vue"
+import Loader from "../components/Loader.vue"
 import mixinMoment from "../plugins/mixin-moment"
 export default {
   components: {
     BarChart,
     PieChart,
     ChartLegend,
+    Loader
   },
   mixins: [mixinMoment],
   computed: {
