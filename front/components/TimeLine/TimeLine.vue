@@ -25,39 +25,42 @@
                         <v-col cols="12" md="3" v-bind:class="{darken: item.study_record.is_finished}">
                           <strong>{{time(item.start)}} ~ {{time(item.end)}}</strong>
                         </v-col>
-                        <v-col cols="12" md="9" v-bind:class="{darken: item.study_record.is_finished}">
-                          <Task
-                            :task="item"
-                            class="py-3"
-                          ></Task>
+                        <v-col cols="12" md="9">
+                          <Task :task="item"></Task>
                           <v-row class="no-gutters align-center">
-                            <v-col cols="auto">
-                              <v-icon>mdi-timer</v-icon>
+                            <v-col cols="auto" class="pl-5">
+                              <v-icon :class="{'text--disabled': item.study_record.is_finished}">mdi-timer</v-icon>
                             </v-col>
-                            <v-col>
-                              <div v-if="item.study_record.is_finished == true">
-                                <v-btn
-                                  color="blue darken-1"
-                                  style="letter-spacing: 0.1px; font-weight: 400; text-indent: 0px;"
-                                  text
-                                  @click="record(item.study_record)"
-                                >
-                                  {{ fromToDateTime(item.study_record.start, item.study_record.end) }}
-                                </v-btn>
+                            <v-col class="pl-4">
+                              <div v-if="item.study_record.is_finished" class="text--disabled">
+                                {{ fromToDateTime(item.study_record.start, item.study_record.end) }}
                               </div>
                               <div v-else>
-                                <v-btn
-                                  color="blue darken-1"
-                                  text
-                                  @click="record(item.study_record)"
-                                >
-                                  記録する
-                                </v-btn>
+                                記録がありません
                               </div>
                             </v-col>
                           </v-row>
                         </v-col>
                       </v-row>
+                      
+                      <div class="pt-3">
+                        <v-btn
+                          v-if="item.study_record.is_finished"
+                          color="blue darken-1"
+                          outlined
+                          @click="record(item.study_record)"
+                        >
+                          更新
+                        </v-btn>
+                        <v-btn
+                          v-else
+                          color="blue darken-1"
+                          outlined
+                          @click="record(item.study_record)"
+                        >
+                          記録
+                        </v-btn>
+                      </div>
                     </v-timeline-item>
                   </template>
                 </v-timeline>
