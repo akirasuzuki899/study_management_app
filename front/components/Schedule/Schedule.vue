@@ -45,6 +45,23 @@
               @mouseup:time="endDrag"
               @mouseleave.native="cancelDrag"
             >
+              <template v-slot:day-label-header="{day, present}">
+                <div style="width: 100%; cursor:default;">
+                  <div
+                    v-if="$vuetify.breakpoint.name !== 'xs'"
+                    class="rounded-circle d-flex justify-center align-center mx-auto"
+                    :class="{'primary' : present}"
+                    style="font-size: 14px; font-weight: 500; letter-spacing: 1.25px; height: 56px; width: 56px;"
+                  >{{day}}日</div>
+                  <div
+                    v-else
+                    class="rounded-circle d-flex justify-center align-center mx-auto"
+                    :class="{'primary' : present}"
+                    style="font-size: 11px; font-weight: 500; height: 25px; width: 25px;"
+                  >{{day}}</div>
+                </div>
+              </template>
+
               <template v-slot:event="{ event }">
                 <div
                   style="pointer-events:none"

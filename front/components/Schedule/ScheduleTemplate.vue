@@ -46,10 +46,20 @@
                 {{ time(event.start) }} - {{ time(event.end)}}  <!-- 2000-01-03 24:00 の表示形式を 24:00 に変更 -->
               </div>
             </template>
+
             <template v-slot:day-label-header="{weekday}">
-              <v-btn fab depressed class="transparent">
-                {{dayOfWeek[weekday]}}
-              </v-btn>
+              <div style="width: 100%; cursor:default;" class="white--text">
+                <div
+                  v-if="$vuetify.breakpoint.name !== 'xs'"
+                  class="d-flex justify-center align-center mx-auto"
+                  style="font-size: 14px; letter-spacing: 1.25px; height: 56px;"
+                >{{dayOfWeek[weekday]}}</div>
+                <div
+                  v-else
+                  class="d-flex justify-center align-center mx-auto"
+                  style="font-size: 11px; height: 25px;"
+                >{{dayOfWeek[weekday]}}</div>
+              </div>
             </template>
           </v-calendar>
         </v-sheet>

@@ -36,15 +36,23 @@
                       </v-col>
                       <v-col cols="auto">
                         <div class="text-caption d-flex align-center mx-auto my-3" style="max-width: 400px;">
-                          <v-icon
+                          <v-btn
+                            icon
+                            small
                             @click="getChartData(bar.format, 'bar', bar.diff-1)"
-                          >mdi-chevron-left</v-icon>
+                          >
+                            <v-icon>mdi-chevron-left</v-icon>
+                          </v-btn>
                           <v-spacer></v-spacer>
                             {{barChartRange}} 
                           <v-spacer></v-spacer>
-                          <v-icon
+                          <v-btn
+                            icon
+                            small
                             @click="getChartData(bar.format, 'bar', bar.diff+1)"
-                          >mdi-chevron-right</v-icon>
+                          >
+                            <v-icon>mdi-chevron-right</v-icon>
+                          </v-btn>
                         </div>
                       </v-col>
                       <v-col cols="auto">
@@ -135,15 +143,23 @@
                       </v-col>
                       <v-col cols="auto">
                         <div class="text-caption d-flex align-center mx-auto my-3" style="max-width: 400px;">
-                          <v-icon
+                          <v-btn
+                            icon
+                            small
                             @click="getChartData(pie.format, 'pie', pie.diff-1)"
-                          >mdi-chevron-left</v-icon>
+                          >
+                            <v-icon>mdi-chevron-left</v-icon>
+                          </v-btn>
                           <v-spacer></v-spacer>
                             {{pieChartRange}} 
                           <v-spacer></v-spacer>
-                          <v-icon
+                          <v-btn
+                            icon
+                            small
                             @click="getChartData(pie.format, 'pie', pie.diff+1)"
-                          >mdi-chevron-right</v-icon>
+                          >
+                            <v-icon>mdi-chevron-right</v-icon>
+                          </v-btn>
                         </div>
                       </v-col>
                       <v-col cols="auto">

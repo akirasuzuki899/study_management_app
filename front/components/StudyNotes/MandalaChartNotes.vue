@@ -1,6 +1,6 @@
 <template>
   <div class="fill-height">
-    <v-card class="fill-height overflow-hidden">
+    <v-card class="fill-height">
       <v-row class="fill-height flex-column no-gutters">
         <v-col cols="auto" class="flex-shrink-1">
           <v-toolbar dense>

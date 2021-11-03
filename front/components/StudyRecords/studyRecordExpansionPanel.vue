@@ -15,14 +15,14 @@
         </v-card-text>
       </v-expansion-panel-header>
 
-      <v-expansion-panel-content :eager="true">
+      <v-expansion-panel-content>
         <!-- パネルが複数：openedPanelには、1つ目のパネルが開いていれば[0]が、すべて閉じていれば[]が入る -->
         <!-- パネルが一つ：openedPanelには、開いていれば数字の0が、閉じていればnullが入る。 -->
         <StudyRecordForm
           ref="StudyRecordForm"
           :selectedStudyRecord="studyRecord"
           :isOpen="openedPanel == 0" 
-          @close="closePanel"
+          @recorded="closePanel"
         ></StudyRecordForm>
       </v-expansion-panel-content>
 
@@ -40,10 +40,6 @@ export default {
     studyRecord: {
       type: Object
     }, 
-    showMenu: {
-      type: Boolean,
-      default: false
-    },
   },
   components: {
       StudyRecordForm,
@@ -52,21 +48,6 @@ export default {
   data() {
     return {
       openedPanel: null
-    }
-  },
-  watch: {
-    openedPanel: function(openedPanel) {
-      if (openedPanel == 0) {
-        this.$refs.StudyRecordForm.setDefaultFormData()
-      } else {
-        this.$refs.StudyRecordForm.initValidation()
-        this.closePanel()
-      }
-    },
-    showMenu: function(showMenu) {
-      if (showMenu == false) {
-        this.closePanel()
-      }
     }
   },
   methods: {

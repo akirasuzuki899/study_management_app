@@ -7,10 +7,11 @@
     offset-x
   >
     <v-card
+      v-if="selectedTask.study_material"
       max-width="350px"
       flat
     >
-      <v-toolbar :color="selectedTask.color">
+      <v-toolbar dense :color="selectedTask.color">
         <v-toolbar-title>{{ selectedTask.name }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click.stop="edit()">
@@ -21,18 +22,35 @@
         </v-btn>
       </v-toolbar>
 
-      <v-card-text v-if="selectedTask.study_material">  <!--参照エラーを防ぐ-->
+      <v-card-text>
         <StudyMaterial
           :studyMaterial="selectedTask.study_material"
+          class="py-3"
         ></StudyMaterial>
-        <v-card-text>
-          <v-icon>mdi-calendar-month</v-icon>
-          {{ fromToDateTime(selectedTask.start, selectedTask.end) }}
-        </v-card-text>
-        <StudyRecordExpansionPanel
-          :studyRecord="selectedTask.study_record"
-          :showMenu="isOpen"
-        ></StudyRecordExpansionPanel>
+        <v-row class="no-gutters pb-1">
+          <v-col cols="auto" class="pl-2">
+            <v-icon>mdi-calendar-month</v-icon>
+          </v-col>
+          <v-col class="pl-4">
+            <div>
+              {{ fromToDateTime(selectedTask.start, selectedTask.end) }}
+            </div>
+          </v-col>
+        </v-row>
+
+        <v-row class="no-gutters align-center">
+          <v-col cols="auto" class="pl-2">
+            <v-icon>mdi-timer</v-icon>
+          </v-col>
+          <v-col class="pl-4">
+            <div v-if="selectedTask.study_record.is_finished == true">
+              {{ fromToDateTime(selectedTask.study_record.start, selectedTask.study_record.end) }}
+            </div>
+            <div v-else>
+              記録がありません
+            </div>
+          </v-col>
+        </v-row>
       </v-card-text>
 
       <v-card-actions>
@@ -42,6 +60,23 @@
           @click="close()"
         >
           閉じる
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+          v-if="selectedTask.study_record.is_finished"
+          color="blue darken-1"
+          text
+          @click="record"
+        >
+          記録を更新
+        </v-btn>
+        <v-btn
+          v-else
+          color="blue darken-1"
+          text
+          @click="record"
+        >
+          記録する
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -65,6 +100,10 @@
       :selectedTask="selectedTask"
       @close="close"
     ></TaskForm>
+    <StudyRecordDialog
+      ref="record"
+      :studyRecord="selectedTask.study_record"
+    ></StudyRecordDialog>
   </v-menu>
 </template>
 
@@ -72,7 +111,7 @@
 import { mapGetters, mapActions } from "vuex";
 import TaskForm from "./TaskForm";
 import StudyMaterial from "../StudyMaterials/StudyMaterial";
-import StudyRecordExpansionPanel from "../StudyRecords/studyRecordExpansionPanel";
+import StudyRecordDialog from "../StudyRecords/studyRecordDialog.vue";
 import Alert from "../Alert"
 
 import mixinMoment from "../../plugins/mixin-moment"
@@ -81,7 +120,7 @@ export default {
   components: {
       TaskForm,
       StudyMaterial,
-      StudyRecordExpansionPanel,
+      StudyRecordDialog,
       Alert,
     },
   mixins: [mixinMoment],
@@ -124,6 +163,9 @@ export default {
     },
     edit() {
       this.$refs.form.open()
+    },
+    record() {
+      this.$refs.record.open()
     },
     openAlert() {
        this.$refs.alert.open();

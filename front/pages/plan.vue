@@ -20,8 +20,8 @@
       style="max-width: 100%;"
       class="pl-sm-2 flex-sm-grow-1 flex-sm-shrink-0"
     >
-      <v-card class="fill-height">
-        <v-row class="flex-column no-gutters fill-height overflow-hidden">
+      <v-card class="fill-height overflow-hidden">
+        <v-row class="flex-column no-gutters fill-height">
           <v-col cols="auto" class="flex-shrink-1">
             <v-tabs v-model="currentItem" background-color="#272727">
               <v-tab href="#tab-note">ノート</v-tab>

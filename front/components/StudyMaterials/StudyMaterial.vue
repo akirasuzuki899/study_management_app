@@ -1,14 +1,18 @@
 <template>
-  <div class="d-flex align-center">
-    <v-avatar tile class="ma-3" size="60">
-      <v-img 
-        :src="studyMaterial.image_url"
-        contain
-      >
-      </v-img>
-    </v-avatar>
-    <v-card-text>{{ studyMaterial.title }}</v-card-text>
-  </div>
+  <v-row align="center">
+    <v-col cols="auto">
+      <v-avatar tile size="40">
+        <v-img 
+          :src="studyMaterial.image_url"
+          contain
+        >
+        </v-img>
+      </v-avatar>
+    </v-col>
+    <v-col>
+      <div>{{ studyMaterial.title }}</div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

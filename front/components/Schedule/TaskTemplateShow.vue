@@ -9,7 +9,7 @@
       max-width="350px"
       flat
     >
-      <v-toolbar :color="selectedTask.color">
+      <v-toolbar dense :color="selectedTask.color">
         <v-toolbar-title>{{selectedTask.name}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click.stop="edit()">
@@ -23,11 +23,16 @@
       <v-card-text v-if="selectedTask.study_material">
         <StudyMaterial
           :studyMaterial="selectedTask.study_material"
+          class="py-3"
         ></StudyMaterial>
-        <v-card-text>
+        <v-row class="no-gutters align-center">
+          <v-col cols="auto" class="pl-2">
             <v-icon>mdi-calendar-month</v-icon>
+          </v-col>
+          <v-col class="pl-4">
             {{ `毎週 ${selectedTask.day_of_week} ${time(selectedTask.start)} 〜 ${time(selectedTask.end)}` }}
-        </v-card-text>
+          </v-col>
+        </v-row>
       </v-card-text>
       <v-card-actions>
         <v-btn
