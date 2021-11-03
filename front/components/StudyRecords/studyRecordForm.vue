@@ -1,14 +1,17 @@
 <template>
   <div>
-    <validation-observer
+    <ValidationObserver
       ref="observer"
       v-slot="{ invalid }"
     >
       <form>
         <v-card >
-          <v-card-text class="py-0">
+          <v-card-text>
             <v-container>
-              <v-row :class="{ 'no-gutters' : $vuetify.breakpoint.name == 'xs' }">
+              <v-row 
+                :class="{ 'no-gutters' : $vuetify.breakpoint.name == 'xs' }" 
+                class="no-gutters"
+              >
                 <!-- 開始日 -->
                 <v-col cols="12">
                   <DatePicker
@@ -47,7 +50,7 @@
               </v-row>
             </v-container>
           </v-card-text>
-          <v-card-actions class="pt-0">
+          <v-card-actions>
             <v-alert
               v-model="alertable"
               class="ma-0 pa-1"
@@ -70,7 +73,7 @@
           </v-card-actions>
         </v-card>
       </form>
-    </validation-observer>
+    </ValidationObserver>
   
   </div>
 </template>
@@ -152,7 +155,7 @@ export default {
           setTimeout(() => {
             this.$set(this.disabledIDs, selectedStudyRecord.id, false)
             this.$set(this.alertIDs, selectedStudyRecord.id, false)
-            if (this.underUpgrteIDs[this.selectedStudyRecord.id] == true) this.close()
+            if (this.underUpgrteIDs[this.selectedStudyRecord.id] == true) this.recorded()
     
             this.$set(this.underUpgrteIDs, selectedStudyRecord.id, false)
             }, 3000)
@@ -175,9 +178,21 @@ export default {
     initValidation() {
       this.$refs.observer.reset()
     },
-    close(){
-      this.$emit('close');
-    }
+    recorded(){
+      this.$emit('recorded')
+    },
+  },
+  mounted() {
+    this.$watch( "isOpen", 
+      function(isOpen) {
+        if (isOpen == true) {
+          this.setDefaultFormData()
+        } else {
+          this.initValidation()
+        }
+      }, 
+      { immediate: true }
+    )
   }
 }
 </script>
