@@ -11,7 +11,7 @@
       max-width="350px"
       flat
     >
-      <v-toolbar :color="selectedTask.color">
+      <v-toolbar dense :color="selectedTask.color">
         <v-toolbar-title>{{ selectedTask.name }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click.stop="edit()">
