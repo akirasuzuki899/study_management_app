@@ -27,7 +27,7 @@
           :studyMaterial="selectedTask.study_material"
           class="py-3"
         ></StudyMaterial>
-        <v-row class="no-gutters">
+        <v-row class="no-gutters pb-1">
           <v-col cols="auto" class="pl-2">
             <v-icon>mdi-calendar-month</v-icon>
           </v-col>
