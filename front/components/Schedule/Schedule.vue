@@ -6,10 +6,35 @@
           <v-sheet>
             <v-toolbar color="#303030">
               <v-btn
+              class="mr-4"
+              outlined
+              text
+              @click="setToday"
+              >
+              今日
+              </v-btn>
+              <v-btn
+                fab
+                text
+                small
+                @click="prev"
+              >
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-btn>
+              <v-btn
+                fab
+                text
+                small
+                @click="next"
+              >
+                <v-icon>mdi-chevron-right</v-icon>
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
                 outlined
                 text
                 @click="$emit('task-list-open')"
-              >未実施のタスク
+              >未実施タスク
               <v-icon v-if="taskListOpen">
                 mdi-close-box-outline
               </v-icon>
@@ -29,6 +54,7 @@
             <v-calendar
               ref="calendar"
               class="rounded"
+              v-model="focus"
               :events="tasks"
               locale="ja"
               color="primary"
@@ -37,6 +63,7 @@
               :event-color="getEventColor"
               @click:event="showTask"
               @click:time="createTask"
+              @change="updateRange"
               :interval-format="intervalFormat"
 
               @mousedown:event="startDrag"
@@ -130,6 +157,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     data: () => ({
       ready: false,
       target: "task",
+      focus: '',
       selectedTask: {},
       selectedElement: null,
       selecrtedTime: {},
@@ -164,6 +192,19 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       },
       updateTime () {
         setInterval(() => this.cal.updateTimes(), 60 * 1000)
+      },
+      prev () {
+        this.$refs.calendar.prev()
+      },
+      next () {
+        this.$refs.calendar.next()
+      },
+      setToday () {
+        this.focus = ''
+      },
+      updateRange(){
+        if (!this.ready) return 
+        this.$store.dispatch('task/getTasks', this.focus)
       },
     },
     mounted () {
