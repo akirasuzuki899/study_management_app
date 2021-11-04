@@ -3,7 +3,7 @@
     <v-expansion-panel>
 
       <v-expansion-panel-header>
-        <div class="d-flex" v-if="studyRecord.is_finished == true">
+        <div class="d-flex" v-if="studyRecord.is_finished">
           <v-card-text class="py-0">
             <v-icon>mdi-timer</v-icon>
             {{ fromToDateTime(studyRecord.start, studyRecord.end) }}

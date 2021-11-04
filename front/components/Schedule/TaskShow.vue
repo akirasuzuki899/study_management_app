@@ -43,7 +43,7 @@
             <v-icon>mdi-timer</v-icon>
           </v-col>
           <v-col class="pl-4">
-            <div v-if="selectedTask.study_record.is_finished == true">
+            <div v-if="selectedTask.study_record.is_finished">
               {{ fromToDateTime(selectedTask.study_record.start, selectedTask.study_record.end) }}
             </div>
             <div v-else>

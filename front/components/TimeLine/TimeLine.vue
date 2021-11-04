@@ -8,8 +8,8 @@
           </v-toolbar>
         </v-col>
         <v-col cols="auto" class="flex-grow-1">
-          <v-card-text class="fill-height py-0">
-            <div v-if="todayTasks.length" class="fill-height" style="position: relative; min-height: 300px;">
+          <v-card-text v-if="loaded" class="fill-height py-0">
+            <div v-if="todayTasks.length" class="fill-height" style="position: relative; min-height: 350px;">
               <div class="fill-height overflow-y-auto" style="width: 100%; position: absolute; left: 0; top: 0;">
                 <v-timeline 
                   align-top 
@@ -90,6 +90,7 @@
               </v-container>
             </div>
           </v-card-text>
+          <Loader v-else style="min-height: 350px;"></Loader>
         </v-col>
       </v-row>
     </v-card>
@@ -105,11 +106,13 @@ import { mapGetters } from "vuex";
 import mixinMoment from "../../plugins/mixin-moment";
 import Task from "../Schedule/Task";
 import StudyRecordDialog from "../StudyRecords/studyRecordDialog.vue";
+import Loader from "../Loader.vue"
 
 export default {
   components: {
     Task,
     StudyRecordDialog,
+    Loader
   },
   mixins: [mixinMoment],
   computed: {
@@ -126,7 +129,8 @@ export default {
   },
   data(){
     return {
-      study_record: undefined
+      study_record: undefined,
+      loaded: false
     }
   },
   methods: {
@@ -135,8 +139,11 @@ export default {
       this.$refs.record.open()
     },
   },
-  created() {
+  async created() {
+    this.loaded = false
     this.$store.dispatch('task/getTasks')
+    this.loaded = true
+
   },
 }
 </script>
