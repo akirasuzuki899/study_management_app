@@ -4,44 +4,53 @@
       <v-row class="flex-column no-gutters fill-height">
         <v-col cols="auto" class="flex-shrink-1">
           <v-sheet>
-            <v-toolbar color="#303030">
+            <v-toolbar 
+              color="#303030" 
+              class="overflow-x-auto"
+              v-bind="$vuetify.breakpoint.name == 'xs' ? {dense: true} : false"
+            >
+
               <v-btn
-              class="mr-4"
-              outlined
-              text
-              @click="setToday"
-              >
-              今日
-              </v-btn>
-              <v-btn
-                fab
                 text
-                small
-                @click="prev"
-              >
-                <v-icon>mdi-chevron-left</v-icon>
-              </v-btn>
-              <v-btn
-                fab
-                text
-                small
-                @click="next"
-              >
-                <v-icon>mdi-chevron-right</v-icon>
-              </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn
                 outlined
-                text
+                v-bind="$vuetify.breakpoint.name == 'xs' ? {small: true} : false"
                 @click="$emit('task-list-open')"
-              >未実施タスク
-              <v-icon v-if="taskListOpen">
-                mdi-close-box-outline
-              </v-icon>
-              <v-icon v-else>
-                mdi-open-in-new
-              </v-icon>
+              >
+                タスク
+                <v-icon 
+                  v-if="taskListOpen"
+                  v-bind="$vuetify.breakpoint.name == 'xs' ? {small: true} : false"
+                >mdi-close-box-outline</v-icon>
+                <v-icon 
+                  v-else
+                  v-bind="$vuetify.breakpoint.name == 'xs' ? {small: true} : false"
+                >mdi-open-in-new</v-icon>
               </v-btn>
+
+              <v-spacer></v-spacer>
+
+              <v-btn
+                class="mr-1 mr-sm-4"
+                text
+                outlined
+                v-bind="$vuetify.breakpoint.name == 'xs' ? {small: true} : false"
+                @click="setToday"
+              >
+                今日
+              </v-btn>
+
+              <ArrowBtn
+                fab
+                left
+                @click="prev"
+              ></ArrowBtn>
+
+              <ArrowBtn
+                fab
+                right
+                @click="next"
+              ></ArrowBtn>
+
             </v-toolbar>
           </v-sheet>
         </v-col>
@@ -138,6 +147,7 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import TaskShow from "./TaskShow";
 import TaskForm from "./TaskForm";
+import ArrowBtn from "../Btn/arrowBtn"
 
 import mixinMoment from "../../plugins/mixin-moment"
 import mixinSchedule from "../../plugins/mixin-schedule"
@@ -146,6 +156,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     components: {
       TaskShow,
       TaskForm,
+      ArrowBtn
     },
     mixins: [mixinMoment, mixinSchedule],
     props: {
