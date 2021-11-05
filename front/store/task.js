@@ -62,13 +62,15 @@ export const mutations = {
 };
 
 export const actions = {
-  getTasks( { commit } ) {
+  getTasks( { commit }, focus = undefined) {
+
+    const url = focus ? `/api/v1/tasks?focus=${focus}` : "/api/v1/tasks"
     return this.$axios
-      .get('/api/v1/tasks')
+      .get(url)
       .then(({ data }) => {
         console.log("success")
         console.log(data)
-        commit("setTasks", data.tasks)
+        focus ? commit("addTask", data.tasks) : commit("setTasks", data.tasks)
       });
   },
   createTask( { commit, dispatch } , { formData } ) {

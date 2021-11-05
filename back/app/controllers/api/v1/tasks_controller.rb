@@ -5,9 +5,9 @@ module Api
       before_action :correct_user, only: [:update, :destroy]
 
       def index
-        today = Date.today
-        tasks = current_user.tasks.where(start_date: today.beginning_of_week..today.end_of_week)
-            .or(current_user.tasks.where(end_date: today.beginning_of_week))
+        date = task_params[:focus] ? Date.parse(task_params[:focus]) : Date.today
+        tasks = current_user.tasks.where(start_date: date.beginning_of_week..date.end_of_week)
+            .or(current_user.tasks.where(end_date: date.beginning_of_week))
         render json: tasks, adapter: :json, each_serializer: TaskSerializer
       end
 
@@ -64,7 +64,7 @@ module Api
       private
 
       def task_params
-        params.permit(:study_material_id, :name, :start_date, :start_time, :end_time, :color, :copy_all, :page)
+        params.permit(:study_material_id, :name, :start_date, :start_time, :end_time, :color, :copy_all, :page, :focus)
       end
 
       def correct_user

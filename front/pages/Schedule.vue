@@ -1,5 +1,5 @@
 <template>
-  <v-row class="no-gutters fill-height">
+  <v-row class="no-gutters fill-height" style="width: 100%;">
     <v-col>
       <v-card class="fill-height" style="width: 100%;">
         <v-row class="flex-column no-gutters fill-height overflow-hidden">

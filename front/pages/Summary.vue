@@ -36,23 +36,21 @@
                       </v-col>
                       <v-col cols="auto">
                         <div class="text-caption d-flex align-center mx-auto my-3" style="max-width: 400px;">
-                          <v-btn
+                          <ArrowBtn
                             icon
-                            small
+                            left
                             @click="getChartData(bar.format, 'bar', bar.diff-1)"
-                          >
-                            <v-icon>mdi-chevron-left</v-icon>
-                          </v-btn>
+                          ></ArrowBtn>
+
                           <v-spacer></v-spacer>
                             {{barChartRange}} 
                           <v-spacer></v-spacer>
-                          <v-btn
+                          
+                          <ArrowBtn
                             icon
-                            small
+                            right
                             @click="getChartData(bar.format, 'bar', bar.diff+1)"
-                          >
-                            <v-icon>mdi-chevron-right</v-icon>
-                          </v-btn>
+                          ></ArrowBtn>
                         </div>
                       </v-col>
                       <v-col cols="auto">
@@ -212,13 +210,15 @@ import BarChart from "../components/Chart/BarChart.vue"
 import PieChart from "../components/Chart/PieChart.vue"
 import ChartLegend from "../components/Chart/ChartLegend.vue"
 import Loader from "../components/Loader.vue"
+import ArrowBtn from "../components/Btn/arrowBtn"
 import mixinMoment from "../plugins/mixin-moment"
 export default {
   components: {
     BarChart,
     PieChart,
     ChartLegend,
-    Loader
+    Loader,
+    ArrowBtn
   },
   mixins: [mixinMoment],
   computed: {
