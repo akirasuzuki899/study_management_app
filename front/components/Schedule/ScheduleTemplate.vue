@@ -2,8 +2,12 @@
   <div class="fill-height">    
     <v-row class="flex-column no-gutters fill-height">
       <v-col cols="auto" class="flex-shrink-1">
-        <v-toolbar color="#303030">
+        <v-toolbar 
+          color="#303030"
+          v-bind="$vuetify.breakpoint.name == 'xs' ? {dense: true} : false"
+        >
           <v-btn
+            v-bind="$vuetify.breakpoint.name == 'xs' ? {small: true} : false"
             outlined
             text
             @click="openAlert"
