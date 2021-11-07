@@ -5,7 +5,7 @@
         <v-row class="flex-column no-gutters fill-height overflow-hidden">
           <v-col cols="auto" class="flex-shrink-1">
             <v-tabs v-model="currentItem" background-color="#272727">
-              <v-tab href="#tab-calendar">今週</v-tab>
+              <v-tab href="#tab-calendar">カレンダー</v-tab>
               <v-tab href="#tab-template">テンプレート</v-tab>
             </v-tabs>
           </v-col>

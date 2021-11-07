@@ -9,47 +9,101 @@
               class="overflow-x-auto"
               v-bind="$vuetify.breakpoint.name == 'xs' ? {dense: true} : false"
             >
+              <template v-if="$vuetify.breakpoint.name == 'xs'">
 
-              <v-btn
-                text
-                outlined
-                v-bind="$vuetify.breakpoint.name == 'xs' ? {small: true} : false"
-                @click="$emit('task-list-open')"
-              >
-                タスク
-                <v-icon 
-                  v-if="taskListOpen"
-                  v-bind="$vuetify.breakpoint.name == 'xs' ? {small: true} : false"
-                >mdi-close-box-outline</v-icon>
-                <v-icon 
-                  v-else
-                  v-bind="$vuetify.breakpoint.name == 'xs' ? {small: true} : false"
-                >mdi-open-in-new</v-icon>
-              </v-btn>
+                <v-toolbar-title v-if="$refs.calendar" class="text-subtitle-2">
+                  {{ title }}
+                </v-toolbar-title>
+                
+                <v-spacer></v-spacer>
 
-              <v-spacer></v-spacer>
+                <v-btn
+                  class="mr-1"
+                  text
+                  icon
+                  small
+                  @click="setToday"
+                >
+                  <v-icon small>mdi-calendar-today</v-icon>
+                </v-btn>
 
-              <v-btn
-                class="mr-1 mr-sm-4"
-                text
-                outlined
-                v-bind="$vuetify.breakpoint.name == 'xs' ? {small: true} : false"
-                @click="setToday"
-              >
-                今日
-              </v-btn>
+                <ArrowBtn
+                  class="ml-1"
+                  icon
+                  left
+                  @click="prev"
+                ></ArrowBtn>
 
-              <ArrowBtn
-                fab
-                left
-                @click="prev"
-              ></ArrowBtn>
+                <ArrowBtn
+                  class="mr-1"
+                  icon
+                  right
+                  @click="next"
+                ></ArrowBtn>
 
-              <ArrowBtn
-                fab
-                right
-                @click="next"
-              ></ArrowBtn>
+                <v-btn
+                  class="ml-1"
+                  text
+                  outlined
+                  small
+                  @click="$emit('task-list-open')"
+                >
+                  タスク
+                  <v-icon 
+                    v-if="taskListOpen"
+                    small
+                  >mdi-close-box-outline</v-icon>
+                  <v-icon 
+                    v-else
+                    small
+                  >mdi-open-in-new</v-icon>
+                </v-btn>
+
+              </template>
+              <template v-else>
+
+                <v-btn
+                  text
+                  outlined
+                  @click="$emit('task-list-open')"
+                >
+                  タスク
+                  <v-icon 
+                    v-if="taskListOpen"
+                  >mdi-close-box-outline</v-icon>
+                  <v-icon 
+                    v-else
+                  >mdi-open-in-new</v-icon>
+                </v-btn>
+
+                <v-spacer></v-spacer>
+                
+                <v-toolbar-title v-if="$refs.calendar" class="mx-4">
+                  {{ title }}
+                </v-toolbar-title>
+
+                <v-btn
+                  class="mx-sm-4"
+                  text
+                  outlined
+                  @click="setToday"
+                >
+                  今週
+                </v-btn>
+
+                <ArrowBtn
+                  fab
+                  left
+                  @click="prev"
+                ></ArrowBtn>
+
+                <ArrowBtn
+                  fab
+                  right
+                  @click="next"
+                ></ArrowBtn>
+
+              </template>
 
             </v-toolbar>
           </v-sheet>
@@ -63,18 +117,18 @@
             <v-calendar
               ref="calendar"
               class="rounded"
-              v-model="focus"
-              :events="tasks"
               locale="ja"
               color="primary"
               type="week"
-              :weekdays="[1, 2, 3, 4, 5, 6, 0]"
+              v-model="focus"
+              :events="tasks"
               :event-color="getEventColor"
+              :interval-format="intervalFormat"
+              :weekdays="weekdays"
+
               @click:event="showTask"
               @click:time="createTask"
               @change="updateRange"
-              :interval-format="intervalFormat"
-
               @mousedown:event="startDrag"
               @mousedown:time="startTime"
               @mousemove:time="mouseMove"
@@ -172,6 +226,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       selectedTask: {},
       selectedElement: null,
       selecrtedTime: {},
+      weekdays: [1, 2, 3, 4, 5, 6, 0]
     }),
     computed: {
       ...mapGetters('task', ['tasks']),
@@ -181,6 +236,33 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       nowY () {
         return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
       },
+      title () {
+        const { start, end } = this.cal.renderProps
+
+        if (this.$vuetify.breakpoint.name == 'xs') {
+          const thisYear  = this.cal.times.now.year
+
+          if (thisYear == start.year) {
+            return this.cal.monthShortFormatter(start, true)
+          } else {
+            return start.year + '年' + this.cal.monthShortFormatter(start, true) 
+          }
+
+        } else {
+          const spanYears = start.year !== end.year
+          const spanMonths = spanYears || start.month !== end.month
+
+          if (spanYears) {
+            return start.year + '年 ' + this.cal.monthShortFormatter(start, true) + ' 〜 ' + this.cal.monthShortFormatter(end, true) +  end.year + '年'
+          }
+
+          if (spanMonths) {
+            return start.year + '年 ' + this.cal.monthShortFormatter(start, true) + ' 〜 ' + this.cal.monthShortFormatter(end, true) 
+          } else {
+            return start.year + '年 ' + this.cal.monthLongFormatter(start, false)
+          }
+        }
+      }
     },
     methods: {
       ...mapActions('studyMaterial', ['getStudyMaterials']),
