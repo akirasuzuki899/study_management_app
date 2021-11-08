@@ -143,16 +143,19 @@ export const actions = {
       .then(( { data } ) => {
         console.log("success")
         console.log(data)
-        commit("addTask", data.tasks)
-        dispatch("snackbar/successMessage", '更新しました', { root: true })
+        if (data.tasks.length){
+          commit("addTask", data.tasks)
+          dispatch("snackbar/successMessage", '更新しました', { root: true })
+        } else {
+          dispatch(
+            "snackbar/warningMessage", 
+            `${data.message}`, 
+            { root: true })
+        }
       })
       .catch(error => {
         console.log("error");
         console.log(error.response.data);
-        dispatch(
-          "snackbar/errorMessage", 
-          `更新に失敗しました。${error.response.data.message}`, 
-          { root: true })
       })
   },
 
