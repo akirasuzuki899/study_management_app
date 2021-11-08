@@ -91,7 +91,7 @@ export const actions = {
       })
   },
   updateMandalaItem({ commit, dispatch }, { selectedMandalaItem, formData }){
-    dispatch("snackbar/processMessage", '削除しています...', { root: true })
+    dispatch("snackbar/processMessage", '更新しています...', { root: true })
     this.$axios
       .put(
         '/api/v1/mandala_items/' + selectedMandalaItem.id,
