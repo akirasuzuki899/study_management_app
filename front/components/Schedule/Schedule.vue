@@ -11,7 +11,7 @@
             >
               <template v-if="$vuetify.breakpoint.name == 'xs'">
 
-                <v-toolbar-title v-if="$refs.calendar" class="text-subtitle-2">
+                <v-toolbar-title class="text-subtitle-2">
                   {{ title }}
                 </v-toolbar-title>
                 
@@ -78,7 +78,7 @@
 
                 <v-spacer></v-spacer>
                 
-                <v-toolbar-title v-if="$refs.calendar" class="mx-4">
+                <v-toolbar-title class="mx-4">
                   {{ title }}
                 </v-toolbar-title>
 
@@ -237,6 +237,8 @@ import mixinSchedule from "../../plugins/mixin-schedule"
         return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
       },
       title () {
+        if (!this.cal) return
+
         const { start, end } = this.cal.renderProps
 
         if (this.$vuetify.breakpoint.name == 'xs') {
