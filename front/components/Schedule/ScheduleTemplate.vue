@@ -101,7 +101,6 @@
         >
         作成する範囲を選択してください。
         </RadioButton>
-        ※週間カレンダーの予定はテンプレートを元に毎週日曜日に自動で作成されます。
       </template>
       <template v-slot:btnText>
         作成
