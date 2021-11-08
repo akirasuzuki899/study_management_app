@@ -41,7 +41,7 @@ module Api
         end
 
         if task_templates.empty?
-          render json: { message: "テンプレートを作成してください。" }, status: 400
+          render json: { tasks: [], message: "作成するレコードがありません"}, status: 200
         else
           tasks = Task.create_tasks_from_templates(templates: task_templates, after_num_weeks: 0)
           render json: tasks, adapter: :json, each_serializer: TaskSerializer  #バリデーションエラー時の処理を追加する

@@ -47,4 +47,10 @@ export const actions = {
     commit("setText", text)
     commit("setTimeOut", -1)
   },
+  warningMessage({ commit }, text ){
+    commit("setStatus", true)
+    commit("setColor", 'warning')
+    commit("setText", text)
+    commit("setTimeOut", 5000)
+  },
 };
