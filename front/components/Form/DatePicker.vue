@@ -27,14 +27,12 @@
           ></v-text-field>
         </validation-provider>
       </template>
-      <v-date-picker
+      <BaseDatePicker
         :value="value"
-        :day-format="onlyNum"
-        :allowed-dates="dates ? allowedDates : null"
-        :first-day-of-week="1"
-        locale="ja-jp"
-        @input="datePicker = false; $emit('input', $event)"
-      ></v-date-picker>
+        :dates="dates"
+        :noTitle="noTitle"
+        @input="input"
+      ></BaseDatePicker>
     </v-menu>
     
     <v-dialog
@@ -61,21 +59,20 @@
           ></v-text-field>
         </validation-provider>
       </template>
-      <v-date-picker
+      <BaseDatePicker
         width="240"
         :value="value"
-        :day-format="onlyNum"
-        :allowed-dates="dates ? allowedDates : null"
-        :first-day-of-week="1"
-        locale="ja-jp"
-        @input="datePicker = false; $emit('input', $event)"
-      ></v-date-picker>
+        :dates="dates"
+        :noTitle="noTitle"
+        @input="input"
+      ></BaseDatePicker>
     </v-dialog>
   </div>
 </template>
 
 <script>
 import { ValidationProvider } from 'vee-validate';
+import BaseDatePicker from  './BaseDatePicker'
 
 export default {
   name: 'DatePicker',
@@ -85,7 +82,8 @@ export default {
     }
   },
   components: {
-    ValidationProvider
+    ValidationProvider,
+    BaseDatePicker
   },
   props: {
     value: {
@@ -115,15 +113,16 @@ export default {
     dates: {
       type: String,
       default: null
+    },
+    noTitle: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
-    onlyNum: val => new Date(val).getDate(),
-
-    allowedDates: function (val){
-      if( this.dates == "afterToday") {
-        return val >= this.$moment().format('YYYY-MM-DD');
-      }
+    input($event){
+      this.datePicker = false; 
+      this.$emit('input', $event)
     }
   },
 }
