@@ -1,14 +1,20 @@
 <template>
-  <div>
+  <div class="fill-height">
     <v-card class="fill-height">
       <v-row class="flex-column no-gutters fill-height">
         <v-col cols="auto" class="flex-shrink-1">
           <v-toolbar
-            color="pink"
+            color="pink darken-1"
             dense
             class="rounded-t"
           >
             <v-toolbar-title>再登録</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn
+              v-if="$vuetify.breakpoint.name !== 'xs'"
+              @click="$emit('close')"
+              icon
+            ><v-icon>mdi-close</v-icon></v-btn>
           </v-toolbar>
         </v-col>
         <v-col cols="auto" class="flex-grow-1" style="position: relative;">
