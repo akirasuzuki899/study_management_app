@@ -6,20 +6,25 @@
           <v-sheet>
             <v-toolbar 
               color="#303030" 
-              class="overflow-x-auto"
-              v-bind="$vuetify.breakpoint.name == 'xs' ? {dense: true} : false"
+              class="overflow-x-auto overflow-y-hidden"
+              v-bind="$vuetify.breakpoint.name == 'xs' ? {dense: true} : {dense: false}"
             >
               <template v-if="$vuetify.breakpoint.name == 'xs'">
 
-                <v-toolbar-title class="text-subtitle-2">
-                  {{ title }}
-                </v-toolbar-title>
+                <div class="text-subtitle-2 text-no-wrap">
+                  {{ datePicker ? datePickerTitle : calendarTitle }}
+                  <v-btn v-if="datePicker" x-small icon @click="datePicker = false">
+                    <v-icon>mdi-menu-up</v-icon>
+                  </v-btn>
+                  <v-btn v-else x-small icon @click="datePicker = true">
+                    <v-icon>mdi-menu-down</v-icon>
+                  </v-btn>
+                </div>
                 
                 <v-spacer></v-spacer>
 
                 <v-btn
                   class="mr-1"
-                  text
                   icon
                   small
                   @click="setToday"
@@ -63,24 +68,28 @@
               <template v-else>
 
                 <v-btn
+                  v-if="!taskListOpen"
                   text
                   outlined
                   @click="$emit('task-list-open')"
                 >
                   タスク
-                  <v-icon 
-                    v-if="taskListOpen"
-                  >mdi-close-box-outline</v-icon>
-                  <v-icon 
-                    v-else
-                  >mdi-open-in-new</v-icon>
+                  <v-icon>mdi-open-in-new</v-icon>
                 </v-btn>
 
-                <v-spacer></v-spacer>
+                <v-spacer v-if="!taskListOpen"></v-spacer>
                 
-                <v-toolbar-title class="mx-4">
-                  {{ title }}
-                </v-toolbar-title>
+                <div class="text-subtitle-1 text-no-wrap">
+                  {{ datePicker ? "日付を選択" : calendarTitle }}
+                  <v-btn v-if="datePicker" x-small icon @click="datePicker = false">
+                    <v-icon>mdi-menu-up</v-icon>
+                  </v-btn>
+                  <v-btn v-else x-small icon @click="datePicker = true">
+                    <v-icon>mdi-menu-down</v-icon>
+                  </v-btn>
+                </div>
+
+                <v-spacer v-if="taskListOpen"></v-spacer>
 
                 <v-btn
                   class="mx-sm-4"
@@ -92,20 +101,29 @@
                 </v-btn>
 
                 <ArrowBtn
-                  fab
+                  icon
                   left
                   @click="prev"
                 ></ArrowBtn>
 
                 <ArrowBtn
-                  fab
+                  icon
                   right
                   @click="next"
+                  class="mr-0"
                 ></ArrowBtn>
 
               </template>
 
             </v-toolbar>
+            <DatePicker
+              v-if="datePicker"
+              v-model="focus"
+              :class="$vuetify.breakpoint.name == 'xs' ? 'v-date-picker-header-hide' : 'v-date-picker-header-show'"
+              width="100%"
+              :noTitle="true"
+              @picker-date="setDatePickerTitle"
+            ></DatePicker>
           </v-sheet>
         </v-col>
         <v-col cols="auto" class="flex-grow-1" style="position: relative;">
@@ -152,7 +170,7 @@
                 </div>
               </template>
 
-              <template v-slot:event="{ event }">
+              <template v-slot:event="{ event }"> 
                 <div
                   style="pointer-events:none"
                   class="v-calendar-event"
@@ -202,6 +220,7 @@ import { mapGetters, mapActions, mapMutations } from "vuex";
 import TaskShow from "./TaskShow";
 import TaskForm from "./TaskForm";
 import ArrowBtn from "../Btn/arrowBtn"
+import DatePicker from "../Form/BaseDatePicker"
 
 import mixinMoment from "../../plugins/mixin-moment"
 import mixinSchedule from "../../plugins/mixin-schedule"
@@ -210,7 +229,8 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     components: {
       TaskShow,
       TaskForm,
-      ArrowBtn
+      ArrowBtn,
+      DatePicker
     },
     mixins: [mixinMoment, mixinSchedule],
     props: {
@@ -226,7 +246,9 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       selectedTask: {},
       selectedElement: null,
       selecrtedTime: {},
-      weekdays: [1, 2, 3, 4, 5, 6, 0]
+      weekdays: [1, 2, 3, 4, 5, 6, 0],
+      datePicker: false,
+      datePickerTitle: ''
     }),
     computed: {
       ...mapGetters('task', ['tasks']),
@@ -236,7 +258,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       nowY () {
         return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
       },
-      title () {
+      calendarTitle () {
         if (!this.cal) return
 
         const { start, end } = this.cal.renderProps
@@ -290,17 +312,28 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       },
       prev () {
         this.$refs.calendar.prev()
+        console.log(this.$vuetify.breakpoint)
       },
       next () {
         this.$refs.calendar.next()
       },
       setToday () {
-        this.focus = ''
+        this.focus = this.getCurrentDate()
       },
       updateRange(){
         if (!this.ready) return 
         this.$store.dispatch('task/getTasks', this.focus)
       },
+      setDatePickerTitle(date) {
+        let year = Number(date.split('-')[0])
+        let month = Number(date.split('-')[1])
+
+        if( year == this.moment().format('YYYY') ) {
+          this.datePickerTitle = month + "月"
+        } else {
+          this.datePickerTitle = year + "年" + month + "月"
+        }
+      }
     },
     mounted () {
       this.ready = true
@@ -339,5 +372,32 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     margin-top: -5px;
     margin-left: -6.5px;
   }
+}
+.v-date-picker-header-show.v-picker--date {
+  & .v-picker__body {
+    & .v-date-picker-header{
+      background-color: #303030;
+    }
+    & .v-date-picker-table{
+      background-color: #303030;
+      height: auto;
+      padding-bottom: 8px;
+    }
+  }
+  border-radius: 0px;
+}
+.v-date-picker-header-hide.v-picker--date {
+  & .v-picker__body {
+    & .v-date-picker-header{
+      background-color: #303030;
+      display: none;
+    }
+    & .v-date-picker-table{
+      background-color: #303030;
+      height: auto;
+      padding-bottom: 8px;
+    }
+  }
+  border-radius: 0px;
 }
 </style>

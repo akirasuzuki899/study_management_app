@@ -1,6 +1,6 @@
 <template>
   <v-row class="no-gutters fill-height" style="width: 100%;">
-    <v-col>
+    <v-col v-bind="taskListOpen && $vuetify.breakpoint.name !== 'xs'? {sm: 8} : false">
       <v-card class="fill-height" style="width: 100%;">
         <v-row class="flex-column no-gutters fill-height overflow-hidden">
           <v-col cols="auto" class="flex-shrink-1">
@@ -11,10 +11,10 @@
           </v-col>
 
           <v-col cols="auto" class="flex-grow-1">
-            <v-tabs-items v-model="currentItem" style="height: 100%;">
+            <v-tabs-items v-model="currentItem" touchless style="height: 100%;">
               <v-tab-item value="tab-calendar" style="height: 100%;">
                 <Calendar
-                  @task-list-open="toggleUnfinishedTaskList"
+                  @task-list-open="openUnfinishedTaskList"
                   :taskListOpen="taskListOpen"
                 ></Calendar>
               </v-tab-item>
@@ -32,6 +32,7 @@
       >
       <UnfinishedTaskList
         class="fill-height pl-3"
+        @close="closeUnfinishedTaskList"
       ></UnfinishedTaskList>
     </v-col>
 
@@ -68,8 +69,11 @@ export default {
     }
   },
   methods: {
-    toggleUnfinishedTaskList(){
-      this.taskListOpen = !this.taskListOpen
+    openUnfinishedTaskList(){
+      this.taskListOpen = true
+    },
+    closeUnfinishedTaskList(){
+      this.taskListOpen = false
     },
   }
 }
