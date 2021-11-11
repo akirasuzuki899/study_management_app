@@ -8,7 +8,7 @@
   :noTitle="noTitle"
   :width="width"
   color="primary"
-  header-color="primary"
+  header-color="#1E1E1E"
   locale="ja-jp"
   @input="$emit('input', $event)"
   @change="$emit('change', $event)"
@@ -35,7 +35,7 @@ export default {
     },
     width: {
       type: [Number, String],
-      default: 'auto'
+      default: undefined
     },
   },
   methods: {
