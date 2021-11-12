@@ -8,7 +8,7 @@
             dense
             class="rounded-t"
           >
-            <v-toolbar-title>再登録</v-toolbar-title>
+            <v-toolbar-title class="text-subtitle-1">再登録</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn
               v-if="$vuetify.breakpoint.name !== 'xs'"

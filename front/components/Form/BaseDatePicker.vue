@@ -8,14 +8,16 @@
   :noTitle="noTitle"
   :width="width"
   color="primary"
-  header-color="primary"
+  header-color="#1E1E1E"
   locale="ja-jp"
   @input="$emit('input', $event)"
   @change="$emit('change', $event)"
   @update:picker-date="$emit('picker-date', $event)"
   @update:active-picker="$emit('active-picker', $event)"
   @update:table-date="$emit('table-date', $event)"
-></v-date-picker>
+>
+  <slot></slot>
+</v-date-picker>
 </template>
 
 <script>
@@ -35,7 +37,7 @@ export default {
     },
     width: {
       type: [Number, String],
-      default: 'auto'
+      default: undefined
     },
   },
   methods: {
