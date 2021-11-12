@@ -15,7 +15,9 @@
   @update:picker-date="$emit('picker-date', $event)"
   @update:active-picker="$emit('active-picker', $event)"
   @update:table-date="$emit('table-date', $event)"
-></v-date-picker>
+>
+  <slot></slot>
+</v-date-picker>
 </template>
 
 <script>

@@ -68,24 +68,22 @@
               <template v-else>
 
                 <v-btn
+                  class="mr-sm-4"
                   v-if="!taskListOpen"
                   text
                   outlined
                   @click="$emit('task-list-open')"
                 >
                   タスク
-                  <v-icon>mdi-open-in-new</v-icon>
+                  <v-icon x-small>mdi-open-in-new</v-icon>
                 </v-btn>
 
                 <v-spacer v-if="!taskListOpen"></v-spacer>
                 
-                <div class="text-subtitle-1 text-no-wrap">
+                <div class="text-subtitle-1 text-no-wrap d-flex align-center">
                   {{ datePicker ? "日付を選択" : calendarTitle }}
-                  <v-btn v-if="datePicker" x-small icon @click="datePicker = false">
-                    <v-icon>mdi-menu-up</v-icon>
-                  </v-btn>
-                  <v-btn v-else x-small icon @click="datePicker = true">
-                    <v-icon>mdi-menu-down</v-icon>
+                  <v-btn v-if="!sideDatePicker" icon small @click="$emit('side-date-picker-open')">
+                    <v-icon small>mdi-open-in-new</v-icon>
                   </v-btn>
                 </div>
 
@@ -117,9 +115,9 @@
 
             </v-toolbar>
             <DatePicker
-              v-if="datePicker"
+              v-if="datePicker && $vuetify.breakpoint.name == 'xs'"
               v-model="focus"
-              :class="$vuetify.breakpoint.name == 'xs' ? 'v-date-picker-header-hide' : 'v-date-picker-header-show'"
+              :class="{'v-date-picker-header-hide' : $vuetify.breakpoint.name == 'xs'}"
               width="100%"
               :noTitle="true"
               @picker-date="setDatePickerTitle"
@@ -237,6 +235,10 @@ import mixinSchedule from "../../plugins/mixin-schedule"
       taskListOpen: {
         type: Boolean,
         default: false
+      },
+      sideDatePicker: {
+        type: Boolean,
+        default: false
       }
     },
     data: () => ({
@@ -347,13 +349,10 @@ import mixinSchedule from "../../plugins/mixin-schedule"
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .v-calendar-event {
   padding-left: 6px;
 }
-</style>
-
-<style lang="scss">
 .v-current-time {
   height: 2px;
   background-color: #ea4335;
@@ -373,7 +372,7 @@ import mixinSchedule from "../../plugins/mixin-schedule"
     margin-left: -6.5px;
   }
 }
-.v-date-picker-header-show.v-picker--date {
+.v-picker--date ::v-deep {
   & .v-picker__body {
     & .v-date-picker-header{
       background-color: #303030;
@@ -386,18 +385,9 @@ import mixinSchedule from "../../plugins/mixin-schedule"
   }
   border-radius: 0px;
 }
-.v-date-picker-header-hide.v-picker--date {
-  & .v-picker__body {
-    & .v-date-picker-header{
-      background-color: #303030;
-      display: none;
-    }
-    & .v-date-picker-table{
-      background-color: #303030;
-      height: auto;
-      padding-bottom: 8px;
-    }
+.v-picker--date.v-date-picker-header-hide ::v-deep {
+  & .v-picker__body .v-date-picker-header{
+    display: none;
   }
-  border-radius: 0px;
 }
 </style>
