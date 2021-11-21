@@ -59,7 +59,7 @@ export default {
   props: {
     value: {
       type: String,
-      default: 'blue'
+      default: 'blue darken-2'
     },
     dense: {
       type: Boolean,

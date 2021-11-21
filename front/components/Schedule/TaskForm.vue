@@ -143,7 +143,7 @@ export default {
         id: '',
         user: '',
         name: '',
-        color: 'blue',
+        color: 'blue darken-2',
         start: '',
         end: '',
         study_material: '',

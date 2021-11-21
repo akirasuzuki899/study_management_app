@@ -146,7 +146,7 @@ export default {
         id: '',
         user: '',
         name: '',
-        color: 'blue',
+        color: 'blue darken-2',
         day_of_week: '',
         start: '',
         end: '',
