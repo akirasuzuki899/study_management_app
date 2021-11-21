@@ -252,15 +252,15 @@ export default {
         rich_text: '',
       },
       colors: {
-      1: 'purple', 
-      2: 'indigo', 
-      3: 'blue', 
-      4: 'cyan', 
-      5: 'teal',  //center
-      6: 'green', 
-      7: 'lime', 
-      8: 'amber', 
-      9: 'orange'},
+      1: 'purple darken-2', 
+      2: 'indigo darken-2', 
+      3: 'blue darken-2', 
+      4: 'cyan darken-2', 
+      5: 'teal darken-2',  //center
+      6: 'green darken-2', 
+      7: 'lime darken-2', 
+      8: 'amber darken-2', 
+      9: 'orange darken-2'},
     }
   },
   components: {

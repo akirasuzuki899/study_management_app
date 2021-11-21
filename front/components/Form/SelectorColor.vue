@@ -40,7 +40,16 @@ export default {
   data () {
     return {
       colorMenu: false,
-      colors: ['purple', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'amber', 'orange'],
+      colors: [
+        'purple darken-2', 
+        'indigo darken-2', 
+        'blue darken-2', 
+        'cyan darken-2', 
+        'teal darken-2',  //center
+        'green darken-2', 
+        'lime darken-2', 
+        'amber darken-2', 
+        'orange darken-2'],
     }
   },
   model: {
