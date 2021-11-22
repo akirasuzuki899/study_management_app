@@ -74,6 +74,14 @@
                       :dense="true"
                     ></SelectTime>
                   </v-col>
+                  <v-col cols="12" sm="12">
+                    <TextArea
+                      v-model="formData.text"
+                      name="詳細"
+                      label="詳細"
+                      rules="required|max:500"
+                    ></TextArea>
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -112,6 +120,7 @@
 
 <script>
 import TextInput from "../Form/BaseTextInput";
+import TextArea from "../Form/BaseTextArea"
 import SelectStudyMaterial from "../Form/SelectStudyMaterial";
 import SelectorColor from "../Form/SelectorColor";
 import DatePicker from "../Form/DatePicker";
@@ -127,6 +136,7 @@ import mixinMoment from "../../plugins/mixin-moment"
 export default {
   components: {
     TextInput,
+    TextArea,
     SelectStudyMaterial,
     SelectorColor,
     DatePicker,
@@ -148,6 +158,7 @@ export default {
         end: '',
         study_material: '',
         study_record: '',
+        text: ''
       })
     },
     selecrtedTime: {
@@ -166,6 +177,7 @@ export default {
         start_date: '',
         start_time: '',
         end_time: '',
+        text: ''
       }
     }
   },
@@ -192,6 +204,7 @@ export default {
       this.formData.start_date = this.date(this.selectedTask.start) || this.selecrtedTime.date
       this.formData.start_time = this.time(this.selectedTask.start) || this.selecrtedTime.startTime
       this.formData.end_time = this.time(this.selectedTask.end) || this.selecrtedTime.endTime
+      this.formData.text = this.selectedTask.text
     },
     open () {
       this.Dialog = true

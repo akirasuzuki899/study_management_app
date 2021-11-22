@@ -85,6 +85,7 @@ export const actions = {
           start_time: formData.start_time,
           end_time: formData.end_time,
           color: formData.color,
+          text: formData.text
         })
       .then(( { data } ) => {
         console.log("success")
@@ -109,6 +110,7 @@ export const actions = {
           start_time: formData.start_time,
           end_time: formData.end_time,
           color: formData.color,
+          text: formData.text
         })
       .then(( { data } ) => {
         console.log("success")
