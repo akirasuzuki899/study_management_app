@@ -106,7 +106,8 @@ export const actions = {
           start_date: formData.start_date,
           start_time: formData.start_time,
           end_time: formData.end_time,
-          color: formData.color
+          color: formData.color,
+          text: formData.text
         })
       .then(( { data } ) => {
         console.log(" res data")
@@ -132,6 +133,7 @@ export const actions = {
         start_time: formData.start_time,
         end_time: formData.end_time,
         color: formData.color,
+        text: formData.text
       })
       .then(( { data } ) => {
         console.log("送信後")

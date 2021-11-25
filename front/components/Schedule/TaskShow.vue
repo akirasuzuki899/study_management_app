@@ -7,7 +7,6 @@
     offset-x
   >
     <v-card
-      v-if="selectedTask.study_material"
       max-width="350px"
       flat
     >
@@ -24,6 +23,7 @@
 
       <v-card-text>
         <StudyMaterial
+          v-if="selectedTask.study_material"
           :studyMaterial="selectedTask.study_material"
           class="py-3"
         ></StudyMaterial>
@@ -38,7 +38,10 @@
           </v-col>
         </v-row>
 
-        <v-row class="no-gutters align-center">
+        <v-row 
+          class="no-gutters align-center"
+          v-if="selectedTask.study_record"
+        >
           <v-col cols="auto" class="pl-2">
             <v-icon>mdi-timer</v-icon>
           </v-col>
@@ -51,9 +54,27 @@
             </div>
           </v-col>
         </v-row>
+
+        <v-divider class="my-3"></v-divider>
+
+        <v-row class="flex-column no-gutters">
+          <v-col>
+            <div class="text-subtitle-1 font-weight-bold pb-2">詳細</div>
+          </v-col>
+          <v-col>
+            <TextArea
+              v-if="id"
+              ref="textArea"
+              class="overflow-y-auto" 
+              :style="TextAreaHeight"
+              :id="id"
+              :text="selectedTask.text"
+            ></TextArea>
+          </v-col>
+        </v-row>
       </v-card-text>
 
-      <v-card-actions>
+      <v-card-actions v-if="selectedTask.study_record">
         <v-btn
           text
           color="secondary"
@@ -80,6 +101,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+
     <Alert
       ref="alert"
       @clicked="deleteTask({
@@ -108,11 +130,12 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import TaskForm from "./TaskForm";
 import StudyMaterial from "../StudyMaterials/StudyMaterial";
 import StudyRecordDialog from "../StudyRecords/studyRecordDialog.vue";
 import Alert from "../Alert"
+import TextArea from "../Form/BaseTextArea"
 
 import mixinMoment from "../../plugins/mixin-moment"
 
@@ -122,6 +145,7 @@ export default {
       StudyMaterial,
       StudyRecordDialog,
       Alert,
+      TextArea
     },
   mixins: [mixinMoment],
   props: {
@@ -145,12 +169,22 @@ export default {
       type: String,
     }
   },
+  computed: {
+    TextAreaHeight () {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return { "max-height": "200px" }
+        case 'sm': return { "max-height": "250px" }
+        case 'md': return { "max-height": "250px" }
+        case 'lg': return { "max-height": "250px" }
+        case 'xl': return { "max-height": "250px" }
+      }
+    }
+  },
   data() {
     return {
       isOpen: false,
+      id: undefined
     }
-  },
-  computed: {
   },
   methods: {
     ...mapActions('task', ['deleteTask']),
@@ -171,6 +205,8 @@ export default {
        this.$refs.alert.open();
     },
   },
+  mounted () {
+    this.id = this._uid
+  },
 }
 </script>
-

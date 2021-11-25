@@ -70,6 +70,7 @@ class Task < ApplicationRecord
         start_time: template.start_time,
         end_time: template.end_time,
         color: template.color,
+        text: template.text,
         created_at: now,
         updated_at: now
       }
