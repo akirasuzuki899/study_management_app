@@ -11,7 +11,7 @@ module Api
       end
     
       it 'json で次の属性を返すこと' do
-        expect(@subject).to include(:id, :user_id, :study_material_id, :name, :day_of_week, :start, :end, :prev_week_sunday_task, :color)
+        expect(@subject).to include(:id, :user_id, :study_material_id, :name, :day_of_week, :start, :end, :prev_week_sunday_task, :color, :text)
       end
 
       it 'json で正しい kye と value を返すこと' do
@@ -23,6 +23,7 @@ module Api
         expect(@subject[:end]).to eq("2000-01-03 01:00")
         expect(@subject[:prev_week_sunday_task]).to eq(nil)
         expect(@subject[:color]).to eq("blue")
+        expect(@subject[:text]).to eq("{\"time\":1637831736143,\"blocks\":[{\"id\":\"sHBSl43QZU\",\"type\":\"paragraph\",\"data\":{\"text\":\"test\"}}],\"version\":\"2.22.2\"}")
       end
 
       it 'end_time = 00:00 かつ start_time > end_timeの時、endはstartの翌日であると有効' do
