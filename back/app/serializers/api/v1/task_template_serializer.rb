@@ -2,7 +2,7 @@ module Api
   module V1
     class TaskTemplateSerializer < ActiveModel::Serializer
       include TaskBase
-      attributes :id, :user_id, :study_material_id, :name, :day_of_week, :start, :end, :prev_week_sunday_task, :color, :dummy
+      attributes :id, :user_id, :study_material_id, :name, :day_of_week, :start, :end, :prev_week_sunday_task, :color, :text, :dummy
 
       belongs_to :user
       belongs_to :study_material

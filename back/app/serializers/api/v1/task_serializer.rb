@@ -2,7 +2,7 @@ module Api
   module V1
     class TaskSerializer < ActiveModel::Serializer
       include TaskBase
-      attributes :id, :user_id, :study_material_id, :name, :start, :end, :color
+      attributes :id, :user_id, :study_material_id, :name, :start, :end, :color, :text
     
       belongs_to :user
       belongs_to :study_material, serializer: StudyMaterialSerializer
