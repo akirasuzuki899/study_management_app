@@ -76,15 +76,18 @@
                   </v-col>
                   <v-col cols="12" sm="12">
                     <TextArea
-                      v-model="formData.text"
-                      name="詳細"
-                      label="詳細"
-                      rules="required|max:500"
+                      ref="textArea"
+                      class="overflow-y-auto rounded px-2" 
+                      style="height:200px; border:1px solid #BCBCBC; box-sizing: border-box"
+                      :id="id"
+                      :text="selectedTask.text"
+                      :readOnly="false"
                     ></TextArea>
                   </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
+
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -99,7 +102,7 @@
                 v-if="method=='create'"
                 :formData="formData"
                 :target="target"
-                @task="createTask($event); close()"
+                @task="saveFormData($event)"
               ></ButtonCreate>
               <ButtonUpdate
                 v-if="method=='update'"
@@ -107,7 +110,7 @@
                 :formData="formData"
                 :target="target"
                 :selectedTask="selectedTask"
-                @task="updateTask($event); close(); closeShow()"
+                @task="saveFormData($event)"
               ></ButtonUpdate>
             </v-card-actions>
           </form>
@@ -120,7 +123,7 @@
 
 <script>
 import TextInput from "../Form/BaseTextInput";
-import TextArea from "../Form/BaseTextArea"
+import TextArea from "../Form/BaseTextArea.vue"
 import SelectStudyMaterial from "../Form/SelectStudyMaterial";
 import SelectorColor from "../Form/SelectorColor";
 import DatePicker from "../Form/DatePicker";
@@ -128,7 +131,7 @@ import SelectTime from "../Form/SelectTime";
 import ButtonCreate from "./TaskButtonCreate";
 import ButtonUpdate from "./TaskButtonUpdate";
 
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import { ValidationObserver } from 'vee-validate';
 
 import mixinMoment from "../../plugins/mixin-moment"
@@ -178,7 +181,8 @@ export default {
         start_time: '',
         end_time: '',
         text: ''
-      }
+      },
+      id: undefined
     }
   },
   watch: {
@@ -192,8 +196,6 @@ export default {
       }
     },
   },
-  computed: {
-  },
   methods: {
     ...mapActions('task', ['createTask', 'updateTask']),
 
@@ -206,17 +208,34 @@ export default {
       this.formData.end_time = this.time(this.selectedTask.end) || this.selecrtedTime.endTime
       this.formData.text = this.selectedTask.text
     },
+    saveFormData($event) {
+      this.$refs.textArea.editor.save().then(savedData => {
+        this.formData.text = JSON.stringify(savedData);
+
+        if (this.method=='update') {
+          this.updateTask($event)
+          this.close()
+          this.closeShow()
+        }
+        if ( this.method=='create' ) {
+          this.createTask($event)
+          this.close()
+          this.$refs.textArea.editor.blocks.clear()
+        }
+      });
+    },
     open () {
       this.Dialog = true
     },
-    
     close () {
       this.Dialog = false
     },
-
     closeShow() {
       this.$emit('close')
     }
+  },
+  mounted () {
+    this.id = this._uid
   },
 }
 </script>

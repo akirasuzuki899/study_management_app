@@ -71,13 +71,23 @@
                       :dense="true"
                     ></SelectTime>
                   </v-col>
+                  <v-col cols="12" sm="12">
+                    <TextArea
+                      ref="textArea"
+                      class="overflow-y-auto rounded px-2" 
+                      style="height:200px; border:1px solid #BCBCBC; box-sizing: border-box"
+                      :id="id"
+                      :text="selectedTask.text"
+                      :readOnly="false"
+                    ></TextArea>
+                  </v-col>
                 </v-row>
               </v-container>
-              <div class="px-3 text-caption text--disabled">
+              <!-- <div class="px-3 text-caption text--disabled">
                 テンプレートを元に一週間の予定を自動で作成します。<br>
                 週間カレンダーに手動で反映させるには、
                 「週間カレンダーに反映」をクリックします。
-              </div>
+              </div> -->
             </v-card-text>
 
             <v-card-actions>
@@ -94,7 +104,7 @@
                 v-if="method=='create'"
                 :formData="formData"
                 :target="target"
-                @task-template="createTaskTemplate($event); close()"
+                @task-template="saveFormData($event)"
               ></ButtonCreate>
               <ButtonUpdate
                 v-if="method=='update'"
@@ -102,7 +112,7 @@
                 :formData="formData"
                 :target="target"
                 :selectedTask="selectedTask"
-                @task-template="updateTaskTemplate($event); close(); closeShow()"
+                @task-template="saveFormData($event)"
               ></ButtonUpdate>
             </v-card-actions>
           </form>
@@ -115,6 +125,7 @@
 
 <script>
 import TextInput from "../Form/BaseTextInput";
+import TextArea from "../Form/BaseTextArea.vue"
 import SelectStudyMaterial from "../Form/SelectStudyMaterial";
 import SelectorColor from "../Form/SelectorColor";
 import SelectDayOfWeek from "../Form/SelectDayOfWeek";
@@ -122,7 +133,7 @@ import SelectTime from "../Form/SelectTime";
 import ButtonCreate from "./TaskButtonCreate";
 import ButtonUpdate from "./TaskButtonUpdate";
 
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import { ValidationObserver} from 'vee-validate';
 
 import mixinMoment from "../../plugins/mixin-moment"
@@ -130,6 +141,7 @@ import mixinMoment from "../../plugins/mixin-moment"
 export default {
   components: {
     TextInput,
+    TextArea,
     SelectStudyMaterial,
     SelectorColor,
     SelectDayOfWeek,
@@ -151,6 +163,7 @@ export default {
         start: '',
         end: '',
         study_material: '',
+        text: ''
       })
     },
     selecrtedTime: {
@@ -169,7 +182,9 @@ export default {
         start_date: '',
         start_time: '',
         end_time: '',
-      }
+        text: ''
+      },
+      id: undefined
     }
   },
   watch: {
@@ -181,8 +196,6 @@ export default {
         this.$refs.observer.reset()
       }
     },
-  },
-  computed: {
   },
   methods: {
     ...mapActions('taskTemplate', ['createTaskTemplate','updateTaskTemplate']),
@@ -201,19 +214,36 @@ export default {
       this.formData.start_date = start_date()
       this.formData.start_time = this.time(this.selectedTask.start) || this.selecrtedTime.startTime
       this.formData.end_time = this.time(this.selectedTask.end) || this.selecrtedTime.endTime
+      this.formData.text = this.selectedTask.text
     },
-    
+    saveFormData($event){
+      this.$refs.textArea.editor.save().then(savedData => {
+        this.formData.text = JSON.stringify(savedData);
+
+        if (this.method=='update') {
+          this.updateTaskTemplate($event)
+          this.close()
+          this.closeShow()
+        }
+        if ( this.method=='create' ) {
+          this.createTaskTemplate($event)
+          this.close()
+          this.$refs.textArea.editor.blocks.clear()
+        }
+      });
+    },
     open () {
       this.Dialog = true
     },
-    
     close () {
       this.Dialog = false
     },
-
     closeShow() {
       this.$emit('close')
     }
+  },
+  mounted () {
+    this.id = this._uid
   },
 }
 </script>

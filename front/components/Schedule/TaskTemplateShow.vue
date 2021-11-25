@@ -1,6 +1,7 @@
 <template>
   <v-menu
     v-model="isOpen"
+    :eager="true"
     :close-on-content-click="false"
     :activator="selectedElement"
     offset-x
@@ -20,8 +21,9 @@
         </v-btn>
       </v-toolbar>
 
-      <v-card-text v-if="selectedTask.study_material">
+      <v-card-text>
         <StudyMaterial
+          v-if="selectedTask.study_material"
           :studyMaterial="selectedTask.study_material"
           class="py-3"
         ></StudyMaterial>
@@ -33,7 +35,26 @@
             {{ `毎週 ${selectedTask.day_of_week} ${time(selectedTask.start)} 〜 ${time(selectedTask.end)}` }}
           </v-col>
         </v-row>
+
+        <v-divider class="my-3"></v-divider>
+
+        <v-row class="flex-column no-gutters">
+          <v-col>
+            <div class="text-subtitle-1 font-weight-bold pb-2">詳細</div>
+          </v-col>
+          <v-col>
+            <TextArea
+              v-if="id"
+              ref="textArea"
+              class="overflow-y-auto" 
+              :style="TextAreaHeight"
+              :id="id"
+              :text="selectedTask.text"
+            ></TextArea>
+          </v-col>
+        </v-row>
       </v-card-text>
+      
       <v-card-actions>
         <v-btn
           text
@@ -73,6 +94,8 @@ import { mapActions } from "vuex";
 import TaskTemplateForm from "./TaskTemplateForm";
 import StudyMaterial from "../StudyMaterials/StudyMaterial";
 import Alert from "../Alert"
+import TextArea from "../Form/BaseTextArea"
+
 
 import mixinMoment from "../../plugins/mixin-moment"
 
@@ -81,6 +104,7 @@ export default {
       TaskTemplateForm,
       StudyMaterial,
       Alert,
+      TextArea
     },
   mixins: [mixinMoment],
   props: {
@@ -104,9 +128,21 @@ export default {
       type: String
     },
   },
+  computed: {
+    TextAreaHeight () {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return { "max-height": "200px" }
+        case 'sm': return { "max-height": "250px" }
+        case 'md': return { "max-height": "250px" }
+        case 'lg': return { "max-height": "250px" }
+        case 'xl': return { "max-height": "250px" }
+      }
+    }
+  },
   data() {
     return {
       isOpen: false,
+      id: undefined
     }
   } ,
   methods: {
@@ -124,6 +160,9 @@ export default {
     openAlert() {
       this.$refs.alert.open();
     },
+  },
+  mounted () {
+    this.id = this._uid
   },
 }
 </script>
