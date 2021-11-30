@@ -7,7 +7,7 @@
     offset-x
   >
     <v-card
-      max-width="350px"
+      max-width="600px"
       flat
     >
       <v-toolbar dense :color="selectedTask.color">
