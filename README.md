@@ -31,7 +31,7 @@ URL：https://study-management-app.com<br><br>
 | :--- | :--- | :--- |
 | Vue 2.6.13 | Ruby 2.7.2 | Docker |
 | Nuxt.js 2.15.6 | Rails 6.1.3 | CircleCI |
-| Vuetify 2.5.3 | RSpec / Rubocop | AWS |
+| Vuetify 2.5.3 | RSpec / Rubocop / ActiveModelSerializers | AWS |
 <br>
 
 
@@ -122,7 +122,7 @@ URL：https://study-management-app.com<br><br>
 * フロントエンドに Vue と Vuetify、バックエンドに Ruby on Rails を用いて完全SPA化し、UXを向上させた
 * Vuetify ではできない細かいデザインの調整を css で行い、アプリ全体で統一感のあるデザインにした
 * 特定のデータが無い時にユーザーを誘導するボタンを表示<br>
-  *  当日の予定がない時&emsp;→&emsp;タイムライン上に週間スケジュールへの誘導ボタンを表示させた<br>
+  *  当日の予定がない時&emsp;→&emsp;タイムライン上に週間スケジュールへの誘導ボタンを表示<br>
   *  教材がない時&emsp;&emsp;&emsp;&emsp;→&emsp;タイムライン、教材メモ、教材一覧上に教材登録への誘導ボタンを表示<br>
 
 | インフラ |
