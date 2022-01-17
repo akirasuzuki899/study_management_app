@@ -27,6 +27,25 @@ RSpec.describe "StudyMaterials", type: :request do
   end
 
   describe "create" do
-    
+    context '全てのパラメータが揃っている場合' do
+      before do
+        user = FactoryBot.create(:user)
+      end
+      
+      it '200 OK を返す' do
+        user = { email: "exist_email@test.com", password: "password" }
+        auth_tokens = sign_in(user)
+        post '/api/v1/study_materials', params: { title: 'test', rakuten_image_url: "#{Rails.root}/spec/fixtures/files/toeic1.jpeg" }, headers: auth_tokens
+        expect(response).to have_http_status(200)
+      end
+      
+      it '教材を登録する' do
+        user = { email: "exist_email@test.com", password: "password" }
+        auth_tokens = sign_in(user)
+        expect do
+          post '/api/v1/study_materials', params: { title: 'test', rakuten_image_url: "#{Rails.root}/spec/fixtures/files/toeic1.jpeg" }, headers: auth_tokens
+        end.to change(StudyMaterial, :count).by(1)
+      end
+    end
   end
 end
