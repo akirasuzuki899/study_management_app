@@ -6,7 +6,8 @@ class StudyNote < ApplicationRecord
   has_many_attached :files
 
   validates :user_id, presence: true
-  # validates :study_material_id, presence: true
+  validates :noteable_id, presence: true
+  validates :noteable_type, presence: true
   validates :title, presence: true, length: { maximum: 50 }
   validates :rich_text, presence: true
 
