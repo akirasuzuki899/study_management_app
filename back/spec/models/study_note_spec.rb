@@ -55,7 +55,6 @@ RSpec.describe StudyNote, type: :model do
     context '有効な投稿' do
       it 'user_id, noteable_id, noteable_type, title, rich_text が存在すれば有効' do
         expect(mandala_item_note).to  be_valid
-        puts "user #{mandala_item_note.noteable.mandala_group.mandala_chart.user.inspect}"
       end
 
       it 'title が50文字以下であれば登録できる' do
