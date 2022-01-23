@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :mandala_chart do
-    user { :user }
+    association :user
   end
 end
