@@ -14,6 +14,13 @@ RSpec.describe User, type: :model do
         user.password_confirmation = 'a' * 6
         expect(user).to be_valid
       end
+
+      it 'ユーザーが所有する mandala_chart, mandala_group, mandala_item を作成する' do
+        user.save
+        expect(user.mandala_charts.count).to  be 1
+        expect(user.mandala_charts[0].mandala_groups.count).to  be 9
+        expect(user.mandala_charts[0].mandala_groups[0].mandala_items.count).to  be 9
+      end
     end
 
     context '無効なユーザー' do
@@ -54,6 +61,11 @@ RSpec.describe User, type: :model do
         user.valid?
         expect(user.errors[:password]).to include('is too short (minimum is 6 characters)')
       end
+
+      it 'mandala_chart を作成しない' do
+        expect(user.mandala_charts.count).to  be 0
+      end
     end
+    
   end
 end
