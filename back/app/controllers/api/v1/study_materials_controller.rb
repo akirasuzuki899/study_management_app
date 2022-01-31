@@ -42,7 +42,7 @@ module Api
         results = RakutenWebService::Books::Book.search(title: params[:keyword], page: params[:page])
         results.each do |result|
           study_material = StudyMaterial.new(read(result))
-          study_materials << study_material if new_material?(study_material)
+          study_materials << study_material if StudyMaterial.new?(current_user, study_material)
         end
 
         study_materials.present? ? ( render json: study_materials, adapter: :json, each_serializer: StudyMaterialSerializer )
@@ -73,14 +73,6 @@ module Api
           title: title,
           rakuten_image_url: rakuten_image_url
         }
-      end
-
-      def new_material?(new_material)
-        study_materials = current_user.study_materials.select(:title)
-        study_materials.each do |study_material|
-          return false if study_material[:title] == new_material[:title]
-        end
-        true
       end
 
     end

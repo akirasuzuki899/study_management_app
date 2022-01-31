@@ -21,4 +21,10 @@ class StudyMaterial < ApplicationRecord
     # 紐づいている画像のURLを取得する
     image.attached? ? url_for(image) : nil
   end
+
+  def self.new?(user, material)
+    result = user.study_materials.find_by(title: material[:title])
+    result ? false : true
+  end
+
 end
