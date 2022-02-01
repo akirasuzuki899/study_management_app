@@ -14,17 +14,12 @@ class StudyMaterial < ApplicationRecord
 
   def attach_rakuten_image(url, title)
     image = open(url)
-    self.image.attach(io: image, filename: "#{title}.jpg")
+    self.image.attach(io: image, filename: title)
   end
 
   def image_url
     # 紐づいている画像のURLを取得する
     image.attached? ? url_for(image) : nil
-  end
-
-  def self.new?(user, material)
-    result = user.study_materials.find_by(title: material[:title])
-    result ? false : true
   end
 
 end

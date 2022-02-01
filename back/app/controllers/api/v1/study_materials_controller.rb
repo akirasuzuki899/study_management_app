@@ -33,21 +33,20 @@ module Api
       end
 
       def search
-        study_materials = []
         if params[:keyword].empty? 
-          render json: { message: 'キーワードを入力してください' }, status:  400
-          return 
+          return render json: { message: 'キーワードを入力してください' }, status:  400
         end
 
-        results = RakutenWebService::Books::Book.search(title: params[:keyword], page: params[:page])
-        results.each do |result|
-          study_material = StudyMaterial.new(read(result))
-          study_materials << study_material if StudyMaterial.new?(current_user, study_material)
-        end
+        results   = RakutenWebService::Books::Book.search(title: params[:keyword], page: params[:page])
+        results   = results.map{ |result| StudyMaterial.new(read(result)) }
+        materials = current_user.study_materials.pluck(:title)
 
+        study_materials = results.select do |result|
+          materials.exclude?(result[:title])
+        end
+        
         study_materials.present? ? ( render json: study_materials, adapter: :json, each_serializer: StudyMaterialSerializer )
                                  : ( render json: { study_materials: [], next: false }, status:  200 )
-
       end
 
       def is_complete
@@ -67,11 +66,9 @@ module Api
       end
 
       def read(result)
-        title = result['title']
-        rakuten_image_url = result['mediumImageUrl']
         {
-          title: title,
-          rakuten_image_url: rakuten_image_url
+          title: result['title'],
+          rakuten_image_url: result['mediumImageUrl']
         }
       end
 
