@@ -51,46 +51,14 @@ module Api
         url = URI.parse(params[:url])
         download_host = url.host
         host = request.domain
+        
+        new_file = 
+          host == download_host ? Downloader.copy(url)
+                                : Downloader.download(url)
 
-        if host == download_host
-
-          signed_id = get_signed_id(url.path)
-          original_file = ActiveStorage::Blob.find_signed(signed_id)
-
-          new_file = ActiveStorage::Blob.create_and_upload!(
-            io: StringIO.new(original_file.download),
-            filename: original_file.filename.to_s
-          )
-
-          new_file ? ( render json: { signed_id: new_file.signed_id(), filename: new_file.filename } )
-                   : ( render json: { message: 'ERROR' }, status: 400 )
-
-        else
-
-          new_file = ActiveStorage::Blob.create_and_upload!(
-            io: open(url),
-            filename:  File.basename(url.path)
-          )
-
-          new_file ? ( render json: { signed_id: new_file.signed_id(), filename: new_file.filename } )
-                   : ( render json: { message: 'ERROR' }, status: 400 )
-
-        end
+        new_file ? ( render json: { signed_id: new_file.signed_id(), filename: new_file.filename } )
+                 : ( render json: { message: 'ERROR' }, status: 400 )
       end
-
-      # def url_metadata
-      #   if meta = MetaInspector.new(params[:url])
-      #     render json: {
-      #       success: 1,
-      #       meta: {
-      #         title: meta.title,
-      #         description: meta.description,
-      #         image: { url: meta.image}}}
-      #   else
-      #     render json: { message: 'ERROR' }, status: 400 
-      #   end
-      # end
-
       
       private
 
@@ -102,20 +70,6 @@ module Api
         @study_note = current_user.study_notes.find(params[:id])
         @noteable = @study_note.noteable
         redirect_to root_url if @study_note.nil?
-      end
-
-      def get_signed_id(path)
-
-        if path.include?("/rails/active_storage/blobs/redirect/")
-          path[/rails\/active_storage\/blobs\/redirect\/(.+--.+)\//, 1]
-
-        elsif path.include?("/rails/active_storage/blobs/proxy/")
-          path[/rails\/active_storage\/blobs\/proxy\/(.+--.+)\//, 1]
-
-        elsif path.include?("/rails/active_storage/blobs/")
-          path[/rails\/active_storage\/blobs\/(.+--.+)\//, 1]
-        end
-
       end
 
     end
