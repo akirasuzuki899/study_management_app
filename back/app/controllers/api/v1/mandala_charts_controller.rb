@@ -10,7 +10,6 @@ module Api
       end
 
       def destroy
-        # @mandala_chart.destroy
         if current_user.mandala_charts.length > 1
           @mandala_chart.destroy
         else
