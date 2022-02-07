@@ -18,7 +18,7 @@ module Api
         @study_note = @noteable.study_notes.build(study_note_params)
         @study_note.user_id = current_user.id
 
-        if sgids = @study_note.files_added?(new_rich_text, old_rich_text) then @study_note.attach_files(sgids) end
+        if sgids = @study_note.added_files(new_rich_text, old_rich_text) then @study_note.attach_files(sgids) end
 
         if @study_note.save
           render json: { study_note: @study_note, noteable: @noteable }
@@ -32,8 +32,8 @@ module Api
         old_rich_text = @study_note.rich_text
         new_rich_text = study_note_params[:rich_text]
 
-        if sgids = @study_note.files_deleted?(new_rich_text, old_rich_text) then @study_note.delete_files(sgids) end
-        if sgids = @study_note.files_added?(new_rich_text, old_rich_text)   then @study_note.attach_files(sgids) end
+        if sgids = @study_note.removed_files(new_rich_text, old_rich_text) then @study_note.delete_files(sgids) end
+        if sgids = @study_note.added_files(new_rich_text, old_rich_text)   then @study_note.attach_files(sgids) end
 
         if @study_note.update(study_note_params)
           render json: { study_note: @study_note, noteable: @study_note.noteable, old_note: old_note, old_noteable: @noteable}
@@ -51,7 +51,7 @@ module Api
         url = URI.parse(params[:url])
         download_host = url.host
         host = request.domain
-        
+
         new_file = 
           host == download_host ? Downloader.copy(url)
                                 : Downloader.download(url)
