@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :study_material do
     association :user, factory: :user
-    title { 'study_material_title' }
+    sequence(:title) { |n| "study_material_title#{n}" }
     is_completed { false }
   end
 end
