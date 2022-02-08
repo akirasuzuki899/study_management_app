@@ -11,17 +11,17 @@ class StudyNote < ApplicationRecord
   validates :title, presence: true, length: { maximum: 50 }
   validates :rich_text, presence: true
 
-  def files_deleted?(new_rich_text, old_rich_text)
-    diff =  get_files_sgid(old_rich_text) - get_files_sgid(new_rich_text)
+  def removed_files(new_rich_text, old_rich_text)
+    diff =  get_file_sgids(old_rich_text) - get_file_sgids(new_rich_text)
     return diff if diff.length > 0
   end
 
-  def files_added?(new_rich_text, old_rich_text)
-    diff =  get_files_sgid(new_rich_text) - get_files_sgid(old_rich_text)
+  def added_files(new_rich_text, old_rich_text)
+    diff =  get_file_sgids(new_rich_text) - get_file_sgids(old_rich_text)
     return diff if diff.length > 0
   end
 
-  def get_files_sgid(rich_text)
+  def get_file_sgids(rich_text)
     return [] if rich_text.blank?
 
     rich_text_blocks = JSON.parse(rich_text)["blocks"]
