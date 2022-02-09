@@ -13,7 +13,7 @@ RSpec.describe "StudyMaterials", type: :request do
         get "/api/v1/task_templates", headers: auth_tokens
         json = JSON.parse(response.body).deep_symbolize_keys
         expect(response).to have_http_status(200)
-        expect(json[:task_templates].count).to eq(1)                    #教材の数
+        expect(json[:task_templates].count).to eq(1)
       end
     end
 
@@ -29,7 +29,7 @@ RSpec.describe "StudyMaterials", type: :request do
   describe "create" do
     context "ログイン済みの場合" do
       context '全ての属性値が揃っている場合' do
-        it 'ノートを作成できる' do
+        it 'タスクテンプレートを作成できる' do
           expect do
             post "/api/v1/task_templates", 
             params: FactoryBot.attributes_for(:task_template, user: nil, study_material_id: task_template.study_material.id) , 
@@ -40,7 +40,7 @@ RSpec.describe "StudyMaterials", type: :request do
       end
 
       context '属性値が無効な時' do
-        it '教材を作成しない' do
+        it 'タスクテンプレートを作成しない' do
           expect do
             post '/api/v1/task_templates', 
             params: FactoryBot.attributes_for(:task_template, user: nil, study_material_id: nil), 
@@ -55,45 +55,45 @@ RSpec.describe "StudyMaterials", type: :request do
     end
   end
 
-  # describe "update" do
-  #   context "ログイン済みの場合" do
-  #     it 'ノートを削除できる' do
-  #       expect do
-  #         put "/api/v1/study_notes/#{study_material_note.id}", 
-  #         params: { study_note: { title: 'update title'}}, 
-  #         headers: auth_tokens
-  #       end.to change(user.study_notes, :count).by(0)
-  #       json = JSON.parse(response.body).deep_symbolize_keys
-  #       expect(json[:study_note][:title]).to  eq("update title")
-  #     end
-  #   end
+  describe "update" do
+    context "ログイン済みの場合" do
+      it 'タスクテンプレートを更新できる' do
+        expect do
+          put "/api/v1/task_templates/#{task_template.id}", 
+          params: { name: 'update name' }, 
+          headers: auth_tokens
+        end.to change(user.task_templates, :count).by(0)
+        json = JSON.parse(response.body).deep_symbolize_keys
+        expect(json[:task_template][:name]).to  eq("update name")
+      end
+    end
 
-  #   context "未ログインの場合" do
-  #     it "401 を返す" do
-  #       put "/api/v1/study_notes/#{study_material_note.id}", 
-  #       params: { study_note: { title: 'update title'}}
-  #       expect(response).to have_http_status(401)
-  #     end
-  #   end
+    context "未ログインの場合" do
+      it "401 を返す" do
+        put "/api/v1/task_templates/#{task_template.id}", 
+        params: { name: 'update title' }
+        expect(response).to have_http_status(401)
+      end
+    end
     
-  # end
+  end
   
-  # describe "delete" do
-  #   context "ログイン済みの場合" do
-  #     it 'ノートを削除できる' do
-  #       expect do
-  #         delete "/api/v1/study_notes/#{study_material_note.id}", 
-  #         headers: auth_tokens
-  #       end.to change(user.study_notes, :count).by(-1)
-  #     end
-  #   end
+  describe "delete" do
+    context "ログイン済みの場合" do
+      it 'タスクテンプレートを削除できる' do
+        expect do
+          delete "/api/v1/task_templates/#{task_template.id}", 
+          headers: auth_tokens
+        end.to change(user.task_templates, :count).by(-1)
+      end
+    end
 
-  #   context "未ログインの場合" do
-  #     it "401 を返す" do
-  #       delete "/api/v1/study_notes/#{study_material_note.id}"
-  #       expect(response).to have_http_status(401)
-  #     end
-  #   end
+    context "未ログインの場合" do
+      it "401 を返す" do
+        delete "/api/v1/task_templates/#{task_template.id}"
+        expect(response).to have_http_status(401)
+      end
+    end
     
-  # end
+  end
 end
