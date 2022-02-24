@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :task_template do
-    user { :user }
-    study_material { :study_material }
+    association :study_material
+    user { study_material.user }
     name { "TaskTemplate" }
     start_date { "2000-01-03" }
     start_time { "2021-05-01 00:00:00" }

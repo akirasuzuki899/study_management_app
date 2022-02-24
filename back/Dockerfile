@@ -1,7 +1,6 @@
 FROM ruby:2.7.2
 RUN apt-get update -qq && \
-    apt-get install -y nodejs \
-                       cron
+    apt-get install -y nodejs
 
 WORKDIR /back
 
@@ -10,8 +9,6 @@ ENV TZ=Asia/Tokyo
 COPY Gemfile /back/Gemfile
 COPY Gemfile.lock /back/Gemfile.lock
 RUN bundle install
-COPY . /back
-RUN bundle exec whenever --update-crontab 
 RUN mkdir -p /back/tmp/sockets
 
 COPY entrypoint.sh /usr/bin/

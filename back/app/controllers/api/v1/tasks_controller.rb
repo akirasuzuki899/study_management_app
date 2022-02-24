@@ -16,7 +16,7 @@ module Api
         if task.save
           render json: task, adapter: :json, serializer: TaskSerializer
         else
-          render json: { status: 400, task: task.errors }
+          render json: { message: task.errors }, status: 400
         end
       end
 
